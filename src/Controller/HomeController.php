@@ -6,6 +6,6 @@ Class HomeController extends ViewManager
 {
 	public function show()
 	{
-		$this->loadPage('home_show', ['title' => 'HOME PAGE', 'h1' => 'HOME PAGE']);
+		$this->loadPage(['HomeView', 'show'], ['title' => 'HOME PAGE', 'h1' => 'HOME PAGE']);
 	}	
 }

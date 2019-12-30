@@ -14,5 +14,7 @@ $router->get('.+', 'Error404Controller#show');
 
 $router->run();
 
+/*
 var_dump($router->url('home'));
 var_dump($router->url('test', ['id' => 45, 'slug' => 'test']));
+*/
