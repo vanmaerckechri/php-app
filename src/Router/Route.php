@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Router;
+
 class Route
 {
 	private $path;
@@ -61,10 +63,7 @@ class Route
 		{
 			$params = explode('#', $this->callable);
 
-			$require = "..\\controller\\" . $params[0] . '.php';
-			require_once("$require");
-
-			$controller = $params[0];
+			$controller = 'App\\Controller\\' . $params[0];
 			$controller = new $controller();
 
 			// [Class, Method], Param($id, $slug, etc.)

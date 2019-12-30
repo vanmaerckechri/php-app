@@ -1,14 +1,16 @@
 <?php
 
-require_once('../router/Router.php');
+require_once('../src/Autoloader.php');
+
+use App\Router\Router;
 
 $router = new Router();
 
-$router->get('/', 'ViewManager#loadHomePage', 'home');
+$router->get('/', 'HomeController#show', 'home');
 
-$router->get('/test/:id-:slug', 'ViewManager#loadTestPage', 'test')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
+$router->get('/test/:id-:slug', 'TestController#show', 'test')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
-$router->get('.+', 'ViewManager#load404Page');
+$router->get('.+', 'Error404Controller#show');
 
 $router->run();
 

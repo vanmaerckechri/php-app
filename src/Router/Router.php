@@ -1,6 +1,6 @@
 <?php
 
-require_once('Route.php');
+namespace App\Router;
 
 class Router
 {
