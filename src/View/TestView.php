@@ -11,8 +11,8 @@ Class TestView
 		?>
 			<p>MAIN</p>
 			<ul>
-				<li>id = <?= $varPage['id'] ?></li>
-				<li>slug = <?= $varPage['slug'] ?></li>
+				<li>id = <?= htmlspecialchars($varPage['id']) ?></li>
+				<li>slug = <?= htmlspecialchars($varPage['slug']) ?></li>
 			</ul>
 		<?php
 

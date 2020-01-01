@@ -4,14 +4,40 @@ namespace App\View;
 
 Class Template
 {
+	private static function importJs($jsFileNames)
+	{
+		ob_start();
+
+		foreach ($jsFileNames as $fileName) 
+		{
+			$path = '/public/js/' . $fileName . '.js';
+			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+			
+			?>
+			<script type="text/javascript" src="<?= $path ?>"></script>
+			<?php
+		}
+
+		return ob_get_clean();
+	}
+
 	public static function load($varPage)
 	{
+		if (isset($varPage['jsFileNames']))
+		{
+			$js = SELF::importJs($varPage['jsFileNames']);
+		}
+
 		ob_start();
 
 		?>
 			<!DOCTYPE html>
-			<html>
+			<html lang="fr">
 			<head>
+			    <meta charset="UTF-8">
+			    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+			    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+			    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
 			    <title><?= $varPage['title'] ?></title>
 			</head>
 			<body>
@@ -25,6 +51,7 @@ Class Template
 			    <footer>
 					<p>FOOTER</p>
 				</footer>
+				<?= $js ?? '' ?>
 			</body>
 			</html>
 		<?php

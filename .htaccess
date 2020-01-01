@@ -1,8 +1,2 @@
-# Settings
 RewriteEngine On
-RewriteBase /
-
-RewriteCond %{THE_REQUEST} /public/([^\s?]*) [NC]
-RewriteRule ^ %1 [L,NE,R=301]
-
-RewriteRule ^((?!public/).*)$ public/index.php?/var=$1 [L,NC]
+RewriteRule .* public/
