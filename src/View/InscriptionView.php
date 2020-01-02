@@ -10,9 +10,11 @@ Class InscriptionView
 		ob_start();
 		?>
 			<form action="<?= $action ?>" method="post">
-				<label for="login">Login<input type="text" name="login" id="login" required></label>
-				<label for="pwd">Password<input type="password" name="pwd" id="pwd" required></label>
+				<label for="username">Login<input type="text" name="username" id="username" required></label>
+				<?= $varPage['errors']['usernameSms'] ?? '' ?>
+				<label for="password">Password<input type="password" name="password" id="password" required></label>
 				<label for="pwdConfirm">Confirm Password<input type="password" name="pwdConfirm" id="pwdConfirm" required></label>
+				<?= $varPage['errors']['passwordSms'] ?? '' ?>
 				<input type="submit" value="INSCRIPTION">
 			</form>
 		<?php

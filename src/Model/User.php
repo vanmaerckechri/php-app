@@ -2,6 +2,8 @@
 
 namespace App\Model;
 
+use App\Validator\Validator;
+
 class User
 {
 	private $id;
@@ -12,13 +14,6 @@ class User
 	public function getId(): ?int
 	{
 		return $this->id;
-	}
-
-	public function setId(int $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 
 	public function getRole(): ?string
@@ -40,7 +35,15 @@ class User
 
 	public function setUsername(string $username): self
 	{
-		$this->username = $username;
+		if (Validator::validate('usernameSms', $username, [
+			'required' => true,
+			'type' => 'string',
+			'minLength' => 5,
+			'maxLength' => 30
+		]))
+		{
+			$this->username = $username;
+		}
 
 		return $this;
 	}
@@ -52,7 +55,15 @@ class User
 
 	public function setPassword(string $password): self
 	{
-		$this->password = $password;
+		if (Validator::validate('passwordSms', $password, [
+			'required' => true,
+			'type' => 'string',
+			'minLength' => 8,
+			'maxLength' => 30
+		]))
+		{
+			$this->password = $password;
+		}
 
 		return $this;
 	}

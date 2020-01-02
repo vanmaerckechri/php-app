@@ -28,13 +28,11 @@ Class ConnexionController extends ViewManager
 		{
 			if (!empty($_POST['username']) && !empty($_POST['password']))
 			{
-				$username = $_POST['username'];
-				$password = $_POST['password'];
-
-				if (is_null(Auth::login($username, $password)))
+				if (is_null(Auth::login($_POST['username'], $_POST['password'])))
 				{
-					$this->varPage['username'] = htmlspecialchars($username);
-					$this->varPage['errors'] = ErrorsManager::getMessage(['auth'], $GLOBALS['lang']);
+					$this->varPage['username'] = htmlspecialchars($_POST['username']);
+					$this->varPage['errors'] = ErrorsManager::add(['authSms' => ['auth' => null]]);
+					$this->varPage['errors'] = ErrorsManager::getMessages();
 				}
 			}
 		}
