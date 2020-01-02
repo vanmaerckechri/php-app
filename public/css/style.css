@@ -1,4 +1,63 @@
+html, body, header, nav, footer, section, div, span, h1, h2, h3, h4, h5, h6, p, a, blockquote, cite, img, ol, ul, li, form, fieldset, legend, label, input, textarea, button
+{
+	margin: 0;
+	padding: 0;
+	border: 0;
+	box-sizing: border-box;
+}
 body
 {
 	background-color: grey;
+}
+header
+{
+	margin-bottom: 2rem;
+	background-color: pink;
+}
+h1
+{
+	text-align: center;
+}
+form
+{
+	margin: 0 auto;
+	max-width: 350px;
+	width: 100%;
+}
+label
+{
+	margin-bottom: 0.5rem;
+	display: block;
+}
+input
+{
+	margin-top: 0.2rem;
+	padding: 0.2rem 0.4rem;
+	display: block;
+	width: 100%;
+}
+.btn
+{
+	margin: 1rem 0;
+	padding: 0.2rem;
+	font-size: 1.2rem;
+	transition: background-color 0.2s;
+}
+.btn:hover
+{
+	cursor: pointer;
+	background-color: orange;
+}
+.sms-error, .sms-info
+{
+	padding: 0.1rem 0.2rem;
+	background-color: black;	
+}
+.sms-error
+{
+	color: red;
+}
+.sms-info
+{
+	color: green;
 }

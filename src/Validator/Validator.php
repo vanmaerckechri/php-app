@@ -2,7 +2,7 @@
 
 namespace App\Validator;
 
-use App\ErrorsManager;
+use App\MessagesManager;
 
 class Validator
 {
@@ -24,7 +24,7 @@ class Validator
 
 	public static function checkMinLength($data, int $length): bool
 	{
-		return strlen($data) > $length;
+		return strlen($data) >= $length;
 	}
 
 	public static function checkMaxLength($data, int $length): bool
@@ -70,7 +70,7 @@ class Validator
 
 		if (!empty($errors[$outputId]))
 		{
-			ErrorsManager::add($errors);
+			MessagesManager::add($errors);
 			return false;
 		}
 		return true;

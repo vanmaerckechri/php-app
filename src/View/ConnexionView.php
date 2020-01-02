@@ -11,11 +11,11 @@ Class ConnexionView
 		?>
 			<form action="" method="post">
 				<label for="username">Nom d'Utilisateur<input type="text" name="username" id="username" value=<?= $varPage['username'] ?? '""' ?> required></label>
-				<label for="password">Mot de Passe<input type="password" name="password" id="password" required></label>
-				<?= $varPage['errors']['authSms'] ?? '' ?>
-				<input type="submit" value="CONNEXION">
+				<label for="password">Mot de Passe<input type="password" name="password" id="password" required><?= $varPage['messages']['authSms'] ?? '' ?></label>
+				<input class="btn" type="submit" value="CONNEXION">
+				<?= $varPage['messages']['registerComplete'] ?? '' ?>
+				<a href="<?= $inscription ?>">Vous n'avez pas encore de compte ?</a>
 			</form>
-			<a href="<?= $inscription ?>">Vous n'avez pas encore de compte ?</a>
 		<?php
 
 		return ob_get_clean();

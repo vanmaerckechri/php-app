@@ -3,7 +3,8 @@
 namespace App\Controller;
 
 use App\Model\User;
-use App\ErrorsManager;
+use App\Request\UserRequest;
+use App\MessagesManager;
 
 Class InscriptionController extends ViewManager
 {
@@ -32,10 +33,20 @@ Class InscriptionController extends ViewManager
 				$user = new User();
 				$user->setUsername($_POST['username']);
 				$user->setPassword($_POST['password']);
-
-				$this->varPage['errors'] = ErrorsManager::getMessages();
+				$this->varPage['username'] = htmlspecialchars($_POST['username']);
+				if ($user->checkVarHealth())
+				{
+					$userRequest = new UserRequest();
+					if ($userRequest->record($user))
+					{
+						header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
+						exit();
+					}
+					MessagesManager::add(['usernameSms' => ['usernameTaken' => null]]);
+				}
 			}
 		}
+		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->show();
 	}	
 }

@@ -11,6 +11,19 @@ class User
 	private $username;
 	private $password;
 
+	public function checkVarHealth(): bool
+	{
+		$essentialVariables = [$this->username, $this->password];
+		foreach ($essentialVariables as $value)
+		{
+			if (is_null($value))
+			{
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public function getId(): ?int
 	{
 		return $this->id;
@@ -38,7 +51,7 @@ class User
 		if (Validator::validate('usernameSms', $username, [
 			'required' => true,
 			'type' => 'string',
-			'minLength' => 5,
+			'minLength' => 4,
 			'maxLength' => 30
 		]))
 		{
@@ -58,11 +71,11 @@ class User
 		if (Validator::validate('passwordSms', $password, [
 			'required' => true,
 			'type' => 'string',
-			'minLength' => 8,
+			'minLength' => 4,
 			'maxLength' => 30
 		]))
 		{
-			$this->password = $password;
+			$this->password = password_hash($password, PASSWORD_DEFAULT);
 		}
 
 		return $this;

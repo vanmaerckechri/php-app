@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Auth;
-use App\ErrorsManager;
+use App\MessagesManager;
 
 Class ConnexionController extends ViewManager
 {
@@ -31,8 +31,8 @@ Class ConnexionController extends ViewManager
 				if (is_null(Auth::login($_POST['username'], $_POST['password'])))
 				{
 					$this->varPage['username'] = htmlspecialchars($_POST['username']);
-					$this->varPage['errors'] = ErrorsManager::add(['authSms' => ['auth' => null]]);
-					$this->varPage['errors'] = ErrorsManager::getMessages();
+					MessagesManager::add(['authSms' => ['auth' => null]]);
+					$this->varPage['messages'] = MessagesManager::getMessages();
 				}
 			}
 		}
