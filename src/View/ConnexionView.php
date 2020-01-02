@@ -10,10 +10,10 @@ Class ConnexionView
 		ob_start();
 		?>
 			<form action="" method="post">
-				<label for="username">Nom d'Utilisateur<input type="text" name="username" id="username" value=<?= $varPage['username'] ?? '""' ?> required></label>
+				<label for="username">Nom d'Utilisateur<input type="text" name="username" id="username" value=<?= $varPage['recordedInputs']['username'] ?? '""' ?> required></label>
 				<label for="password">Mot de Passe<input type="password" name="password" id="password" required><?= $varPage['messages']['authSms'] ?? '' ?></label>
 				<input class="btn" type="submit" value="CONNEXION">
-				<?= $varPage['messages']['registerComplete'] ?? '' ?>
+				<?= $varPage['messages']['info'] ?? '' ?>
 				<a href="<?= $inscription ?>">Vous n'avez pas encore de compte ?</a>
 			</form>
 		<?php

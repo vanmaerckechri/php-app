@@ -34,7 +34,7 @@ class MessagesManager
 					$sms = $value;
 					$smsType = $customType;
 				}
-				self::$currentMessages[$keyFam][] = ['sms' => $sms, 'type' => $smsType];
+				$_SESSION['messages'][$keyFam][] = ['sms' => $sms, 'type' => $smsType];
 			}
 		}
 	}
@@ -43,23 +43,28 @@ class MessagesManager
 	{
 		$result = array();
 
-		foreach (self::$currentMessages as $keyFam => $messages) 
+		if ($_SESSION['messages'])
 		{
-			ob_start();
-			?>
-				<div class="sms-container">
-			<?php
-			foreach ($messages as $key => $value)
+			foreach ($_SESSION['messages'] as $keyFam => $messages) 
 			{
-			?>
-				<p class="sms-<?=$value['type']?>"><?=$value['sms']?></p>
-			<?php
+				ob_start();
+				?>
+					<div class="sms-container">
+				<?php
+				foreach ($messages as $key => $value)
+				{
+				?>
+					<p class="sms-<?=$value['type']?>"><?=$value['sms']?></p>
+				<?php
+				}
+				?>
+					</div>
+				<?php
+				$result[$keyFam] = ob_get_clean();
 			}
-			?>
-				</div>
-			<?php
-			$result[$keyFam] = ob_get_clean();
 		}
+
+		$_SESSION['messages'] = [];
 
 		return $result;
 	}

@@ -29,4 +29,22 @@ class App
 			session_start();
 		}
 	}
+
+	public static function recordInputs(array $inputs): void
+	{
+		$result = array();
+		foreach ($inputs as $key => $value)
+		{
+			$result[$key] = htmlspecialchars($value);
+		}
+		$_SESSION['recordedInputs'] = $result;
+	}
+
+	public static function getRecordedInputs(): ?array
+	{
+		$result = isset($_SESSION['recordedInputs']) ? $_SESSION['recordedInputs'] : null;
+		$_SESSION['recordedInputs'] = [];
+		return $result;
+	}
+
 }

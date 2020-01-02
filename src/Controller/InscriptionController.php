@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\App;
 use App\Model\User;
 use App\Request\UserRequest;
 use App\MessagesManager;
@@ -21,6 +22,8 @@ Class InscriptionController extends ViewManager
 
 	public function show()
 	{
+		$this->varPage['recordedInputs'] = App::getRecordedInputs();
+		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->loadPage(['InscriptionView', 'show'], $this->varPage);
 	}
 
@@ -33,12 +36,13 @@ Class InscriptionController extends ViewManager
 				$user = new User();
 				$user->setUsername($_POST['username']);
 				$user->setPassword($_POST['password']);
-				$this->varPage['username'] = htmlspecialchars($_POST['username']);
+				App::recordInputs(['username' => $_POST['username']]);
 				if ($user->checkVarHealth())
 				{
 					$userRequest = new UserRequest();
 					if ($userRequest->record($user))
 					{
+						MessagesManager::add(['info' => ['registerComplete' => null]]);
 						header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
 						exit();
 					}
@@ -46,7 +50,7 @@ Class InscriptionController extends ViewManager
 				}
 			}
 		}
-		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->show();
+		header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('inscription'));
+		exit();
 	}	
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\App;
 use App\Auth;
 use App\MessagesManager;
 
@@ -19,6 +20,8 @@ Class ConnexionController extends ViewManager
 
 	public function show(): void
 	{
+		$this->varPage['recordedInputs'] = App::getRecordedInputs();
+		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->loadPage(['ConnexionView', 'show'], $this->varPage);
 	}
 
@@ -30,12 +33,11 @@ Class ConnexionController extends ViewManager
 			{
 				if (is_null(Auth::login($_POST['username'], $_POST['password'])))
 				{
-					$this->varPage['username'] = htmlspecialchars($_POST['username']);
+					App::recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
-					$this->varPage['messages'] = MessagesManager::getMessages();
+					header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
 				}
 			}
 		}
-		$this->show();
 	}
 }
