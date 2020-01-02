@@ -2,16 +2,42 @@
 
 namespace App\Controller;
 
+use App\Auth;
+use App\ErrorsManager;
+
 Class ConnexionController extends ViewManager
 {
-	public function show()
+	public function __construct()
 	{
-		$this->loadPage(['ConnexionView', 'show'], ['title' => 'CONNEXION', 'h1' => 'CONNEXION']);
+		$this->redirectLoggedUser('home');
+
+		$this->varPage = [
+			'title' => 'CONNEXION',
+			'h1' => 'CONNEXION',
+		];
 	}
 
-	public function check()
+	public function show(): void
 	{
-		var_dump($_POST);
-		$this->loadPage(['ConnexionView', 'show'], ['title' => 'CONNEXION', 'h1' => 'CONNEXION']);
-	}	
+		$this->loadPage(['ConnexionView', 'show'], $this->varPage);
+	}
+
+	public function check(): void
+	{
+		if (!empty($_POST))
+		{
+			if (!empty($_POST['username']) && !empty($_POST['password']))
+			{
+				$username = $_POST['username'];
+				$password = $_POST['password'];
+
+				if (is_null(Auth::login($username, $password)))
+				{
+					$this->varPage['username'] = htmlspecialchars($username);
+					$this->varPage['errors'] = ErrorsManager::getMessage(['auth'], $GLOBALS['lang']);
+				}
+			}
+		}
+		$this->show();
+	}
 }

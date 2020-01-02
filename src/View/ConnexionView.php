@@ -6,13 +6,13 @@ Class ConnexionView
 {
 	public static function show($varPage)
 	{
-		$action = $GLOBALS['router']->url('connexion');
 		$inscription = $GLOBALS['router']->url('inscription');
 		ob_start();
 		?>
-			<form action="<?= $action ?>" method="post">
-				<label for="login">Login<input type="text" name="login" id="login" required></label>
-				<label for="pwd">Password<input type="password" name="pwd" id="pwd" required></label>
+			<form action="" method="post">
+				<label for="username">Nom d'Utilisateur<input type="text" name="username" id="username" value=<?= $varPage['username'] ?? '""' ?> required></label>
+				<label for="password">Mot de Passe<input type="password" name="password" id="password" required></label>
+				<?= $varPage['errors']['auth'] ?? '' ?>
 				<input type="submit" value="CONNEXION">
 			</form>
 			<a href="<?= $inscription ?>">Vous n'avez pas encore de compte ?</a>

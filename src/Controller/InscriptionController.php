@@ -11,7 +11,6 @@ Class InscriptionController extends ViewManager
 
 	public function record()
 	{
-		var_dump($_POST);
 		$this->loadPage(['InscriptionView', 'show'], ['title' => 'INSCRIPTION', 'h1' => 'INSCRIPTION', 'jsFileNames' => ['confirmPassword']]);
 	}	
 }

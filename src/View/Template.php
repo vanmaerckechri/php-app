@@ -32,7 +32,7 @@ Class Template
 
 		?>
 			<!DOCTYPE html>
-			<html lang="fr">
+			<html lang=<?= $GLOBALS['lang'] ?>>
 			<head>
 			    <meta charset="UTF-8">
 			    <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -43,13 +43,11 @@ Class Template
 			<body>
 				<header>
 					<h1><?= $varPage['h1'] ?></h1>
-					<p>HEADER</p>
 				</header>
 				<div id="main">
 			    	<?= $varPage['content'] ?>
 			    </div>
 			    <footer>
-					<p>FOOTER</p>
 				</footer>
 				<?= $js ?? '' ?>
 			</body>

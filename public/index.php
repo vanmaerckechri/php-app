@@ -1,8 +1,13 @@
 <?php
 
-require_once('../src/Autoloader.php');
+require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Autoloader.php';
 
+use App\App;
 use App\Router\Router;
+
+App::startSession();
+
+$lang = "fr";
 
 $router = new Router();
 
@@ -21,8 +26,3 @@ $router->get('/test/:id-:slug', 'TestController#show', 'test')->with('id', '[0-9
 $router->get('.+', 'Error404Controller#show', 'error404');
 
 $router->run();
-
-/*
-var_dump($router->url('home'));
-var_dump($router->url('test', ['id' => 45, 'slug' => 'test']));
-*/
