@@ -8,13 +8,18 @@ use App\Request\UserRequest;
 
 class Oauth
 {
-	private function getEndPoint(): object
+	private function getEndPoint(): ?object
 	{
-		return json_decode(file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
+		return json_decode(@file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
 	}
 
-	private function getToken(string $tokenEndPoint): object
+	private function getToken(string $tokenEndPoint): ?object
 	{
+		if (!isset($_GET['code']))
+		{
+			return null;
+		}
+
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
 
 		$content  = array(
@@ -37,11 +42,26 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(file_get_contents($tokenEndPoint, false, $context));
+		return json_decode(@file_get_contents($tokenEndPoint, false, $context));
 	}
 
-	private function getUserInfos(string $userInfoEndPoint, string $accessToken): object
+	private function getUserInfos(): ?object
 	{
+		$endPoint = $this->getEndPoint();
+		if (!$endPoint)
+		{
+			return null;
+		}
+		$tokenEndPoint = $endPoint->token_endpoint;
+		$userInfoEndPoint = $endPoint->userinfo_endpoint;
+
+		$token = $this->getToken($tokenEndPoint);
+		if (!$token)
+		{
+			return null;
+		}
+		$accessToken = $token->access_token;
+
 		$options = array(
 			'http'=>array(
 				'method'=>'GET',
@@ -51,26 +71,18 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(file_get_contents($userInfoEndPoint, false, $context));
+		return json_decode(@file_get_contents($userInfoEndPoint, false, $context));
 	}
 
-	private function getProfile(): object
+	public function login(): bool
 	{
-		$endPoint = $this->getEndPoint();
-		$tokenEndPoint = $endPoint->token_endpoint;
-		$userInfoEndPoint = $endPoint->userinfo_endpoint;
+		$userInfos = $this->getUserInfos();
+		if (!$userInfos)
+		{
+			return false;
+		}
 
-		$token = $this->getToken($tokenEndPoint);
-		$accessToken = $token->access_token;
-
-		return $this->getUserInfos($userInfoEndPoint, $accessToken);
-	}
-
-	public function login(): void
-	{
-		$profile = $this->getProfile();
-
-		$email = $profile->email;
+		$email = $userInfos->email;
 
 		$userRequest = new UserRequest();
 		$user = $userRequest->findUserByEmail($email);
@@ -83,6 +95,7 @@ class Oauth
 			$user = $userRequest->findUserByEmail($email);
 		}
 		Auth::addUserToSession($user);
+		return true;
 	}
 
 }

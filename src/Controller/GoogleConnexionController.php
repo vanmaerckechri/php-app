@@ -9,12 +9,8 @@ class GoogleConnexionController
 {
 	public function check(): void
 	{
-		if (isset($_GET['code']))
-		{
-			$oauth = new Oauth();
-			$oauth->login('google');
-		}
-		else
+		$oauth = new Oauth();
+		if (!$oauth->login('google'))
 		{
 			header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
 		}
