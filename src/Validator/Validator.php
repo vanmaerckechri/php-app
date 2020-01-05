@@ -18,8 +18,17 @@ class Validator
 
 	public static function checkType($data, string $type): bool
 	{
-		$checkFunction = "is_$type";
-		return $checkFunction($data);
+		switch ($type)
+		{
+			case 'email':
+				return filter_var($data, FILTER_VALIDATE_EMAIL);
+			case 'int':
+				return filter_var($data, FILTER_VALIDATE_INT);
+			case 'string':
+				return is_string($data);
+			default:
+				return false;
+		}
 	}
 
 	public static function checkMinLength($data, int $length): bool
@@ -47,9 +56,10 @@ class Validator
 			}
 			if ($k === 'type')
 			{		
+				$type = strtolower($v);
 				if (!self::checkType($data, $v))
 				{
-					$errors[$outputId][$k] = $v;
+					$errors[$outputId]['type_' . $type] = null;
 				}
 			}
 			if ($k === 'minLength')

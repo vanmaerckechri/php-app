@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\App;
-use App\Auth;
+use App\Authentification\Auth;
 use App\MessagesManager;
 
 Class ConnexionController extends ViewManager
@@ -20,6 +20,10 @@ Class ConnexionController extends ViewManager
 
 	public function show(): void
 	{
+		require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
+		$this->varPage['google_id'] = GOOGLE_ID;
+		$this->varPage['googleCoUri'] = 'http://127.0.0.1/' . $GLOBALS['router']->url('googleConnexion');
+		$this->varPage['inscriptionUrl'] = $GLOBALS['router']->url('inscription');
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->loadPage(['ConnexionView', 'show'], $this->varPage);

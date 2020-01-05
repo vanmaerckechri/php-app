@@ -8,12 +8,13 @@ class User
 {
 	private $id;
 	private $role;
+	private $email;
 	private $username;
 	private $password;
 
 	public function checkVarHealth(): bool
 	{
-		$essentialVariables = [$this->username, $this->password];
+		$essentialVariables = [$this->email, $this->username, $this->password];
 		foreach ($essentialVariables as $value)
 		{
 			if (is_null($value))
@@ -76,6 +77,26 @@ class User
 		]))
 		{
 			$this->password = password_hash($password, PASSWORD_DEFAULT);
+		}
+
+		return $this;
+	}
+
+	public function getEmail(): ?string
+	{
+		return $this->email;
+	}
+
+	public function setEmail(string $email): self
+	{
+		if (Validator::validate('emailSms', $email, [
+			'required' => true,
+			'type' => 'email',
+			'minLength' => 4,
+			'maxLength' => 254
+		]))
+		{
+			$this->email = $email;
 		}
 
 		return $this;

@@ -29,27 +29,40 @@ Class InscriptionController extends ViewManager
 
 	public function record()
 	{
-		if (!empty($_POST))
+		if (isset($_POST['username']) && isset($_POST['password']))
 		{
-			if (isset($_POST['username']) && isset($_POST['password']))
+			App::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
+
+			$user = App::hydrateModel(new User(), [
+				'email' => $_POST['email'],
+				'username' => $_POST['username'],
+				'password' => $_POST['password']
+			]);
+			// if entries are validated...
+			if ($user)
 			{
-				$user = new User();
-				$user->setUsername($_POST['username']);
-				$user->setPassword($_POST['password']);
-				App::recordInputs(['username' => $_POST['username']]);
-				if ($user->checkVarHealth())
+				// try to record in db...
+				$userRequest = new UserRequest();
+				$columnsConflict = $userRequest->record($user);
+				if (!$columnsConflict)
 				{
-					$userRequest = new UserRequest();
-					if ($userRequest->record($user))
+					MessagesManager::add(['info' => ['registerComplete' => null]]);
+					header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
+					exit();
+				}
+				// email or username already used!
+				else
+				{
+					foreach ($columnsConflict as $column)
 					{
-						MessagesManager::add(['info' => ['registerComplete' => null]]);
-						header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
-						exit();
+						$name = $column . 'Sms';
+						$sms = $column . 'Taken';
+						MessagesManager::add([$name => [$sms => null]]);
 					}
-					MessagesManager::add(['usernameSms' => ['usernameTaken' => null]]);
 				}
 			}
 		}
+
 		header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('inscription'));
 		exit();
 	}	

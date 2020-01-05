@@ -9,9 +9,9 @@ App::startSession();
 
 $lang = "fr";
 
-$router = new Router();
+$router = new Router($_GET['url']);
 
-$router->get('/', 'HomeController#show', 'home');
+$router->get('/google-connexion', 'GoogleConnexionController#check', 'googleConnexion');
 
 $router->get('/connexion', 'ConnexionController#show', 'connexion');
 
@@ -24,5 +24,7 @@ $router->post('/inscription', 'InscriptionController#record', 'inscription');
 $router->get('/test/:id-:slug', 'TestController#show', 'test')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
 $router->get('.+', 'Error404Controller#show', 'error404');
+
+$router->get('/', 'HomeController#show', 'home');
 
 $router->run();

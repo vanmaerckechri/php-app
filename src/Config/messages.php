@@ -17,8 +17,15 @@ return array(
 	'usernameTaken' => array(
 		'type' => 'error',
 		'content' => array(
-			'fr' => 'Le nom d\'utilisateur existe déjà',
-			'en' => 'Username already exists'
+			'fr' => 'Le nom d\'utilisateur est déjà utilisé',
+			'en' => 'Username is already in use'
+		)
+	),
+	'emailTaken' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'L\'adresse email est déjà utilisée',
+			'en' => 'The email address is already used'
 		)
 	),
 	'required' => array(
@@ -42,11 +49,25 @@ return array(
 			'en' => 'This field must contain a maximum of {{x}} characters'
 		)
 	),
-	'type' => array(
+	'type_int' => array(
 		'type' => 'error',
 		'content' => array(
-			'fr' => 'Ce champ est de type {{x}}',
-			'en' => 'This field is of type {{x}}'
+			'fr' => 'Ce champ n\'accepte que les nombres entiers',
+			'en' => 'This field accepts only whole numbers'
+		)
+	),
+	'type_email' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'Adresse email non valide',
+			'en' => 'Email address Invalid'
+		)
+	),
+	'type_string' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'Ce champ doit être une chaîne de caractères',
+			'en' => 'This field must be a character string'
 		)
 	)
 );

@@ -43,7 +43,7 @@ class MessagesManager
 	{
 		$result = array();
 
-		if ($_SESSION['messages'])
+		if (isset($_SESSION['messages']))
 		{
 			foreach ($_SESSION['messages'] as $keyFam => $messages) 
 			{

@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Auth;
+use App\Authentification\Auth;
 
 Class ViewManager
 {
