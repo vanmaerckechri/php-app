@@ -8,6 +8,7 @@ Class HomeView
 	{
 		ob_start();
 		?>
+			<h2><?=$varPage['h2'] ?? ''?></h2>
 		<?php
 		return ob_get_clean();
 	}

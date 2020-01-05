@@ -2,13 +2,19 @@
 
 namespace App\View;
 
+use App\View\HeaderView;
+
 Class Template
 {
-	private static function importJs($jsFileNames)
+	private static function importJs($varPage)
 	{
-		ob_start();
+		if (!isset($varPage['jsFileNames']))
+		{
+			return null;
+		}
 
-		foreach ($jsFileNames as $fileName) 
+		ob_start();
+		foreach ($varPage['jsFileNames'] as $fileName) 
 		{
 			$path = '/public/js/' . $fileName . '.js';
 			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
@@ -17,16 +23,13 @@ Class Template
 			<script type="text/javascript" src="<?= $path ?>"></script>
 			<?php
 		}
-
 		return ob_get_clean();
 	}
 
 	public static function load($varPage)
 	{
-		if (isset($varPage['jsFileNames']))
-		{
-			$js = SELF::importJs($varPage['jsFileNames']);
-		}
+		$header = HeaderView::get($varPage);
+		$js = SELF::importJs($varPage);
 
 		ob_start();
 
@@ -42,12 +45,21 @@ Class Template
 			</head>
 			<body>
 				<header>
-					<h1><?= $varPage['h1'] ?></h1>
+					<div class="container">
+						<?=$header?>
+					</div>
 				</header>
-				<div id="main">
-			    	<?= $varPage['content'] ?>
+				<div class="sms-container">
+					<?= $varPage['messages']['info'] ?? '' ?>
+				</div>
+				<div id="main" class="main">
+					<div class="container">
+			    		<?= $varPage['content'] ?>
+			    	</div>
 			    </div>
 			    <footer>
+			    	<div class="container">
+					</div>
 				</footer>
 				<?= $js ?? '' ?>
 			</body>

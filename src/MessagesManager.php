@@ -48,18 +48,12 @@ class MessagesManager
 			foreach ($_SESSION['messages'] as $keyFam => $messages) 
 			{
 				ob_start();
-				?>
-					<div class="sms-container">
-				<?php
 				foreach ($messages as $key => $value)
 				{
 				?>
 					<p class="sms-<?=$value['type']?>"><?=$value['sms']?></p>
 				<?php
 				}
-				?>
-					</div>
-				<?php
 				$result[$keyFam] = ob_get_clean();
 			}
 		}

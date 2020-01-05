@@ -7,6 +7,13 @@ return array(
 			'en' => 'A validation email has just been sent to you'
 		)
 	),
+	'disconnectComplete' => array(
+		'type' => 'info',
+		'content' => array(
+			'fr' => 'Vous êtes déconnecté',
+			'en' => 'You are disconnected'
+		)
+	),
 	'auth' => array(
 		'type' => 'error',
 		'content' => array(

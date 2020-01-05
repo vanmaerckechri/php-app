@@ -11,16 +11,19 @@ body
 }
 header
 {
-	margin-bottom: 2rem;
-	background-color: pink;
+	border-bottom: 2px solid black;
+	background-color: rgb(200, 200, 200);
 }
 h1
 {
 	text-align: center;
 }
+h2
+{
+	margin: 2rem 0;
+}
 form
 {
-	margin: 0 auto;
 	max-width: 350px;
 	width: 100%;
 }
@@ -36,11 +39,37 @@ input
 	display: block;
 	width: 100%;
 }
+.main
+{
+	width: 100%;
+}
+.main .container
+{
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+.container
+{
+	margin: 0 auto;
+	padding: 0.5rem 1rem;
+	display: flex;
+	justify-content: space-between;
+	align-items: baseline;
+	max-width: 1280px;
+	width: 100%;
+}
 .btn
 {
 	margin: 1rem 0;
 	padding: 0.2rem;
+	display: block;
+	text-decoration: none;
+	text-align: center;
+	font-family: inherit;
 	font-size: 1.2rem;
+	color: black;
+	background-color: white;
 	transition: background-color 0.2s;
 }
 .btn:hover
@@ -48,10 +77,19 @@ input
 	cursor: pointer;
 	background-color: orange;
 }
+.sms-container
+{
+	width: 100%;
+}
+.sms-container .sms-error, .sms-container .sms-info
+{
+	text-align: center;
+}
 .sms-error, .sms-info
 {
 	padding: 0.1rem 0.2rem;
-	background-color: black;	
+	width: 100%;
+	background-color: black;
 }
 .sms-error
 {

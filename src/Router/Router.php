@@ -58,6 +58,8 @@ class Router
 		{
 			throw new RouterException('No route matches this name');
 		}
-		return $this->namedRoutes[$name]->getUrl($params);
+
+		$url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $this->namedRoutes[$name]->getUrl($params);
+		return $url;
 	}
 }

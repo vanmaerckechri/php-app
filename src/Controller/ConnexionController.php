@@ -13,8 +13,9 @@ Class ConnexionController extends ViewManager
 		$this->redirectLoggedUser('home');
 
 		$this->varPage = [
-			'title' => 'CONNEXION',
-			'h1' => 'CONNEXION',
+			'title' => 'APP-PHP::CONNEXION',
+			'h1' => 'APP-PHP',
+			'h2' => 'CONNEXION',
 		];
 	}
 
@@ -22,11 +23,11 @@ Class ConnexionController extends ViewManager
 	{
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
 		$this->varPage['google_id'] = GOOGLE_ID;
-		$this->varPage['googleCoUri'] = 'http://127.0.0.1/' . $GLOBALS['router']->url('googleConnexion');
+		$this->varPage['googleCoUri'] = $GLOBALS['router']->url('googleConnexion');
 		$this->varPage['inscriptionUrl'] = $GLOBALS['router']->url('inscription');
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->loadPage(['ConnexionView', 'show'], $this->varPage);
+		$this->loadPage(['ConnexionView', 'show']);
 	}
 
 	public function check(): void
@@ -39,7 +40,7 @@ Class ConnexionController extends ViewManager
 				{
 					App::recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
-					header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
+					header('Location: ' . $GLOBALS['router']->url('connexion'));
 				}
 			}
 		}

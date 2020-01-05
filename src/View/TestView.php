@@ -9,7 +9,7 @@ Class TestView
 		ob_start();
 
 		?>
-			<p>MAIN</p>
+			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<ul>
 				<li>id = <?= htmlspecialchars($varPage['id']) ?></li>
 				<li>slug = <?= htmlspecialchars($varPage['slug']) ?></li>

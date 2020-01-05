@@ -43,7 +43,7 @@ class Auth
 	public static function addUserToSession(User $user): void
 	{
 		$_SESSION['auth'] = $user->getId();
-		header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('home'));
+		header('Location: ' . $GLOBALS['router']->url('home'));
 		exit();		
 	}
 }

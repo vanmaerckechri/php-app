@@ -9,6 +9,7 @@ Class InscriptionView
 		$action = $GLOBALS['router']->url('inscription');
 		ob_start();
 		?>
+			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<form action="<?= $action ?>" method="post" id='form'>
 				<label for="username">Login<input type="text" name="username" id="username" value="<?= $varPage['recordedInputs']['username'] ?? '' ?>" required><?= $varPage['messages']['usernameSms'] ?? '' ?></label>
 				<label for="password">Password<input type="password" name="password" id="password" required><?= $varPage['messages']['passwordSms'] ?? '' ?></label>

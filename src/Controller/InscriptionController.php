@@ -14,8 +14,9 @@ Class InscriptionController extends ViewManager
 		$this->redirectLoggedUser('home');
 
 		$this->varPage = [
-			'title' => 'INSCRIPTION',
-			'h1' => 'INSCRIPTION',
+			'title' => 'APP-PHP::INSCRIPTION',
+			'h1' => 'APP-PHP',
+			'h2' => 'INSCRIPTION',
 			'jsFileNames' => ['confirmPassword']
 		];
 	}
@@ -24,7 +25,7 @@ Class InscriptionController extends ViewManager
 	{
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->loadPage(['InscriptionView', 'show'], $this->varPage);
+		$this->loadPage(['InscriptionView', 'show']);
 	}
 
 	public function record()
@@ -47,7 +48,7 @@ Class InscriptionController extends ViewManager
 				if (!$columnsConflict)
 				{
 					MessagesManager::add(['info' => ['registerComplete' => null]]);
-					header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('connexion'));
+					header('Location: ' . $GLOBALS['router']->url('connexion'));
 					exit();
 				}
 				// email or username already used!
@@ -63,7 +64,7 @@ Class InscriptionController extends ViewManager
 			}
 		}
 
-		header('Location: ' . DIRECTORY_SEPARATOR . $GLOBALS['router']->url('inscription'));
+		header('Location: ' . $GLOBALS['router']->url('inscription'));
 		exit();
 	}	
 }

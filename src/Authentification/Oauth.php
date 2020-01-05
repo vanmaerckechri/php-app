@@ -10,7 +10,7 @@ class Oauth
 {
 	private function getEndPoint(): ?object
 	{
-		return json_decode(@file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
+		return json_decode(file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
 	}
 
 	private function getToken(string $tokenEndPoint): ?object
@@ -26,7 +26,7 @@ class Oauth
 	        'code' => $_GET['code'],
 			'client_id' => GOOGLE_ID,
 			'client_secret' => GOOGLE_SECRET,
-			'redirect_uri' => 'http://127.0.0.1/' . $GLOBALS['router']->url('googleConnexion'),
+			'redirect_uri' => $GLOBALS['router']->url('googleConnexion'),
 			'grant_type' => 'authorization_code'
 		);
 
@@ -42,7 +42,7 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(@file_get_contents($tokenEndPoint, false, $context));
+		return json_decode(file_get_contents($tokenEndPoint, false, $context));
 	}
 
 	private function getUserInfos(): ?object
@@ -71,7 +71,7 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(@file_get_contents($userInfoEndPoint, false, $context));
+		return json_decode(file_get_contents($userInfoEndPoint, false, $context));
 	}
 
 	public function login(): bool

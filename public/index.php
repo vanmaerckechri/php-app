@@ -23,8 +23,10 @@ $router->post('/inscription', 'InscriptionController#record', 'inscription');
 
 $router->get('/test/:id-:slug', 'TestController#show', 'test')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
-$router->get('.+', 'Error404Controller#show', 'error404');
+$router->get('/disconnect', 'DisconnectionController#check', 'disconnect');
 
 $router->get('/', 'HomeController#show', 'home');
+
+$router->get('.+', 'Error404Controller#show', 'error404');
 
 $router->run();
