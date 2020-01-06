@@ -21,6 +21,51 @@ trait Model
 			$this->$setVar($v);
 		}
 	}
+
+	public function disableFilterUnique(): self
+	{
+		$this->switchFilterUniqueStatus(false);
+		return $this;
+	}
+
+	public function enableFilterUnique(): self
+	{
+		$this->switchFilterUniqueStatus(true);
+		return $this;
+	}
+
+	private function switchFilterUniqueStatus(bool $status): void
+	{
+		foreach ($this->rules as $varName => $rules)
+		{
+			foreach ($rules as $ruleName => $value)
+			{
+				if ($ruleName === 'unique')
+				{
+					$this->rules[$varName][$ruleName]['status'] = $status;
+				}
+			}
+		}
+	}
+
+	private function initFilterUnique(string $className, object $request): void
+	{
+		foreach ($this->rules as $varName => $rules)
+		{
+			foreach ($rules as $ruleName => $value)
+			{
+				if ($ruleName === 'unique' && $value === true)
+				{
+					$this->rules[$varName][$ruleName] = array(
+						'status' => true,
+						'class' => $className,
+						'column' => $varName,
+						'request' => $request
+					);
+				}
+			}
+		}
+	}
 /*
 	private function isValid(string $value): ?string
 	{

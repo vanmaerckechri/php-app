@@ -3,6 +3,7 @@
 namespace App\Model;
 
 use App\Validator\Validator;
+use App\Request\UserRequest;
 
 class User
 {
@@ -19,12 +20,14 @@ class User
 			'only' => array('user', 'admin')
 		),
 		'email' => array(
+			'unique' => true,
 			'required' => true,
 			'type' => 'email',
 			'minLength' => 4,
 			'maxLength' => 254
 		),
 		'username' => array(
+			'unique' => true,
 			'required' => true,
 			'type' => 'string',
 			'minLength' => 4,
@@ -37,6 +40,10 @@ class User
 			'maxLength' => 254
 		)
 	);
+	public function __construct()
+	{
+		$this->initFilterUnique('User', new UserRequest);
+	}
 
 	public function getId(): ?int
 	{

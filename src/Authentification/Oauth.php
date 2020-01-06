@@ -83,17 +83,19 @@ class Oauth
 		}
 
 		$email = $userInfos->email;
-
-		$userRequest = new UserRequest();
-		$user = $userRequest->findUserByEmail($email);
-
-		if (!$user)
+		$user = new User();
+		$user->setEmail($email);
+		// if the email is not yet present in the db
+		if (!is_null($user->getEmail()))
 		{
-			$user = new User();
-			$user->setEmail($email);
+			$userRequest = new UserRequest();
 			$userRequest->recordOauth($user, true);
-			$user = $userRequest->findUserByEmail($email);
 		}
+		else
+		{
+			$user->disableFilterUnique()->setEmail($email);
+		}
+
 		Auth::addUserToSession($user);
 		return true;
 	}

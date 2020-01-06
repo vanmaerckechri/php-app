@@ -24,7 +24,7 @@ class Auth
 	public static function login(string $username, string $password): ?User
 	{
 		$user = new User();
-		$user->setMultiple(['username' => $username, 'password' => $password]);
+		$user->disableFilterUnique()->setMultiple(['username' => $username, 'password' => $password]);
 		if (!is_null($user->getUsername()) && !is_null($user->getPassword()))
 		{
 			$userRequest = new UserRequest();

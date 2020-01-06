@@ -6,6 +6,16 @@ use App\MessagesManager;
 
 class Validator
 {
+	public static function checkUnique($data, array $value): bool
+	{
+		$method = 'find' . ucfirst($value['class']) . 'By' . ucfirst($value['column']);
+		if ($value['request']->$method($data))
+		{
+			return false;
+		}
+		return true;
+	}
+
 	public static function checkRequired($data, bool $value): bool
 	{
 		if ($value === false)
@@ -93,6 +103,18 @@ class Validator
 				if (!self::checkMaxLength($data, $v))
 				{
 					$errors[$outputId][$k] = $v;
+				}
+			}
+			if ($k === 'unique')
+			{
+				// check if the value is unique only if the previous filters have been validated
+				if (!isset($errors[$outputId][$k]) && $v['status'] === true)
+				{
+					if (!self::checkUnique($data, $v))
+					{
+						$smsId = $v['column'] . 'Taken';
+						$errors[$outputId][$smsId] = null;
+					}
 				}
 			}
 		}
