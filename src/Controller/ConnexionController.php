@@ -27,7 +27,7 @@ Class ConnexionController extends ViewManager
 		$this->varPage['inscriptionUrl'] = $GLOBALS['router']->url('inscription');
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->loadPage(['ConnexionView', 'show']);
+		$this->renderer(['ConnexionView', 'show']);
 	}
 
 	public function check(): void

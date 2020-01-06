@@ -25,42 +25,51 @@ Class InscriptionController extends ViewManager
 	{
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->loadPage(['InscriptionView', 'show']);
+		$this->renderer(['InscriptionView', 'show']);
 	}
 
 	public function record()
 	{
-		if (isset($_POST['username']) && isset($_POST['password']))
+		if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email']))
 		{
+			$userRequest = new UserRequest();
+			$isValid = true;
+
 			App::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
 
-			$user = App::hydrateModel(new User(), [
+			// use automatic validation rules with setMultiple
+			$user = new User();
+			$user->setMultiple([
 				'email' => $_POST['email'],
 				'username' => $_POST['username'],
 				'password' => $_POST['password']
 			]);
-			// if entries are validated...
-			if ($user)
+
+			// if the email and username entries have been validated, check if it does not already exist in the database
+			if (!is_null($user->getEmail()) && $userRequest->findUserByEmail($user->getEmail()))
 			{
-				// try to record in db...
-				$userRequest = new UserRequest();
-				$columnsConflict = $userRequest->record($user);
-				if (!$columnsConflict)
-				{
-					MessagesManager::add(['info' => ['registerComplete' => null]]);
-					header('Location: ' . $GLOBALS['router']->url('connexion'));
-					exit();
-				}
-				// email or username already used!
-				else
-				{
-					foreach ($columnsConflict as $column)
-					{
-						$name = $column . 'Sms';
-						$sms = $column . 'Taken';
-						MessagesManager::add([$name => [$sms => null]]);
-					}
-				}
+				$isValid = false;
+				MessagesManager::add(['emailSms' => ['emailTaken' => null]]);				
+			}
+			if (!is_null($user->getUsername()) && $userRequest->findUserByUsername($user->getUsername()))
+			{
+				$isValid = false;
+				MessagesManager::add(['usernameSms' => ['usernameTaken' => null]]);
+			}
+
+			// check if the password have been validated
+			if (is_null($user->getPassword()))
+			{
+				$isValid = false;
+			}
+
+			// record if all entries are valid
+			if ($isValid === true)
+			{
+				$userRequest->record($user);
+				MessagesManager::add(['info' => ['registerComplete' => null]]);
+				header('Location: ' . $GLOBALS['router']->url('connexion'));
+				exit();
 			}
 		}
 

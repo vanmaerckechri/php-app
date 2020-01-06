@@ -2,23 +2,18 @@
 
 namespace App\Request;
 
-use PDO;
-use App\App;
 use App\Model\User;
 
 class UserRequest
 {
-	public function find()
-	{
-
-	}
+	use Request;
 
 	public function findUserById(int $id): ?User
 	{
-
-		$stmt = App::getPdo()->prepare("SELECT * FROM user WHERE id = :id");
-		$stmt->bindValue(':id', $id, PDO::PARAM_INT);
-		$stmt->execute();
+		$stmt = $this->select(
+			'SELECT * FROM user WHERE id = :id',
+			['id' => [$id, 'int']]
+		);
 		//$stmt->setFetchMode(PDO::FETCH_CLASS, User::class);
 		$user = $stmt->fetchObject(User::class);
 		return $user ?: null;
@@ -26,55 +21,43 @@ class UserRequest
 
 	public function findUserByUsername(string $username): ?User
 	{
-		$stmt = App::getPdo()->prepare("SELECT * FROM user WHERE username = :username");
-		$stmt->bindValue(':username', $username, PDO::PARAM_STR);
-		$stmt->execute();
+		$stmt = $this->select(
+			'SELECT * FROM user WHERE username = :username',
+			['username' => [$username, 'str']]
+		);
 		$user = $stmt->fetchObject(User::class);
 		return $user ?: null;
 	}
 
 	public function findUserByEmail(string $email): ?User
 	{
-		$stmt = App::getPdo()->prepare("SELECT * FROM user WHERE email = :email");
-		$stmt->bindValue(':email', $email, PDO::PARAM_STR);
-		$stmt->execute();
+		$stmt = $this->select(
+			'SELECT * FROM user WHERE email = :email',
+			['email' => [$email, 'str']]
+		);
 		$user = $stmt->fetchObject(User::class);
 		return $user ?: null;
 	}
 
-	public function record(User $user): ?array
+	public function record(User $user): void
 	{
-		$userByEmail = $this->findUserByEmail($user->getEmail());
-		$userByUsername = $this->findUserByUsername($user->getUsername());
-
-		if (!$userByEmail && !$userByUsername)
-		{
-			$stmt = App::getPdo()->prepare("INSERT INTO user (email, username, password) VALUES (:email, :username, :password)");
-			$stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
-			$stmt->bindValue(':username', $user->getUsername(), PDO::PARAM_STR);
-			$stmt->bindValue(':password', $user->getPassword(), PDO::PARAM_STR);
-			$stmt->execute();
-			return null;
-		}
-		else
-		{
-			$columnConflict = array();
-			if ($userByUsername && $userByUsername->getUsername() === $user->getUsername())
-			{
-				$columnConflict[] = 'username';
-			}
-			if ($userByEmail && $userByEmail->getEmail() === $user->getEmail())
-			{
-				$columnConflict[] = 'email';
-			}
-			return $columnConflict;
-		}
+		$this->Insert(
+			'INSERT INTO user (email, username, password) VALUES (:email, :username, :password)',
+			[
+				'email' => [$user->getEmail(), 'str'],
+				'username' => [$user->getUsername(), 'str'],
+				'password' => [$user->getPassword(), 'str'],
+			]
+		);
 	}
 
 	public function recordOauth(User $user): void
 	{
-		$stmt = App::getPdo()->prepare("INSERT INTO user (email) VALUES (:email)");
-		$stmt->bindValue(':email', $user->getEmail(), PDO::PARAM_STR);
-		$stmt->execute();		
+		$this->Insert(
+			'INSERT INTO user (email) VALUES (:email)',
+			[
+				'email' => [$user->getEmail(), 'str'],
+			]
+		);	
 	}
 }

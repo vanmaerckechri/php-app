@@ -42,6 +42,13 @@ return array(
 			'en' => 'Required field'
 		)
 	),
+	'only' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'Seules les entrées suivantes sont acceptées {{x}}',
+			'en' => 'Only the following entries are accepted {{x}}'
+		)
+	),
 	'minLength' => array(
 		'type' => 'error',
 		'content' => array(

@@ -15,6 +15,6 @@ Class Error404Controller extends ViewManager
 	}
 	public function show()
 	{
-		$this->loadPage(['error404View', 'show']);
+		$this->renderer(['error404View', 'show']);
 	}	
 }

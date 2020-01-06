@@ -34,6 +34,7 @@ class MessagesManager
 					$sms = $value;
 					$smsType = $customType;
 				}
+				$deb[] = $sms;
 				$_SESSION['messages'][$keyFam][] = ['sms' => $sms, 'type' => $smsType];
 			}
 		}

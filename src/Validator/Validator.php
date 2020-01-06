@@ -16,6 +16,18 @@ class Validator
 		return !empty($data);
 	}
 
+	public static function checkOnly($data, array $str): bol
+	{
+		foreach ($str as $value)
+		{
+			if ($value === $data)
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
 	public static function checkType($data, string $type): bool
 	{
 		switch ($type)
@@ -52,6 +64,13 @@ class Validator
 				if (!self::checkRequired($data, $v))
 				{
 					$errors[$outputId][$k] = null;
+				}
+			}
+			if ($k === 'only')
+			{
+				if (!self::checkOnly($data, $v))
+				{
+					$errors[$outputId][$k] = implode(", ", $v);
 				}
 			}
 			if ($k === 'type')

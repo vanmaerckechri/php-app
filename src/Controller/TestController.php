@@ -17,6 +17,6 @@ Class TestController extends ViewManager
 	{
 		$this->varPage['id'] = $id;
 		$this->varPage['slug'] = $slug;
-		$this->loadPage(['TestView', 'show']);
+		$this->renderer(['TestView', 'show']);
 	}	
 }

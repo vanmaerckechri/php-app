@@ -8,7 +8,7 @@ Class ViewManager
 {
 	protected $varPage = array();
 
-	protected function loadPage(array $view): void
+	protected function renderer(array $view): void
 	{
 		$class = "App\View\\$view[0]";
 		$method = $view[1];

@@ -46,20 +46,4 @@ class App
 		$_SESSION['recordedInputs'] = [];
 		return $result;
 	}
-
-	public static function hydrateModel(object $model, array $inputs): ?object
-	{
-		foreach ($inputs as $k => $v) 
-		{
-			$var = ucfirst($k);
-			$setVar = 'set' . $var;
-			$model->$setVar($v);
-			$getVar = 'get' . $var;
-			if (!$model->$getVar())
-			{
-				return null;
-			}
-		}
-		return $model;
-	}
 }
