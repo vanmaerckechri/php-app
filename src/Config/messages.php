@@ -77,7 +77,7 @@ return array(
 			'en' => 'Email address Invalid'
 		)
 	),
-	'type_string' => array(
+	'type_varchar' => array(
 		'type' => 'error',
 		'content' => array(
 			'fr' => 'Ce champ doit être une chaîne de caractères',

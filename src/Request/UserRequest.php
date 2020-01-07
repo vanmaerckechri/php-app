@@ -42,7 +42,7 @@ class UserRequest
 	public function record(User $user): void
 	{
 		$this->Insert(
-			'INSERT INTO user (email, username, password) VALUES (:email, :username, :password)',
+			'INSERT INTO user (email, username, password) VALUES (:email, :username, :password) ON DUPLICATE KEY UPDATE username = username + 1',
 			[
 				'email' => [$user->getEmail(), 'str'],
 				'username' => [$user->getUsername(), 'str'],
@@ -51,13 +51,22 @@ class UserRequest
 		);
 	}
 
-	public function recordOauth(User $user): void
+	public function incrementIfTaken(string $column, string $type, string $value): ?string
 	{
-		$this->Insert(
-			'INSERT INTO user (email) VALUES (:email)',
-			[
-				'email' => [$user->getEmail(), 'str'],
-			]
-		);	
+		$newValue = $value;
+		for ($i = 100; $i >= 0; --$i)
+		{
+			$stmt = $this->select(
+				"SELECT * FROM user WHERE $column = :$column",
+				[$column => [$newValue, $type]]
+			);
+			$user = $stmt->fetchObject(User::class);
+			if (!$user)
+			{
+				return $newValue;
+			}
+			$newValue = !is_numeric(substr($newValue, -1)) ? $newValue . '1' : ++$newValue;
+		}
+		return null;
 	}
 }

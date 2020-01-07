@@ -4,6 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Autoloader.php';
 
 use App\App;
 use App\Router\Router;
+use App\Migration\Migration;
 
 App::startSession();
 

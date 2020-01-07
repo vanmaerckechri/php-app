@@ -46,7 +46,7 @@ class Validator
 				return filter_var($data, FILTER_VALIDATE_EMAIL);
 			case 'int':
 				return filter_var($data, FILTER_VALIDATE_INT);
-			case 'string':
+			case 'varchar':
 				return is_string($data);
 			default:
 				return false;

@@ -36,14 +36,14 @@ Class InscriptionController extends ViewManager
 
 			// use automatic validation rules with setMultiple
 			$user = new User();
-			$user->setMultiple([
+			$isValid = $user->isValidToInsert([
 				'email' => $_POST['email'],
 				'username' => $_POST['username'],
 				'password' => $_POST['password']
 			]);
 
 			// record if all values are valid
-			if (!is_null($user->getPassword()) && !is_null($user->getEmail()) && !is_null($user->getUsername()))
+			if ($isValid)
 			{
 				$userRequest = new UserRequest();
 				$userRequest->record($user);

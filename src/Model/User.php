@@ -4,6 +4,7 @@ namespace App\Model;
 
 use App\Validator\Validator;
 use App\Request\UserRequest;
+use App\Schema\UserSchema;
 
 class User
 {
@@ -15,34 +16,9 @@ class User
 	private $username;
 	private $password;
 
-	private $rules = array(
-		'role' => array(
-			'only' => array('user', 'admin')
-		),
-		'email' => array(
-			'unique' => true,
-			'required' => true,
-			'type' => 'email',
-			'minLength' => 4,
-			'maxLength' => 254
-		),
-		'username' => array(
-			'unique' => true,
-			'required' => true,
-			'type' => 'string',
-			'minLength' => 4,
-			'maxLength' => 30
-		),
-		'password' => array(
-			'required' => true,
-			'type' => 'string',
-			'minLength' => 4,
-			'maxLength' => 254
-		)
-	);
 	public function __construct()
 	{
-		$this->initFilterUnique('User', new UserRequest);
+		$this->initValidationRules('User', new UserRequest, UserSchema::getSchema());
 	}
 
 	public function getId(): ?int

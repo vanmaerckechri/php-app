@@ -4,52 +4,34 @@ namespace App\Model;
 
 trait Model
 {
-	private $requiredVar = array();
+	protected $rules;
 
-	public function __construct()
+	public function isValidToSelect(array $inputs): bool
 	{
-		//$this->recordRequiredVarName();
-	}
+		$this->setMultiple($inputs, false);
 
-	public function setMultiple(array $inputs): void
-	{
-		$invalidVar = array();
-		foreach ($inputs as $k => $v) 
+		if ($this->isReadyToSelect($inputs) === true)
 		{
-			$var = ucfirst($k);
-			$setVar = 'set' . $var;
-			$this->$setVar($v);
+			return true;
 		}
+		return false;
 	}
 
-	public function disableFilterUnique(): self
+	public function isValidToInsert(array $inputs): bool
 	{
-		$this->switchFilterUniqueStatus(false);
-		return $this;
-	}
+		$this->setMultiple($inputs, true);
 
-	public function enableFilterUnique(): self
-	{
-		$this->switchFilterUniqueStatus(true);
-		return $this;
-	}
-
-	private function switchFilterUniqueStatus(bool $status): void
-	{
-		foreach ($this->rules as $varName => $rules)
+		if ($this->isReadyToInsert() === true)
 		{
-			foreach ($rules as $ruleName => $value)
-			{
-				if ($ruleName === 'unique')
-				{
-					$this->rules[$varName][$ruleName]['status'] = $status;
-				}
-			}
+			return true;
 		}
+		return false;
 	}
 
-	private function initFilterUnique(string $className, object $request): void
+	protected function initValidationRules(string $className, object $request, array $schema): void
 	{
+		$this->rules = $schema;
+
 		foreach ($this->rules as $varName => $rules)
 		{
 			foreach ($rules as $ruleName => $value)
@@ -63,26 +45,43 @@ trait Model
 						'request' => $request
 					);
 				}
+				if ($ruleName === 'default' && $value === 'NOT NULL' && (!isset($rules['autoInc']) || $rules['autoInc'] !== 'AUTO_INCREMENT' ))
+				{
+					$this->rules[$varName]['required'] = true;
+				}
+
 			}
 		}
 	}
-/*
-	private function isValid(string $value): ?string
+
+	private function setMultiple(array $inputs, bool $isTestUniqueFilter): void
 	{
-		$get = 'get' . ucfirst($value);
-		if (is_null($this->$get()))
+		$invalidVar = array();
+		foreach ($inputs as $k => $v) 
 		{
-			return $value;
+			$var = ucfirst($k);
+			$setVar = 'set' . $var;
+			if (isset($this->rules[$k]['unique']['status']))
+			{
+				$this->rules[$k]['unique']['status'] = $isTestUniqueFilter;
+			}
+			$this->$setVar($v);
 		}
-		return null;
 	}
 
-	public function isValidToRecord(): bool
+	private function isReadyToSelect(array $inputs): bool
 	{
-		return $this->isValid($this->requiredVar);
+		foreach ($inputs as $varName => $value)
+		{
+			if ($this->$varName === null)
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 
-	private function recordRequiredVarName(): void
+	private function isReadyToInsert(): bool
 	{
 		foreach ($this->rules as $varName => $rules)
 		{
@@ -90,10 +89,13 @@ trait Model
 			{
 				if ($ruleName === 'required' && $value === true)
 				{
-					$this->requiredVar[] = $varName;
+					if ($this->$varName === null)
+					{
+						return false;
+					}
 				}
 			}
 		}
+		return true;
 	}
-*/
 }

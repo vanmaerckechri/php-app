@@ -12,7 +12,7 @@ class App
 	{
 		if (!self::$pdo)
 		{
-			$settings = require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/db.php';
+			$settings = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/db.php';
 			self::$pdo = new PDO("mysql:host=$settings[host]; dbname=$settings[dbname]; charset=$settings[charset]", $settings['user'], $settings['pwd'], [
 				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
