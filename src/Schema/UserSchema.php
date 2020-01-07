@@ -4,7 +4,7 @@ namespace App\Schema;
 
 class UserSchema
 {
-    private static $schema = array(
+    public static $schema = array(
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
@@ -40,8 +40,7 @@ class UserSchema
         )
     );
 
-    public static function getSchema()
-    {
-        return self::$schema;
-    }
+    public static $constraint;
+
+    public static $options = "ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8";
 }

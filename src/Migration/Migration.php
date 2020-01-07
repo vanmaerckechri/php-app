@@ -7,49 +7,58 @@ use PDO;
 class Migration
 {
 	private $pdo;
-	private $tables = ['user'];
+	private $db = "CREATE DATABASE IF NOT EXISTS {{ dbname }} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+	private $tables = ['user', 'article'];
 
 	public function __construct()
 	{
 		$settings = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/db.php';
 
-		// $settings['dbname'] | temp --->
-		$dbname = 'test';
-		// <---
-
+		// connect to server to create new db
 		$this->pdo = new PDO('mysql:host=' . $settings['host'], $settings['user'], $settings['pwd']);
-
-		$this->createDb($dbname);
-		$this->pdo = new PDO("mysql:host=$settings[host]; dbname=$dbname", $settings['user'], $settings['pwd']);		
-
+		// create db
+		$this->createDb($settings['dbname']);
+		// connect to db
+		$this->pdo = new PDO("mysql:host=$settings[host]; dbname=$settings[dbname]", $settings['user'], $settings['pwd']);		
+		// create table(s)
 		foreach ($this->tables as $table)
 		{
-			$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
-			$request = $this->buildSqlRequest($table, $class::getSchema());
+			$request = $this->buildSqlRequest($table);
 			$this->createTable($request);
 		}
 	}
 
-	private function buildSqlRequest(string $table, array $schema): string
+	private function buildSqlRequest(string $table): string
     {
-        $request = "CREATE TABLE IF NOT EXISTS `$table`(";
+    	$table = $this->getTableInfos($table);
+
+        $request = "CREATE TABLE IF NOT EXISTS `$table[name]`(";
         $lines = '';
         $primKey = '';
         $uniques = array();
 
-        foreach ($schema as $column => $rules)
+        // $table['schema'] is an array which will also be used for the input validator for models
+        foreach ($table['schema'] as $column => $rules)
         {
-            $line = '{{ column }} {{ type }}({{ maxLength }}) {{ default }} {{ autoInc }}';
-            $line = str_replace("{{ column }}", "`$column`", $line);
+            $line = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
+
             foreach ($rules as $rule => $value)
             {
+            	// email is only used with the model validator
             	if ($value === 'email')
                	{
                 	$value = 'varchar';
                 }
+                // if current rule exist in $line replace {{ $rule }} by $value
             	if (strpos($line, "{{ $rule }}") !== false)
                 {
-                    $line = str_replace("{{ $rule }}", $value, $line);
+                	$replace = $value;
+                	// length is a special case, it requires parentheses
+                	if ($rule === 'maxLength')
+                	{
+                		$replace = "($value)";
+                	}
+                    $line = str_replace("{{ $rule }}", $replace, $line);
                 }
                 else 
                 {
@@ -70,14 +79,18 @@ class Migration
         $lines .= $primKey === '' ? '' : $primKey . ',';
         $lines .= implode(',', $uniques);
         $lines = trim($lines, ',');
-        $request .= $lines . ")ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
+
+        $lines .= !$table['constraint'] ? ',' . $table['constraint'] : '';
+        $lines = trim($lines, ',');
+
+        $request .= $lines . ")$table[options]";
 
         return $request;
     }
 
-	private function createDb(string $dbName): void
+	private function createDb($db): void
 	{
-		$requete = "CREATE DATABASE IF NOT EXISTS `".$dbName."` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
+		$requete = str_replace("{{ dbname }}", "`$db`", $this->db);
 		$this->pdo->prepare($requete)->execute();
 	}
 
@@ -85,5 +98,17 @@ class Migration
 	{        
         $request = $sqlRequest;
         $this->pdo->prepare($request)->execute();
+	}
+
+	private function getTableInfos(string $table): array
+	{
+		$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
+
+		return array(
+			'name' => $table,
+			'schema' => $schema = $class::$schema,
+    		'constraint' => $constraint = $class::$constraint,
+    		'options' => $options = $class::$options
+    	);
 	}
 }
