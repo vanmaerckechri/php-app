@@ -88,8 +88,13 @@ class Oauth
 
 		$user = new User();
 		$userRequest = new UserRequest();
-		// if the email is not yet present in the db create new account
-		if ($user->isValidToInsert(['email' => $email, 'username' => $userRequest->incrementIfTaken('username', 'str', $username), 'password' => $password]))
+		// check that the username respects the filters and if so, increment it if it already exists in the db
+		if ($user->isValidToSelect(['username' => $username]))
+		{
+			$username = $userRequest->incrementIfTaken('username', 'str', $username);
+		}		
+		// if the email is not yet present in the db and if all values respects the filters then create new account
+		if ($user->isValidToInsert(['email' => $email, 'username' => $username, 'password' => $password]))
 		{
 			$userRequest->record($user);
 		}
@@ -97,7 +102,7 @@ class Oauth
 		{
 			$user = $userRequest->findUserByEmail($email);
 		}
-		else
+		if (is_null($user))
 		{
 			return false;
 		}
