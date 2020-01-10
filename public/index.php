@@ -4,7 +4,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Autoloader.php';
 
 use App\App;
 use App\Router\Router;
-use App\Migration\Migration;
+//use App\Migration\Migration;
 
 App::startSession();
 
@@ -31,3 +31,5 @@ $router->get('/', 'HomeController#show', 'home');
 $router->get('.+', 'Error404Controller#show', 'error404');
 
 $router->run();
+
+//$migration = new Migration();

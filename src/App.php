@@ -46,4 +46,9 @@ class App
 		$_SESSION['recordedInputs'] = [];
 		return $result;
 	}
+
+	public static function convertNamespaceToClassname(string $classname): string
+	{
+		return substr($classname, strrpos($classname, '\\') + 1);
+	}
 }

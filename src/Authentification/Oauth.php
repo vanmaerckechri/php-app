@@ -4,13 +4,13 @@ namespace App\Authentification;
 
 use App\Authentification\Auth;
 use App\Model\User;
-use App\Request\UserRequest;
+use App\Repository\UserRepository;
 
 class Oauth
 {
 	private function getEndPoint(): ?object
 	{
-		return json_decode(file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
+		return json_decode(@file_get_contents('https://accounts.google.com/.well-known/openid-configuration', false));
 	}
 
 	private function getToken(string $tokenEndPoint): ?object
@@ -42,7 +42,7 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(file_get_contents($tokenEndPoint, false, $context));
+		return json_decode(@file_get_contents($tokenEndPoint, false, $context));
 	}
 
 	private function getUserInfos(): ?object
@@ -71,7 +71,7 @@ class Oauth
 
 		$context = stream_context_create($options);
 
-		return json_decode(file_get_contents($userInfoEndPoint, false, $context));
+		return json_decode(@file_get_contents($userInfoEndPoint, false, $context));
 	}
 
 	public function login(): bool
@@ -87,27 +87,29 @@ class Oauth
 		$username = $userInfos->name;
 
 		$user = new User();
-		$userRequest = new UserRequest();
-		// check that the username respects the filters and if so, increment it if it already exists in the db
-		if ($user->isValidToSelect(['username' => $username]))
+		// check that the user inputs respect the filters
+		if ($user->isValid(['email' => $email, 'username' => $username, 'password' => $password]))
 		{
-			$username = $userRequest->incrementIfTaken('username', 'str', $username);
-		}		
-		// if the email is not yet present in the db and if all values respects the filters then create new account
-		if ($user->isValidToInsert(['email' => $email, 'username' => $username, 'password' => $password]))
-		{
-			$userRequest->record($user);
+			// if email is unique create a new account
+			if ($user->isUnique(['email']))
+			{
+				// if username already used, increment it
+				if (!$user->isUnique(['username']))
+				{
+					$newUsername = $user->incrementAlreadyUsed('username');
+					$user->isValid(['username' => $newUsername]);
+				}
+				// try to record new user
+				if (!UserRepository::record($user))
+				{
+					return false;
+				}
+			}
+			// connect user
+			$user = UserRepository::findUserByEmail($email);
+			Auth::addUserToSession($user);
+			return true;
 		}
-		if ($user->isValidToSelect(['email' => $email]))
-		{
-			$user = $userRequest->findUserByEmail($email);
-		}
-		if (is_null($user))
-		{
-			return false;
-		}
-
-		Auth::addUserToSession($user);
-		return true;
+		return false;
 	}
 }

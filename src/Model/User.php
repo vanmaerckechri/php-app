@@ -3,22 +3,20 @@
 namespace App\Model;
 
 use App\Validator\Validator;
-use App\Request\UserRequest;
-use App\Schema\UserSchema;
 
-class User
+class User extends Model
 {
-	use Model;
-
 	private $id;
 	private $role;
 	private $email;
 	private $username;
 	private $password;
+	private $created_at;
 
 	public function __construct()
 	{
-		$this->initValidationRules('User', new UserRequest, UserSchema::getSchema());
+		$this->created_at = new \DateTime('now');
+		parent::__construct(__CLASS__);
 	}
 
 	public function getId(): ?int
@@ -33,10 +31,7 @@ class User
 
 	public function setRole(string $role): self
 	{
-		if (Validator::validate('roleSms', $role, $this->rules['role']))
-		{
-			$this->role = $role;
-		}
+		$this->role = $role;
 
 		return $this;
 	}
@@ -48,10 +43,8 @@ class User
 
 	public function setUsername(string $username): self
 	{
-		if (Validator::validate('usernameSms', $username, $this->rules['username']))
-		{
-			$this->username = $username;
-		}
+		$this->username = $username;
+
 		return $this;
 	}
 
@@ -62,10 +55,7 @@ class User
 
 	public function setPassword(string $password): self
 	{
-		if (Validator::validate('passwordSms', $password, $this->rules['password']))
-		{
-			$this->password = password_hash($password, PASSWORD_DEFAULT);
-		}
+		$this->password = password_hash($password, PASSWORD_DEFAULT);
 
 		return $this;
 	}
@@ -77,16 +67,20 @@ class User
 
 	public function setEmail(string $email): self
 	{
-		if (Validator::validate('emailSms', $email, $this->rules['email']))
-		{
-			$this->email = $email;
-		}
+		$this->email = $email;
 
 		return $this;
 	}
 
-	public function isValidToLoginByUsername()
-	{
-		return $this->isValid(['username', 'password']);
-	}
+    public function getCreated_at(): ?string
+    {
+        return $this->created_at->format('Y-m-d H:i:s');
+    }
+
+    public function setCreated_at(\DateTimeInterface $created_at): self
+    {
+        $this->created_at = $created_at;
+
+        return $this;
+    }
 }

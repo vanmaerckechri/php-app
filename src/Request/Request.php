@@ -5,38 +5,91 @@ namespace App\Request;
 use PDO;
 use App\App;
 
-trait Request
+class Request
 {
-	private function getBindParam(string $type): string
-	{
-		if ($type === "STR")
-		{
-			return PDO::PARAM_STR;
-		}
-		else if ($type === "INT")
-		{
-			return PDO::PARAM_INT;			
-		}
-		else if ($type === "BOOL")
-		{
-			return PDO::PARAM_BOOL;			
-		}
-		else
-		{
-			return PDO::PARAM_NULL;			
-		}
-	}
-	
-	protected function select(string $prepare, array $binds): ?object
-	{
-		$stmt = App::getPdo()->prepare($prepare);
-		foreach ($binds as $column => $input)
-		{
-			$value = $input[0];
-			$type = strtoupper($input[1]);
-			$bind = ':'. $column;
+	private $table;
+	private $prepare;
+	private $binds = array();
 
-			$param = $this->getBindParam($type);
+	// INSERT INTO
+
+	public function insertInto(string $table): self
+	{
+		$this->table = $table;
+		$this->prepare = 'INSERT INTO ' . $table;
+		return $this;
+	}
+
+	public function values(array $binds): self
+	{
+		$this->binds = $binds;
+		$this->prepare .= '(' . implode(', ', array_keys($binds)) . ') VALUES (' . ':' . implode(', :', array_keys($binds)) . ')';
+		$this->execute();
+		return $this;
+	}
+
+	// SELECT
+
+	public function select($columns): self
+	{
+		if (is_array($columns))
+		{
+			$columns = implode(', ', $columns);
+		}
+		$this->prepare = 'SELECT ' . $columns;
+		return $this;
+	}
+
+	public function from(string $table): self
+	{
+		$this->table = $table;
+		$this->prepare .= ' FROM ' . $table;
+		return $this;
+	}
+
+	public function where(string $column, $value): self
+	{
+		$this->binds = array();
+		$this->binds[$column] = $value;
+		$this->prepare .= ' WHERE ';
+		$this->prepare .= "$column = :$column";
+		return $this;
+	}
+
+	public function and(string $column, $value): self
+	{
+		$this->binds[$column] = $value;
+		$this->prepare .= ' AND ';
+		$this->prepare .= "$column = :$column";
+		return $this;		
+	}
+
+	public function or(string $column, $value): self
+	{
+		$this->binds[$column] = $value;
+		$this->prepare .= ' OR ';
+		$this->prepare .= "$column = :$column";
+		return $this;		
+	}
+
+	public function fetchObject(): ?object
+	{
+		$class = 'App\\Model\\' . ucfirst($this->table);
+		$stmt = $this->execute();
+		$result = $stmt->fetchObject($class);
+		return $result ?: null;
+	}
+
+	private function execute()
+	{
+		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
+		$schema = $schemaClass::$schema;
+
+		$stmt = App::getPdo()->prepare($this->prepare);
+		foreach ($this->binds as $column => $value)
+		{
+			$bind = ':'. $column;
+			$param = $this->getBindParam($schema[$column]['type']);
 
 			$stmt->bindValue($bind, $value, $param);
 		}
@@ -44,19 +97,22 @@ trait Request
 		return $stmt;
 	}
 
-	protected function insert(string $prepare, array $binds)
+	private function getBindParam(string $type): string
 	{
-		$stmt = App::getPdo()->prepare($prepare);
-		foreach ($binds as $column => $input)
+		$type = strtoupper($type);
+		switch ($type)
 		{
-			$value = $input[0];
-			$type = strtoupper($input[1]);
-			$bind = ':'. $column;
-
-			$param = $this->getBindParam($type);
-
-			$stmt->bindValue($bind, $value, $param);
+			case 'EMAIL':
+			case 'VARCHAR':
+			case 'TEXT':
+			case 'DATETIME':
+				return PDO::PARAM_STR;
+			case 'INT':
+				return PDO::PARAM_INT;
+			case 'BOOL':
+				return PDO::PARAM_BOOL;
+			default:
+				return PDO::PARAM_NULL;
 		}
-		$stmt->execute();
 	}
 }

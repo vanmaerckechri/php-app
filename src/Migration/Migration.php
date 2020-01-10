@@ -71,8 +71,8 @@ class Migration
 	                    $uniques[] = "UNIQUE KEY `$column` (`$column`)";
 	                }
 	            }
-            }
-            $line = preg_replace('/{{.*}}/', '', $line);
+            }          
+            $line = preg_replace('/{{(.*?)}}/', '', $line);
             $line = trim($line);
             $lines .= $line . ",";
         }
@@ -80,7 +80,7 @@ class Migration
         $lines .= implode(',', $uniques);
         $lines = trim($lines, ',');
 
-        $lines .= !$table['constraint'] ? ',' . $table['constraint'] : '';
+        $lines .= $table['constraint'] ? ',' . $table['constraint'] : '';
         $lines = trim($lines, ',');
 
         $request .= $lines . ")$table[options]";

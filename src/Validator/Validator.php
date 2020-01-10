@@ -2,35 +2,102 @@
 
 namespace App\Validator;
 
+use App\App;
 use App\MessagesManager;
 
 class Validator
 {
-	public static function checkUnique($data, array $value): bool
+	public static function isUnique(object $obj, string $column, $input): bool
 	{
-		$method = 'find' . ucfirst($value['class']) . 'By' . ucfirst($value['column']);
-		if ($value['request']->$method($data))
+		$repoClass = 'App\\Repository\\' . $obj->classname . 'Repository';
+		$errors = array();
+
+		$smsId = $column . 'Sms';
+		$findMethod = 'find' . $obj->classname . 'By' . ucfirst($column);
+
+		if ($repoClass::$findMethod($input))
 		{
+			$errors[$smsId][$column . 'Taken'] = null;				
+		}
+
+		if (!empty($errors[$smsId]))
+		{
+			MessagesManager::add($errors);
 			return false;
 		}
 		return true;
 	}
 
-	public static function checkRequired($data, bool $value): bool
+	public static function isValid(object $obj, string $column, $input): bool
+	{
+		$errors = array();
+		$smsId = $column . 'Sms';
+		$errors[$smsId] = array();
+		$rules = $obj->rules[$column];
+
+		foreach ($rules as $rule => $value)
+		{
+			if ($rule === 'required')
+			{
+				if (!self::checkRequired($input, $value))
+				{
+					$errors[$smsId][$rule] = null;
+				}
+			}
+			if ($rule === 'only')
+			{
+				if (!self::checkOnly($input, $value))
+				{
+					$errors[$smsId][$rule] = implode(", ", $rule);
+				}
+			}
+			if ($rule === 'type')
+			{		
+				$type = strtolower($rule);
+				if (!self::checkType($input, $value))
+				{
+					$errors[$smsId]['type_' . $value] = null;
+				}
+			}
+			if ($rule === 'minLength')
+			{
+				if (!self::checkMinLength($input, $value))
+				{
+					$errors[$smsId][$rule] = $value;
+				}
+			}
+			if ($rule === 'maxLength')
+			{
+				if (!self::checkMaxLength($input, $value))
+				{
+					$errors[$smsId][$rule] = $value;
+				}
+			}
+		}
+
+		if (!empty($errors[$smsId]))
+		{
+			MessagesManager::add($errors);
+			return false;
+		}
+		return true;
+	}
+
+	private static function checkRequired($input, bool $value): bool
 	{
 		if ($value === false)
 		{
 			return true;
 		}
 
-		return !empty($data);
+		return !empty($input);
 	}
 
-	public static function checkOnly($data, array $str): bol
+	private static function checkOnly($input, array $str): bol
 	{
 		foreach ($str as $value)
 		{
-			if ($value === $data)
+			if ($value === $input)
 			{
 				return true;
 			}
@@ -38,92 +105,30 @@ class Validator
 		return false;
 	}
 
-	public static function checkType($data, string $type): bool
+	private static function checkType($input, string $type): bool
 	{
 		switch ($type)
 		{
 			case 'email':
-				return filter_var($data, FILTER_VALIDATE_EMAIL);
+				return filter_var($input, FILTER_VALIDATE_EMAIL);
 			case 'int':
-				return filter_var($data, FILTER_VALIDATE_INT);
+				return filter_var($input, FILTER_VALIDATE_INT);
 			case 'varchar':
-				return is_string($data);
+			case 'text':
+			case 'datetime':
+				return is_string($input);
 			default:
 				return false;
 		}
 	}
 
-	public static function checkMinLength($data, int $length): bool
+	private static function checkMinLength($input, int $length): bool
 	{
-		return strlen($data) >= $length;
+		return strlen($input) >= $length;
 	}
 
-	public static function checkMaxLength($data, int $length): bool
+	private static function checkMaxLength($input, int $length): bool
 	{
-		return strlen($data) < $length;
-	}
-
-	public static function validate(string $outputId, $data, array $rules): bool
-	{
-		$errors = array($outputId => []);
-
-		foreach ($rules as $k => $v)
-		{
-			if ($k === 'required')
-			{
-				if (!self::checkRequired($data, $v))
-				{
-					$errors[$outputId][$k] = null;
-				}
-			}
-			if ($k === 'only')
-			{
-				if (!self::checkOnly($data, $v))
-				{
-					$errors[$outputId][$k] = implode(", ", $v);
-				}
-			}
-			if ($k === 'type')
-			{		
-				$type = strtolower($v);
-				if (!self::checkType($data, $v))
-				{
-					$errors[$outputId]['type_' . $type] = null;
-				}
-			}
-			if ($k === 'minLength')
-			{
-				if (!self::checkMinLength($data, $v))
-				{
-					$errors[$outputId][$k] = $v;
-				}
-			}
-			if ($k === 'maxLength')
-			{
-				if (!self::checkMaxLength($data, $v))
-				{
-					$errors[$outputId][$k] = $v;
-				}
-			}
-			if ($k === 'unique')
-			{
-				// check if the value is unique only if the previous filters have been validated
-				if (!isset($errors[$outputId][$k]) && $v['status'] === true)
-				{
-					if (!self::checkUnique($data, $v))
-					{
-						$smsId = $v['column'] . 'Taken';
-						$errors[$outputId][$smsId] = null;
-					}
-				}
-			}
-		}
-
-		if (!empty($errors[$outputId]))
-		{
-			MessagesManager::add($errors);
-			return false;
-		}
-		return true;
+		return strlen($input) < $length;
 	}
 }

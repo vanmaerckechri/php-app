@@ -24,9 +24,15 @@ class ArticleSchema
             'default' => 'NOT NULL',
             'unique' => true
         ),
+        'content' => array(
+            'type' => 'text',
+            'minLength' => 10,
+            'maxLength' => 500,
+            'default' => 'NOT NULL'
+        ),
         'created_at' => array(
             'type' => 'datetime',
-            'default' => 'NOT NULL',
+            'default' => 'NOT NULL'
         )
     );
 

@@ -2,49 +2,125 @@
 
 namespace App\Model;
 
-trait Model
+use App\App;
+use App\Validator\Validator;
+
+class Model
 {
-	protected $rules;
+	public $classname;
+	public $table;
+	public $rules;
 
-	public function isValidToSelect(array $inputs): bool
+	public function __construct($class)
 	{
-		$this->setMultiple($inputs, false);
-
-		if ($this->isReadyToSelect($inputs) === true)
-		{
-			return true;
-		}
-		return false;
+		$this->classname = App::convertNamespaceToClassname($class);
+		$this->table = strtolower($this->classname);
+		$this->initValidationRules();
 	}
 
-	public function isValidToInsert(array $inputs): bool
+	public function isValid(array $inputs): bool
 	{
-		$this->setMultiple($inputs, true);
-
-		if ($this->isReadyToInsert() === true)
+		$isValid = true;
+		foreach ($inputs as $column => $value) 
 		{
-			return true;
+			if (Validator::isValid($this, $column, $value))
+			{
+				$setCol = 'set' . ucfirst($column);
+				$this->$setCol($value);
+			}
+			else
+			{
+				$isValid = false;
+			}
 		}
-		return false;
+		return $isValid;
 	}
 
-	protected function initValidationRules(string $className, object $request, array $schema): void
+	public function isUnique(array $columns): bool
 	{
-		$this->rules = $schema;
+		$isValid = true;
+		foreach ($columns as $column) 
+		{
+			$getCol = 'get' . ucfirst($column);
+			$value = $this->$getCol();
+			if (!Validator::isUnique($this, $column, $value))
+			{
+				$isValid = false;
+			}
+		}
+		return $isValid;
+	}
+
+	public function incrementAlreadyUsed($column): string
+	{
+		$repoClass = 'App\\Repository\\' . $this->classname . 'Repository';
+		$getMethod = 'get' . ucfirst($column);
+		$findMethod = 'find' . $this->classname . 'By' . ucfirst($column);
+
+		$string = $this->$getMethod();
+		$newString = $string;
+
+		while (!is_null($string))
+		{
+			if (preg_match('#(\d+)$#', $newString, $matches, PREG_OFFSET_CAPTURE))
+			{
+			    $index = $matches[0][1];
+			    $number = ++$matches[1][0];
+			    $newString = substr_replace($newString, $number, $index);
+			}
+			else
+			{
+				$newString .= '1';
+			}
+
+			$string = $repoClass::$findMethod($newString);
+		}
+
+		return $newString;
+	}
+
+	public function getValuesToRecord(): ?array
+	{
+		$output = array();
+		foreach ($this->rules as $varName => $rules)
+		{
+			$getVar = 'get' . ucfirst($varName);
+			foreach ($rules as $ruleId => $ruleValue)
+			{
+				$value = $this->$getVar();
+				// save all columns that have a value, if one of the required columns has a null value, return null
+				if ($ruleId === 'required' && $ruleValue === true)
+				{
+					if (is_null($value))
+					{
+						return null;
+					}
+					else
+					{
+						$output[$varName] = $value;
+					}
+				}
+				else
+				{
+					if (!is_null($value))
+					{
+						$output[$varName] = $value;
+					}
+				}
+			}
+		}
+		return $output;
+	}
+
+	private function initValidationRules(): void
+	{
+		$schemaClass = 'App\\Schema\\' . $this->classname . 'Schema';
+		$this->rules = $schemaClass::$schema;
 
 		foreach ($this->rules as $varName => $rules)
 		{
 			foreach ($rules as $ruleName => $value)
 			{
-				if ($ruleName === 'unique' && $value === true)
-				{
-					$this->rules[$varName][$ruleName] = array(
-						'status' => true,
-						'class' => $className,
-						'column' => $varName,
-						'request' => $request
-					);
-				}
 				if ($ruleName === 'default' && $value === 'NOT NULL' && (!isset($rules['autoInc']) || $rules['autoInc'] !== 'AUTO_INCREMENT' ))
 				{
 					$this->rules[$varName]['required'] = true;
@@ -54,48 +130,4 @@ trait Model
 		}
 	}
 
-	private function setMultiple(array $inputs, bool $isTestUniqueFilter): void
-	{
-		$invalidVar = array();
-		foreach ($inputs as $k => $v) 
-		{
-			$var = ucfirst($k);
-			$setVar = 'set' . $var;
-			if (isset($this->rules[$k]['unique']['status']))
-			{
-				$this->rules[$k]['unique']['status'] = $isTestUniqueFilter;
-			}
-			$this->$setVar($v);
-		}
-	}
-
-	private function isReadyToSelect(array $inputs): bool
-	{
-		foreach ($inputs as $varName => $value)
-		{
-			if ($this->$varName === null)
-			{
-				return false;
-			}
-		}
-		return true;
-	}
-
-	private function isReadyToInsert(): bool
-	{
-		foreach ($this->rules as $varName => $rules)
-		{
-			foreach ($rules as $ruleName => $value)
-			{
-				if ($ruleName === 'required' && $value === true)
-				{
-					if ($this->$varName === null)
-					{
-						return false;
-					}
-				}
-			}
-		}
-		return true;
-	}
 }

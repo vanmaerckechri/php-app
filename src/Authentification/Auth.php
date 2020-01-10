@@ -5,7 +5,8 @@ namespace App\Authentification;
 use PDO;
 use App\App;
 use App\Model\User;
-use App\Request\UserRequest;
+use App\Repository\UserRepository;
+use App\Validator\Validator;
 
 class Auth
 {
@@ -17,18 +18,18 @@ class Auth
 			return null;
 		}
 
-		$userRequest = new UserRequest();
-		return $userRequest->findUserById($id);
+		$user = UserRepository::findUserById($id);
+		return $user;
 	}
 
 	public static function login(string $username, string $password): ?User
 	{
 		$user = new User();
-		$isValid = $user->isValidToSelect(['username' => $username, 'password' => $password]);
-		if ($isValid)
+		$inputs = array('username' => $username, 'password' => $password);
+		if ($user->isValid($inputs))
 		{
-			$userRequest = new UserRequest();
-			$user = $userRequest->findUserByUsername($username);
+			$user = UserRepository::findUserByUsername($username);
+
 			if ($user === null)
 			{
 				return null;

@@ -2,6 +2,9 @@
 
 namespace App\Controller;
 
+use App\Model\Article;
+use App\Request\ArticleRequest;
+
 Class HomeController extends ViewManager
 {
 	public function __construct()

@@ -37,6 +37,10 @@ class UserSchema
             'maxLength' => 5,
             'default' => 'NOT NULL DEFAULT \'user\'',
             'only' => array('user', 'admin')
+        ),
+        'created_at' => array(
+            'type' => 'datetime',
+            'default' => 'NOT NULL'
         )
     );
 
