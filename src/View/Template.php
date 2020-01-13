@@ -53,9 +53,7 @@ Class Template
 					<?= $varPage['messages']['info'] ?? '' ?>
 				</div>
 				<div id="main" class="main">
-					<div class="container">
-			    		<?= $varPage['content'] ?>
-			    	</div>
+			    	<?= $varPage['content'] ?>
 			    </div>
 			    <footer>
 			    	<div class="container">

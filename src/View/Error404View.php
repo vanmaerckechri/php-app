@@ -9,7 +9,9 @@ Class Error404View
 		ob_start();
 
 		?>
+		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
+		</div>
 		<?php
 
 		return ob_get_clean();

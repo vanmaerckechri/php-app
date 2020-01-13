@@ -15,7 +15,6 @@ class User extends Model
 
 	public function __construct()
 	{
-		$this->created_at = new \DateTime('now');
 		parent::__construct(__CLASS__);
 	}
 
@@ -72,15 +71,12 @@ class User extends Model
 		return $this;
 	}
 
-    public function getCreated_at(): ?string
+    public function getCreated_at(): ?\DateTime
     {
-        return $this->created_at->format('Y-m-d H:i:s');
-    }
-
-    public function setCreated_at(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
+    	if (is_null($this->created_at))
+    	{
+    		return null;
+    	}
+        return new \DateTime($this->created_at);
     }
 }

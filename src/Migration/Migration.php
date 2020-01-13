@@ -8,7 +8,7 @@ class Migration
 {
 	private $pdo;
 	private $db = "CREATE DATABASE IF NOT EXISTS {{ dbname }} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
-	private $tables = ['user', 'article'];
+	private $tables = ['user', 'article', 'category'];
 
 	public function __construct()
 	{

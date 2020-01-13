@@ -56,7 +56,7 @@ input
 	display: flex;
 	justify-content: space-between;
 	align-items: baseline;
-	max-width: 1280px;
+	max-width: 1600px;
 	width: 100%;
 }
 .btn
@@ -98,4 +98,39 @@ input
 .sms-info
 {
 	color: green;
+}
+.articles-container
+{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+}
+.article
+{
+	margin-bottom: 5vw;
+	width: 30%;
+	height: 300px;
+	display: flex;
+	flex-direction: column;
+	background-color: rgb(200, 200, 200);
+}
+.article h3
+{
+	height: 100px;
+}
+.article .content, .article h3, .article .date
+{
+	padding: 0.75rem;
+}
+.article .content
+{
+	flex: 1;
+}
+.article .date
+{
+	text-align: right;
+}
+.article .btn
+{
+	margin-bottom: 0;
 }

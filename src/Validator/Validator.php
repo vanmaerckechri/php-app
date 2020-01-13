@@ -20,12 +20,7 @@ class Validator
 			$errors[$smsId][$column . 'Taken'] = null;				
 		}
 
-		if (!empty($errors[$smsId]))
-		{
-			MessagesManager::add($errors);
-			return false;
-		}
-		return true;
+		return self::noErrorDetected($errors, $smsId);
 	}
 
 	public static function isValid(object $obj, string $column, $input): bool
@@ -44,14 +39,14 @@ class Validator
 					$errors[$smsId][$rule] = null;
 				}
 			}
-			if ($rule === 'only')
+			else if ($rule === 'only')
 			{
 				if (!self::checkOnly($input, $value))
 				{
 					$errors[$smsId][$rule] = implode(", ", $rule);
 				}
 			}
-			if ($rule === 'type')
+			else if ($rule === 'type')
 			{		
 				$type = strtolower($rule);
 				if (!self::checkType($input, $value))
@@ -59,14 +54,14 @@ class Validator
 					$errors[$smsId]['type_' . $value] = null;
 				}
 			}
-			if ($rule === 'minLength')
+			else if ($rule === 'minLength')
 			{
 				if (!self::checkMinLength($input, $value))
 				{
 					$errors[$smsId][$rule] = $value;
 				}
 			}
-			if ($rule === 'maxLength')
+			else if ($rule === 'maxLength')
 			{
 				if (!self::checkMaxLength($input, $value))
 				{
@@ -75,12 +70,7 @@ class Validator
 			}
 		}
 
-		if (!empty($errors[$smsId]))
-		{
-			MessagesManager::add($errors);
-			return false;
-		}
-		return true;
+		return self::noErrorDetected($errors, $smsId);
 	}
 
 	private static function checkRequired($input, bool $value): bool
@@ -130,5 +120,15 @@ class Validator
 	private static function checkMaxLength($input, int $length): bool
 	{
 		return strlen($input) < $length;
+	}
+
+	private static function noErrorDetected(array $errors, string $smsId): bool
+	{
+		if (!empty($errors[$smsId]))
+		{
+			MessagesManager::add($errors);
+			return false;
+		}
+		return true;		
 	}
 }

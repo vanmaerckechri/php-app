@@ -19,20 +19,28 @@ class ArticleSchema
         ),
         'title' => array(
             'type' => 'varchar',
-            'minLength' => 4,
-            'maxLength' => 254,
+            'minLength' => 25,
+            'maxLength' => 125,
             'default' => 'NOT NULL',
+            'unique' => true
+        ),
+        'slug' => array(
+            'type' => 'varchar',
+            'minLength' => 5,
+            'maxLength' => 125,
+            'default' => 'NOT NULL',
+            'slug' => 'title',
             'unique' => true
         ),
         'content' => array(
             'type' => 'text',
-            'minLength' => 10,
-            'maxLength' => 500,
+            'minLength' => 200,
+            'maxLength' => 600,
             'default' => 'NOT NULL'
         ),
         'created_at' => array(
             'type' => 'datetime',
-            'default' => 'NOT NULL'
+            'default' => 'NOT NULL DEFAULT CURRENT_TIMESTAMP'
         )
     );
 

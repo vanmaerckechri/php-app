@@ -72,12 +72,26 @@ class Request
 		return $this;		
 	}
 
-	public function fetchObject(): ?object
+	public function options(string $options): self
+	{
+		$this->prepare .= " $options";
+		return $this;		
+	}
+
+	public function fetchClass(): ?object
 	{
 		$class = 'App\\Model\\' . ucfirst($this->table);
 		$stmt = $this->execute();
 		$result = $stmt->fetchObject($class);
 		return $result ?: null;
+	}
+
+	public function fetchAllClass(): ?array
+	{
+		$class = 'App\\Model\\' . ucfirst($this->table);
+		$stmt = $this->execute();
+		$result = $stmt->fetchAll(PDO::FETCH_CLASS, $class);
+		return $result ?: null;		
 	}
 
 	private function execute()
@@ -102,17 +116,14 @@ class Request
 		$type = strtoupper($type);
 		switch ($type)
 		{
-			case 'EMAIL':
-			case 'VARCHAR':
-			case 'TEXT':
-			case 'DATETIME':
-				return PDO::PARAM_STR;
 			case 'INT':
 				return PDO::PARAM_INT;
 			case 'BOOL':
 				return PDO::PARAM_BOOL;
-			default:
+			case 'NULL':
 				return PDO::PARAM_NULL;
+			default:
+				return PDO::PARAM_STR;
 		}
 	}
 }

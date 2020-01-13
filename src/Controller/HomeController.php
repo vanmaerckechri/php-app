@@ -3,10 +3,11 @@
 namespace App\Controller;
 
 use App\Model\Article;
-use App\Request\ArticleRequest;
+use App\Repository\ArticleRepository;
 
 Class HomeController extends ViewManager
 {
+	private $articlesByPage = 12;
 	public function __construct()
 	{
 		$this->varPage = [
@@ -18,6 +19,7 @@ Class HomeController extends ViewManager
 
 	public function show()
 	{
+		$this->varPage['articles'] = ArticleRepository::findAll("ORDER BY created_at DESC LIMIT $this->articlesByPage");
 		$this->renderer(['HomeView', 'show']);
 	}	
 }

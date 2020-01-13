@@ -4,19 +4,17 @@ namespace App\Model;
 
 use App\Validator\Validator;
 
-class Article
+class Article extends Model
 {
-	use Model;
-
 	private $id;
 	private $user_id;
+	private $slug;
 	private $title;
 	private $content;
 	private $created_at;
 
 	public function __construct()
 	{
-		$this->created_at = time();
 		parent::__construct(__CLASS__);
 	}
 
@@ -25,7 +23,7 @@ class Article
 		return $this->id;
 	}
 
-	public function setId(int $id): self
+	public function setId(string $id): self
 	{
 		$this->id = $id;
 
@@ -44,6 +42,18 @@ class Article
 		return $this;
 	}
 
+	public function getSlug(): ?string
+	{
+		return $this->slug;
+	}
+
+	public function setSlug(string $slug): self
+	{
+		$this->slug = $slug;
+
+		return $this;
+	}
+
 	public function getTitle(): ?string
 	{
 		return $this->title;
@@ -51,10 +61,9 @@ class Article
 
 	public function setTitle(string $title): self
 	{
-		if (Validator::validate('titleSms', $title, $this->rules['title']))
-		{
-			$this->title = $title;
-		}
+		$this->title = $title;
+		$this->slug = App::slugify($title);
+
 		return $this;
 	}
 
@@ -65,22 +74,17 @@ class Article
 
 	public function setContent(string $content): self
 	{
-		if (Validator::validate('contentSms', $content, $this->rules['content']))
-		{
-			$this->content = $content;
-		}
+		$this->content = $content;
+
 		return $this;
 	}
 
-    public function getCreated_at(): ?string
+    public function getCreated_at(): ?\DateTime
     {
-        return $this->created_at->format('Y-m-d H:i:s');
-    }
-
-    public function setCreated_at(\DateTimeInterface $created_at): self
-    {
-        $this->created_at = $created_at;
-
-        return $this;
+    	if (is_null($this->created_at))
+    	{
+    		return null;
+    	}
+        return new \DateTime($this->created_at);
     }
 }

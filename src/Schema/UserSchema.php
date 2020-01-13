@@ -40,7 +40,7 @@ class UserSchema
         ),
         'created_at' => array(
             'type' => 'datetime',
-            'default' => 'NOT NULL'
+            'default' => 'NOT NULL DEFAULT CURRENT_TIMESTAMP'
         )
     );
 

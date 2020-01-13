@@ -23,8 +23,6 @@ Class ConnexionController extends ViewManager
 	{
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
 		$this->varPage['google_id'] = GOOGLE_ID;
-		$this->varPage['googleCoUri'] = $GLOBALS['router']->url('googleConnexion');
-		$this->varPage['inscriptionUrl'] = $GLOBALS['router']->url('inscription');
 		$this->varPage['recordedInputs'] = App::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer(['ConnexionView', 'show']);

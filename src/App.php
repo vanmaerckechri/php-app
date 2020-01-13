@@ -35,7 +35,7 @@ class App
 		$result = array();
 		foreach ($inputs as $key => $value)
 		{
-			$result[$key] = htmlspecialchars($value);
+			$result[$key] = $value;
 		}
 		$_SESSION['recordedInputs'] = $result;
 	}
@@ -50,5 +50,30 @@ class App
 	public static function convertNamespaceToClassname(string $classname): string
 	{
 		return substr($classname, strrpos($classname, '\\') + 1);
+	}
+
+	public static function excerpt(string $content, int $limit = 60): string
+	{
+		if (mb_strlen($content) > $limit)
+		{
+			$lastSpacePos = mb_strpos($content, ' ', $limit);
+			if (!is_int($lastSpacePos))
+			{
+				$lastSpacePos = $limit;
+			}
+			return mb_substr($content, 0, $lastSpacePos) . '...';
+		}
+		return $content;
+	}
+
+	public static function slugify($string)
+	{
+        return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string), '-'));
+	}
+
+	public static function getTablesFromSchemas()
+	{
+		$files =  array_values(array_diff(scandir($_SERVER['DOCUMENT_ROOT'] . '/src/Schema/'), ['..', '.']));
+		return array_map('strtolower', preg_replace('/Schema.php/', '', $files));
 	}
 }

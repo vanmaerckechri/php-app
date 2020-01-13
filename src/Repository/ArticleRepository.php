@@ -7,27 +7,26 @@ use App\Model\Article;
 
 class ArticleRepository extends Repository
 {
-	public static function findUserById(int $id): ?article
+	public static function findArticleByIdSlug(array $values): ?article
 	{
-		return self::findObjByCol('id', $id);
+		$request = new Request();
+		$obj = $request
+			->select('*')
+			->from('Article')
+			->where('id', $values['id'])
+			->and('slug', $values['slug'])
+			->fetchClass();
+
+		return $obj ?: null;
 	}
 
-	public static function findUserByTitle(string $title): ?article
+	public static function findArticleByTitle(string $title): ?article
 	{
 		return self::findObjByCol('title', $title);
 	}
 
-	public static function findUserByContent(string $content): ?article
+	public static function findArticleByContent(string $content): ?article
 	{
 		return self::findObjByCol('content', $content);
-	}
-
-	public static function record(Article $article): void
-	{
-		$request = new Request();
-		$request->insertInto('article')->values([
-			'title' => $user->getTitle(),
-			'content' => $user->getContent(),
-		]);
 	}
 }
