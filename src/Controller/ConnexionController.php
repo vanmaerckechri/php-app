@@ -6,7 +6,7 @@ use App\App;
 use App\Authentification\Auth;
 use App\MessagesManager;
 
-Class ConnexionController extends ViewManager
+class ConnexionController extends AbstractController
 {
 	public function __construct()
 	{

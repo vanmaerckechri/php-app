@@ -4,7 +4,7 @@ namespace App\Repository;
 
 use App\Request\Request;
 
-class Repository
+abstract class AbstractRepository
 {
 	public static function findObjByCol(string $column, $value, string $options = ''): ?Object
 	{

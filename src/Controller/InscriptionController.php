@@ -8,7 +8,7 @@ use App\Repository\UserRepository;
 use App\MessagesManager;
 use App\Validator\Validator;
 
-Class InscriptionController extends ViewManager
+class InscriptionController extends AbstractController
 {
 	public function __construct()
 	{

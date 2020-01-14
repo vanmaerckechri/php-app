@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Model\Article;
 use App\Repository\ArticleRepository;
 
-Class HomeController extends ViewManager
+class HomeController extends AbstractController
 {
 	private $articlesByPage = 12;
 	public function __construct()

@@ -12,13 +12,12 @@ class Auth
 {
 	public static function user(): ?User
 	{
-		$id = $_SESSION['auth'] ?? null;
-		if ($id === null)
+		$user = new User();
+		if (!$user->isValid(['id' => $_SESSION['auth']], false))
 		{
 			return null;
 		}
-
-		$user = UserRepository::findUserById($id);
+		$user = UserRepository::findUserById($_SESSION['auth']);
 		return $user;
 	}
 
@@ -26,7 +25,7 @@ class Auth
 	{
 		$user = new User();
 		$inputs = array('username' => $username, 'password' => $password);
-		if ($user->isValid($inputs))
+		if ($user->isValid($inputs, false))
 		{
 			$user = UserRepository::findUserByUsername($username);
 

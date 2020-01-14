@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Request\Request;
 use App\Model\User;
 
-class UserRepository extends Repository
+class UserRepository extends AbstractRepository
 {
 	public static function findUserById(int $id): ?User
 	{

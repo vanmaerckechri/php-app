@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-Class Error404Controller extends ViewManager
+class Error404Controller extends AbstractController
 {
 	public function __construct()
 	{

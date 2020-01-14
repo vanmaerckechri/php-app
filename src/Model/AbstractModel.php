@@ -5,7 +5,7 @@ namespace App\Model;
 use App\App;
 use App\Validator\Validator;
 
-class Model
+abstract class AbstractModel
 {
 	public $classname;
 	public $table;
@@ -18,15 +18,18 @@ class Model
 		$this->initValidationRules();
 	}
 
-	public function isValid(array $inputs): bool
+	public function isValid(array $inputs, bool $setColumns = true): bool
 	{
 		$isValid = true;
 		foreach ($inputs as $column => $value) 
 		{
 			if (Validator::isValid($this, $column, $value))
 			{
-				$setCol = 'set' . ucfirst($column);
-				$this->$setCol($value);
+				if ($setColumns === true)
+				{
+					$setCol = 'set' . ucfirst($column);
+					$this->$setCol($value);
+				}
 			}
 			else
 			{
@@ -125,7 +128,17 @@ class Model
 				{
 					$this->rules[$varName]['required'] = true;
 				}
-
+				else if ($ruleName === 'type' && $value === 'int')
+				{
+					if (isset($this->rules['minLength']))
+					{
+						$this->rules['minLength'] = 10 ** $this->rules['minLength'];
+					}
+					if (isset($this->rules['maxLength']))
+					{
+						$this->rules['maxLength'] = 10 ** $this->rules['maxLength'];	
+					}
+				}
 			}
 		}
 	}

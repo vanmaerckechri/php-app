@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Validator\Validator;
 
-class Article extends Model
+class Article extends AbstractModel
 {
 	private $id;
 	private $user_id;
@@ -21,13 +21,6 @@ class Article extends Model
 	public function getId(): ?int
 	{
 		return $this->id;
-	}
-
-	public function setId(string $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 
 	public function getUser_id(): ?int

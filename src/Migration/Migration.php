@@ -71,18 +71,22 @@ class Migration
 	                    $uniques[] = "UNIQUE KEY `$column` (`$column`)";
 	                }
 	            }
-            }          
+            }
+            // remove unused dummies and add the line to the other lines
             $line = preg_replace('/{{(.*?)}}/', '', $line);
             $line = trim($line);
             $lines .= $line . ",";
         }
+        // add primary and unique key
         $lines .= $primKey === '' ? '' : $primKey . ',';
         $lines .= implode(',', $uniques);
         $lines = trim($lines, ',');
 
+        // add constraint (foreign key)
         $lines .= $table['constraint'] ? ',' . $table['constraint'] : '';
         $lines = trim($lines, ',');
 
+        // close lines with options (engine, charset, ...)
         $request .= $lines . ")$table[options]";
 
         return $request;

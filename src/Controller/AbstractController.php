@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use App\Authentification\Auth;
 
-Class ViewManager
+abstract class AbstractController
 {
 	protected $varPage = array();
 

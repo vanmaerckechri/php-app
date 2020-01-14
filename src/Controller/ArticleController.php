@@ -5,7 +5,7 @@ namespace App\Controller;
 use App\Model\Article;
 use App\Repository\ArticleRepository;
 
-Class ArticleController extends ViewManager
+class ArticleController extends AbstractController
 {
 	public function __construct()
 	{
@@ -19,7 +19,7 @@ Class ArticleController extends ViewManager
 	public function show($id, $slug)
 	{
 		$article = new Article();
-		if ($article->isValid(['id' => $id, 'slug' => $slug]))
+		if ($article->isValid(['id' => $id, 'slug' => $slug], false))
 		{
 			$this->varPage['article'] = ArticleRepository::findArticleByIdSlug(['id' => $id, 'slug' => $slug]);
 			if (!is_null($this->varPage['article']))

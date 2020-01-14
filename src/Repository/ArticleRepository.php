@@ -5,7 +5,7 @@ namespace App\Repository;
 use App\Request\Request;
 use App\Model\Article;
 
-class ArticleRepository extends Repository
+class ArticleRepository extends AbstractRepository
 {
 	public static function findArticleByIdSlug(array $values): ?article
 	{

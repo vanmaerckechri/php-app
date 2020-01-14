@@ -4,7 +4,7 @@ namespace App\Model;
 
 use App\Validator\Validator;
 
-class User extends Model
+class User extends AbstractModel
 {
 	private $id;
 	private $role;
