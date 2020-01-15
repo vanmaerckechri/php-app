@@ -1,2 +1,2 @@
-src/Config/db.php
+src/Config/dbServer.php
 src/Config/oauth.php

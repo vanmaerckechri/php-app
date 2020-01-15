@@ -44,7 +44,11 @@ class ArticleSchema
         )
     );
 
-    public static $constraint = "CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)";
+    public static $options = array(
+        'engine' => 'InnoDB',
+        'auto_increment' => 0,
+        'default charset' => 'utf8'
+    );
 
-    public static $options = "ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8";
+    public static $constraint = "CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)";
 }

@@ -3,116 +3,130 @@
 namespace App\Migration;
 
 use PDO;
+use App\App;
 
 class Migration
 {
-	private $pdo;
-	private $db = "CREATE DATABASE IF NOT EXISTS {{ dbname }} DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci";
-	private $tables = ['user', 'article', 'category'];
+    public function __construct()
+    {
+        $this->createDb();
+    }
 
-	public function __construct()
-	{
-		$settings = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/db.php';
+    public function createDb(): void
+    {
+        $dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
+        $pdo = new PDO("mysql:host={$dbServer['host']}", $dbServer['user'], $dbServer['pwd']);
+        $request = $this->mountDbRequest($dbServer['db']);
+        $pdo->prepare($request)->execute();
+    }
 
-		// connect to server to create new db
-		$this->pdo = new PDO('mysql:host=' . $settings['host'], $settings['user'], $settings['pwd']);
-		// create db
-		$this->createDb($settings['dbname']);
-		// connect to db
-		$this->pdo = new PDO("mysql:host=$settings[host]; dbname=$settings[dbname]", $settings['user'], $settings['pwd']);		
-		// create table(s)
-		foreach ($this->tables as $table)
-		{
-			$request = $this->buildSqlRequest($table);
-			$this->createTable($request);
-		}
-	}
+    public function createTable(string $table): void
+    {   
+        $request = $this->mountTableRequest($table);
+        App::getPdo()->prepare($request)->execute();
+    }
 
-	private function buildSqlRequest(string $table): string
+    public function createTables(array $tables): void
+    {
+        foreach ($tables as $table)
+        {
+            $this->createTable($table);
+        }
+    }
+
+    private function mountDbRequest(array $db): string
+    {
+        return "CREATE DATABASE IF NOT EXISTS `{$db['name']}` DEFAULT CHARACTER SET {$db['default character']}";
+    }
+
+	private function mountTableRequest(string $table): string
     {
     	$table = $this->getTableInfos($table);
-
-        $request = "CREATE TABLE IF NOT EXISTS `$table[name]`(";
-        $lines = '';
-        $primKey = '';
-        $uniques = array();
+        $request = array(
+            'column' => '',
+            'primaryKey' => '',
+            'unique' => array(),
+            'result' => "CREATE TABLE IF NOT EXISTS `{$table['name']}`(",
+        );
 
         // $table['schema'] is an array which will also be used for the input validator for models
         foreach ($table['schema'] as $column => $rules)
         {
-            $line = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
+            // markers that will help replace with values
+            $request['column'] = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
 
-            foreach ($rules as $rule => $value)
-            {
-            	// email is only used with the model validator
-            	if ($value === 'email')
-               	{
-                	$value = 'varchar';
-                }
-                // if current rule exist in $line replace {{ $rule }} by $value
-            	if (strpos($line, "{{ $rule }}") !== false)
-                {
-                	$replace = $value;
-                	// length is a special case, it requires parentheses
-                	if ($rule === 'maxLength')
-                	{
-                		$replace = "($value)";
-                	}
-                    $line = str_replace("{{ $rule }}", $replace, $line);
-                }
-                else 
-                {
-                	if ($rule === 'primaryKey' && $value === true)
-	                {
-	                    $primKey = "PRIMARY KEY (`$column`)";
-	                }
-	                else if ($rule === 'unique' && $value === true && (!isset($rules['primKey']) || $rules['primKey'] === false))
-	                {
-	                    $uniques[] = "UNIQUE KEY `$column` (`$column`)";
-	                }
-	            }
-            }
-            // remove unused dummies and add the line to the other lines
-            $line = preg_replace('/{{(.*?)}}/', '', $line);
-            $line = trim($line);
-            $lines .= $line . ",";
+            $request = $this->mountTableColumns($request, $column, $rules);
+
+            // remove unused markers and update result
+            $request['column']  = preg_replace('/{{(.*?)}}/', '', $request['column']);
+            $request['column']  = trim($request['column']);
+            $request['result'] .= $request['column'] . ',';
         }
-        // add primary and unique key
-        $lines .= $primKey === '' ? '' : $primKey . ',';
-        $lines .= implode(',', $uniques);
-        $lines = trim($lines, ',');
 
-        // add constraint (foreign key)
-        $lines .= $table['constraint'] ? ',' . $table['constraint'] : '';
-        $lines = trim($lines, ',');
+        // add primary key, unique key(s) and foreign key(s)
+        $request['result'] .= $request['primaryKey'] ?? '';
+        $request['result'] .= ', ' . implode(',', $request['unique']);
+        $request['result'] .= $table['constraint'] ? ',' . $table['constraint'] : '';
 
-        // close lines with options (engine, charset, ...)
-        $request .= $lines . ")$table[options]";
+        // close request with options (engine, charset, ...)
+        $options = $this->mountTableOptions($table['options']);
 
-        return $request;
+        return ($request['result'] . ")" . $options);
     }
-
-	private function createDb($db): void
-	{
-		$requete = str_replace("{{ dbname }}", "`$db`", $this->db);
-		$this->pdo->prepare($requete)->execute();
-	}
-
-	private function createTable(string $sqlRequest): void
-	{        
-        $request = $sqlRequest;
-        $this->pdo->prepare($request)->execute();
-	}
 
 	private function getTableInfos(string $table): array
 	{
 		$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
 
 		return array(
-			'name' => $table,
+            'name' => $table,
 			'schema' => $schema = $class::$schema,
     		'constraint' => $constraint = $class::$constraint,
     		'options' => $options = $class::$options
     	);
 	}
+
+    private function mountTableColumns(array $request, string $column, array $rules): array
+    {
+        foreach ($rules as $rule => $value)
+        {
+            // email is only used with the model validator
+            if ($value === 'email')
+            {
+                $value = 'varchar';
+            }
+            // if current rule exist in dummies, replace {{ $rule }} by $value
+            if (strpos($request['column'], "{{ $rule }}") !== false)
+            {
+                // length is a special case, it requires parentheses
+                if ($rule === 'maxLength')
+                {
+                    $value = "($value)";
+                }
+                $request['column'] = str_replace("{{ $rule }}", $value, $request['column']);
+            }
+            else 
+            {
+                if ($rule === 'primaryKey' && $value === true)
+                {
+                    $request['primaryKey'] = "PRIMARY KEY (`$column`)";
+                }
+                else if ($rule === 'unique' && $value === true)
+                {
+                    $request['unique'][] = "UNIQUE KEY `$column` (`$column`)";
+                }
+            }
+        }
+        return $request;
+    }
+
+    private function mountTableOptions(array $options): string
+    {
+        $mounting = '';
+        foreach ($options as $option => $value)
+        {
+            $mounting .= ' ' . strtoupper($option) . '=' . $value;
+        }
+        return $mounting;
+    }
 }
