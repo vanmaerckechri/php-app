@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\MessagesManager;
+use Core\MessagesManager;
 
 class DisconnectionController
 {

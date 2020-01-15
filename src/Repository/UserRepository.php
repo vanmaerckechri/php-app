@@ -2,7 +2,7 @@
 
 namespace App\Repository;
 
-use App\Request\Request;
+use Core\AbstractRepository;
 use App\Model\User;
 
 class UserRepository extends AbstractRepository

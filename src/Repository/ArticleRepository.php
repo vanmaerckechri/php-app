@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
-use App\Request\Request;
+use Core\ {
+	Request,
+	AbstractRepository
+};
 use App\Model\Article;
 
 class ArticleRepository extends AbstractRepository

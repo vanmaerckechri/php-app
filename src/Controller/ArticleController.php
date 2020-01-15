@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Core\AbstractController;
 use App\Model\Article;
 use App\Repository\ArticleRepository;
 

@@ -2,17 +2,25 @@
 
 namespace App\Controller;
 
-use App\App;
+use Core\ {
+	Helper,
+	MessagesManager,
+	Validator,
+	AbstractController
+};
 use App\Model\User;
 use App\Repository\UserRepository;
-use App\MessagesManager;
-use App\Validator\Validator;
+use App\Authentification\Auth;
 
 class InscriptionController extends AbstractController
 {
 	public function __construct()
 	{
-		$this->redirectLoggedUser('home');
+		if (!is_null(Auth::user()))
+		{
+			header('Location: ' . $GLOBALS['router']->url('home'));
+			exit();
+		}
 
 		$this->varPage = [
 			'title' => 'APP-PHP::INSCRIPTION',
@@ -24,7 +32,7 @@ class InscriptionController extends AbstractController
 
 	public function show()
 	{
-		$this->varPage['recordedInputs'] = App::getRecordedInputs();
+		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer(['InscriptionView', 'show']);
 	}
@@ -33,7 +41,7 @@ class InscriptionController extends AbstractController
 	{
 		if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email']))
 		{
-			App::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
+			Helper::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
 
 			$user = new User();
 			$isValid = true;

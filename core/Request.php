@@ -1,9 +1,8 @@
 <?php
 
-namespace App\Request;
+namespace Core;
 
 use PDO;
-use App\App;
 
 class Request
 {
@@ -99,7 +98,7 @@ class Request
 		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
 		$schema = $schemaClass::$schema;
 
-		$stmt = App::getPdo()->prepare($this->prepare);
+		$stmt = Helper::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
 			$bind = ':'. $column;

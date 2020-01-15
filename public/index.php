@@ -1,24 +1,11 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Autoloader.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/core/Autoloader.php';
 
-use App\App;
-use App\Router\Router;
+use Core\Helper;
+use Core\Router\Router;
 
-
-/*
-use App\Migration\Migration;
-use App\Migration\DbContentGenerator;
-
-$migration = new Migration();
-DbContentGenerator::launch([
-	'user' => ['iteration' => 5, 'forceRand' => ['created_at']],
-	'category' => ['iteration' => 3],
-	'article' => ['iteration' => 30, 'forceRand' => ['created_at']]
-]);
-*/
-
-App::startSession();
+Helper::startSession();
 
 $lang = "fr";
 

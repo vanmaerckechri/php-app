@@ -2,8 +2,6 @@
 
 namespace App\View;
 
-use App\App;
-
 Class ArticleView
 {
 	public static function show($varPage)

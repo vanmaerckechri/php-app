@@ -2,7 +2,11 @@
 
 namespace App\Controller;
 
-use App\Migration\Migration;
+use Core\ {
+	Migration\Migration,
+	Migration\DbContentGenerator,
+	AbstractController
+};
 
 class DevboardController extends AbstractController
 {
@@ -22,5 +26,11 @@ class DevboardController extends AbstractController
 		$migration = new Migration();
 		$migration->createDb();
 		$migration->createTables(['user', 'article', 'category']);
+
+		DbContentGenerator::launch([
+			'user' => ['iteration' => 5, 'forceRand' => ['created_at']],
+			'category' => ['iteration' => 3],
+			'article' => ['iteration' => 30, 'forceRand' => ['created_at']]
+		]);
 	}	
 }

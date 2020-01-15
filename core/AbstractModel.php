@@ -1,9 +1,6 @@
 <?php 
 
-namespace App\Model;
-
-use App\App;
-use App\Validator\Validator;
+namespace Core;
 
 abstract class AbstractModel
 {
@@ -13,7 +10,7 @@ abstract class AbstractModel
 
 	public function __construct($class)
 	{
-		$this->classname = App::convertNamespaceToClassname($class);
+		$this->classname = Helper::convertNamespaceToClassname($class);
 		$this->table = strtolower($this->classname);
 		$this->initValidationRules();
 	}

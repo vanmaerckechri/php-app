@@ -1,9 +1,6 @@
 <?php
 
-namespace App\Validator;
-
-use App\App;
-use App\MessagesManager;
+namespace Core;
 
 class Validator
 {

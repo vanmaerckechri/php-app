@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use Core\AbstractController;
+
 class Error404Controller extends AbstractController
 {
 	public function __construct()

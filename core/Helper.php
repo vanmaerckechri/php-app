@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace Core;
 
 use PDO;
 
-class App
+class Helper
 {
 	private static $pdo;
 

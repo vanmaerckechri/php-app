@@ -2,7 +2,10 @@
 
 namespace App\Model;
 
-use App\Validator\Validator;
+use Core\ {
+	Validator,
+	AbstractModel
+};
 
 class Article extends AbstractModel
 {

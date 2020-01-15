@@ -2,15 +2,22 @@
 
 namespace App\Controller;
 
-use App\App;
+use Core\ {
+	Helper,
+	MessagesManager,
+	AbstractController
+};
 use App\Authentification\Auth;
-use App\MessagesManager;
 
 class ConnexionController extends AbstractController
 {
 	public function __construct()
 	{
-		$this->redirectLoggedUser('home');
+		if (!is_null(Auth::user()))
+		{
+			header('Location: ' . $GLOBALS['router']->url('home'));
+			exit();
+		}
 
 		$this->varPage = [
 			'title' => 'APP-PHP::CONNEXION',
@@ -23,7 +30,7 @@ class ConnexionController extends AbstractController
 	{
 		require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
 		$this->varPage['google_id'] = GOOGLE_ID;
-		$this->varPage['recordedInputs'] = App::getRecordedInputs();
+		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer(['ConnexionView', 'show']);
 	}
@@ -36,7 +43,7 @@ class ConnexionController extends AbstractController
 			{
 				if (is_null(Auth::login($_POST['username'], $_POST['password'])))
 				{
-					App::recordInputs(['username' => $_POST['username']]);
+					Helper::recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
 					header('Location: ' . $GLOBALS['router']->url('connexion'));
 				}

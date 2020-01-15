@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Migration;
+namespace Core\Migration;
 
 use PDO;
-use App\App;
+use Core\Helper;
 
 /*
 	DbContentGenerator::launch([
@@ -18,7 +18,7 @@ class DbContentGenerator
 
 	public static function launch(array $tables): void
 	{
-		$pdo = App::getPdo();
+		$pdo = Helper::getPdo();
 
 		self::deleteRows($pdo, $tables);
 		self::loadFakerContent();
@@ -64,7 +64,7 @@ class DbContentGenerator
 						{
 							if (isset($rules['slug']))
 							{
-								$generation[$column] = App::slugify($generation[$rules['slug']]);
+								$generation[$column] = Helper::slugify($generation[$rules['slug']]);
 							}
 							else
 							{

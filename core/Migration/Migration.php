@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Migration;
+namespace Core\Migration;
 
 use PDO;
-use App\App;
+use Core\Helper;
 
 class Migration
 {
@@ -23,7 +23,7 @@ class Migration
     public function createTable(string $table): void
     {   
         $request = $this->mountTableRequest($table);
-        App::getPdo()->prepare($request)->execute();
+        Helper::getPdo()->prepare($request)->execute();
     }
 
     public function createTables(array $tables): void
