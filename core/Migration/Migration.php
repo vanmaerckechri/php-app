@@ -46,15 +46,13 @@ class Migration
             'column' => '',
             'primaryKey' => '',
             'unique' => array(),
+            'foreignKey' => array(),
             'result' => "CREATE TABLE IF NOT EXISTS `{$table['name']}`(",
         );
 
         // $table['schema'] is an array which will also be used for the input validator for models
         foreach ($table['schema'] as $column => $rules)
         {
-            // markers that will help replace with values
-            $request['column'] = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
-
             $request = $this->mountTableColumns($request, $column, $rules);
 
             // remove unused markers and update result
@@ -65,13 +63,13 @@ class Migration
 
         // add primary key, unique key(s) and foreign key(s)
         $request['result'] .= $request['primaryKey'] ?? '';
-        $request['result'] .= ', ' . implode(',', $request['unique']);
-        $request['result'] .= $table['constraint'] ? ',' . $table['constraint'] : '';
+        $request['result'] .= implode('', $request['unique']);
+        $request['result'] .= implode('', $request['foreignKey']);
 
         // close request with options (engine, charset, ...)
         $options = $this->mountTableOptions($table['options']);
 
-        return ($request['result'] . ")" . $options);
+        return ($request['result'] . ')' . $options);
     }
 
 	private function getTableInfos(string $table): array
@@ -81,13 +79,15 @@ class Migration
 		return array(
             'name' => $table,
 			'schema' => $schema = $class::$schema,
-    		'constraint' => $constraint = $class::$constraint,
     		'options' => $options = $class::$options
     	);
 	}
 
     private function mountTableColumns(array $request, string $column, array $rules): array
     {
+        // markers that will help replace with values
+        $request['column'] = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
+
         foreach ($rules as $rule => $value)
         {
             // email is only used with the model validator
@@ -113,7 +113,21 @@ class Migration
                 }
                 else if ($rule === 'unique' && $value === true)
                 {
-                    $request['unique'][] = "UNIQUE KEY `$column` (`$column`)";
+                    $request['unique'][] = ", UNIQUE KEY `$column` (`$column`)";
+                }
+                else if ($rule === 'foreignKey')
+                {
+                    $params = $value;
+                    if (isset($params['table']) && isset($params['column']))
+                    {
+                        $id = "{$params['table']}_{$params['column']}";
+
+                        $constraint = isset($params['constraint']) && $params['constraint'] === true ? "CONSTRAINT `fk_{$id}`" : '';
+                        $fk = "FOREIGN KEY (`{$id}`)";
+                        $ref = "REFERENCES `{$params['table']}` (`{$params['column']}`)";
+
+                        $request['foreignKey'][] = ", $constraint $fk $ref";
+                    }
                 }
             }
         }

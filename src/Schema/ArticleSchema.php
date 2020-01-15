@@ -16,6 +16,11 @@ class ArticleSchema
             'type' => 'int',
             'maxLength' => 11,
             'default' => 'NOT NULL',
+            'foreignKey' => array(
+                'table' => 'user',
+                'column' => 'id',
+                'constraint' => true
+            )
         ),
         'title' => array(
             'type' => 'varchar',
@@ -49,6 +54,4 @@ class ArticleSchema
         'auto_increment' => 0,
         'default charset' => 'utf8'
     );
-
-    public static $constraint = "CONSTRAINT `fk_user_id` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)";
 }

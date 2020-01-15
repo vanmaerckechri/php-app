@@ -26,6 +26,4 @@ class CategorySchema
         'auto_increment' => 0,
         'default charset' => 'utf8'
     );
-
-    public static $constraint = "";
 }
