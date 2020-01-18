@@ -117,23 +117,23 @@ abstract class AbstractModel
 		$schemaClass = 'App\\Schema\\' . $this->classname . 'Schema';
 		$this->rules = $schemaClass::$schema;
 
-		foreach ($this->rules as $varName => $rules)
+		foreach ($this->rules as $column => $rules)
 		{
 			foreach ($rules as $ruleName => $value)
 			{
-				if ($ruleName === 'default' && $value === 'NOT NULL' && (!isset($rules['autoInc']) || $rules['autoInc'] !== 'AUTO_INCREMENT' ))
+				if ($ruleName === 'default' && $value === 'NOT NULL')
 				{
-					$this->rules[$varName]['required'] = true;
+					$this->rules[$column]['required'] = true;
 				}
 				else if ($ruleName === 'type' && $value === 'int')
 				{
-					if (isset($this->rules['minLength']))
+					if (isset($this->rules[$column]['minLength']))
 					{
-						$this->rules['minLength'] = 10 ** $this->rules['minLength'];
+						$this->rules[$column]['minLength'] = 10 ** $this->rules[$column]['minLength'];
 					}
-					if (isset($this->rules['maxLength']))
+					if (isset($this->rules[$column]['maxLength']))
 					{
-						$this->rules['maxLength'] = 10 ** $this->rules['maxLength'];	
+						$this->rules[$column]['maxLength'] = 10 ** $this->rules[$column]['maxLength'];	
 					}
 				}
 			}

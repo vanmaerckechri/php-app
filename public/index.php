@@ -13,6 +13,10 @@ $router = new Router($_GET['url']);
 
 $router->get('/devboard', 'DevboardController#index', 'devboard');
 
+$router->delete('/devboard', 'DevboardController#delete');
+
+$router->post('/devboard', 'DevboardController#create');
+
 $router->get('/', 'HomeController#show', 'home');
 
 $router->get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');

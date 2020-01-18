@@ -19,7 +19,6 @@ class Route
 	{
 		// Remplacer les parenthèses du paramètre(regex) par des parenthèses qui ne capturent pas. Les parenthèses capturantes seront ajoutées dans la méthode 'paramMatch' à tous les paramètres concernés (qu'ils aient des parenthèses dans leur regex de base ou pas)...
 		$this->params[$param] = str_replace('(', '(?:', $regex);
-		// Retourner $this permet d'utiliser du fluent comme $plop->get()->with()->with().
 		return $this;
 	}
 
@@ -63,7 +62,15 @@ class Route
 		{
 			$params = explode('#', $this->callable);
 
-			$controller = 'App\\Controller\\' . $params[0];
+			if ($params[0] === 'DevboardController')
+			{
+				$controller = 'Core\\Devboard\\' . $params[0];
+			}
+			else
+			{
+				$controller = 'App\\Controller\\' . $params[0];
+			}
+
 			$controller = new $controller();
 
 			// [Class, Method], Param($id, $slug, etc.)

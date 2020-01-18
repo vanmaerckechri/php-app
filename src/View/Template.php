@@ -26,7 +26,7 @@ Class Template
 		return ob_get_clean();
 	}
 
-	public static function load($varPage)
+	public static function load(array $varPage): void
 	{
 		$header = HeaderView::get($varPage);
 		$js = SELF::importJs($varPage);

@@ -100,12 +100,10 @@ class Validator
 				return filter_var($input, FILTER_VALIDATE_EMAIL);
 			case 'int':
 				return filter_var($input, FILTER_VALIDATE_INT);
-			case 'varchar':
-			case 'text':
-			case 'datetime':
-				return is_string($input);
+			case 'bool':
+				return filter_var($input, FILTER_VALIDATE_BOOLEAN);
 			default:
-				return false;
+				return is_string($input);
 		}
 	}
 

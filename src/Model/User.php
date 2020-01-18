@@ -2,18 +2,15 @@
 
 namespace App\Model;
 
-use Core\ {
-	Validator,
-	AbstractModel
-};
+use Core\AbstractModel;
 
 class User extends AbstractModel
 {
 	private $id;
-	private $role;
 	private $email;
 	private $username;
 	private $password;
+	private $role;
 	private $created_at;
 
 	public function __construct()
@@ -26,14 +23,14 @@ class User extends AbstractModel
 		return $this->id;
 	}
 
-	public function getRole(): ?string
+	public function getEmail(): ?string
 	{
-		return $this->role;
+		return $this->email;
 	}
 
-	public function setRole(string $role): self
+	public function setEmail(string $email): self
 	{
-		$this->role = $role;
+		$this->email = $email;
 
 		return $this;
 	}
@@ -62,24 +59,24 @@ class User extends AbstractModel
 		return $this;
 	}
 
-	public function getEmail(): ?string
+	public function getRole(): ?string
 	{
-		return $this->email;
+		return $this->role;
 	}
 
-	public function setEmail(string $email): self
+	public function setRole(string $role): self
 	{
-		$this->email = $email;
+		$this->role = $role;
 
 		return $this;
 	}
 
-    public function getCreated_at(): ?\DateTime
-    {
-    	if (is_null($this->created_at))
-    	{
-    		return null;
-    	}
-        return new \DateTime($this->created_at);
-    }
+	public function getCreated_at(): ?\DateTime
+	{
+		if (is_null($this->created_at))
+		{
+			return null;
+		}
+		return new \DateTime($this->created_at);
+	}
 }

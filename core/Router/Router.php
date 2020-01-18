@@ -34,14 +34,27 @@ class Router
 		return $this->add($path, $callable, $name, 'POST');
 	}
 
+	public function delete($path, $callable, $name = null)
+	{
+		return $this->add($path, $callable, $name, 'DELETE');
+	}
+
+	public function put($path, $callable, $name = null)
+	{
+		return $this->add($path, $callable, $name, 'PUT');
+	}
+
 	public function run()
 	{
-		if(!isset($this->routes[$_SERVER['REQUEST_METHOD']]))
+		$method = $_POST['method'] ?? $_SERVER['REQUEST_METHOD'];
+		$method = strtoupper($method);
+
+		if(!isset($this->routes[$method]))
 		{
 			throw new RouterException('REQUEST_METHOD does not exist');
 		}
 
-		foreach ($this->routes[$_SERVER['REQUEST_METHOD']] as $route)
+		foreach ($this->routes[$method] as $route)
 		{
 			if ($route->match($this->url))
 			{

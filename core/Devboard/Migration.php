@@ -1,29 +1,57 @@
 <?php
 
-namespace Core\Migration;
+namespace Core\Devboard;
 
 use PDO;
 use Core\Helper;
 
 class Migration
 {
+    private $dbServer;
+    private $connectServ;
+
     public function __construct()
     {
-        $this->createDb();
+        $this->dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
+        $this->connectServ = new PDO("mysql:host={$this->dbServer['host']}", $this->dbServer['user'], $this->dbServer['pwd']);
     }
 
-    public function createDb(): void
+    public function getDbName(): ?string
     {
-        $dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
-        $pdo = new PDO("mysql:host={$dbServer['host']}", $dbServer['user'], $dbServer['pwd']);
-        $request = $this->mountDbRequest($dbServer['db']);
-        $pdo->prepare($request)->execute();
+        return $this->dbServer['db']['name'];
     }
 
-    public function createTable(string $table): void
-    {   
-        $request = $this->mountTableRequest($table);
-        Helper::getPdo()->prepare($request)->execute();
+    public function checkDbExist(): bool
+    {
+        $stmt = $this->connectServ->prepare("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{$this->dbServer['db']['name']}'");
+        $stmt->execute();
+        if ($stmt->fetch() !== false)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public function createDatabase(): void
+    {
+        $request = $this->mountDbRequest($this->dbServer['db']);
+        $this->connectServ->prepare($request)->execute();
+    }
+
+    public function dropDatabase(): void
+    {
+        $this->connectServ->prepare("DROP DATABASE IF EXISTS `{$this->dbServer['db']['name']}`")->execute();
+    }
+
+    public function listTablesFromDb(): ?array
+    {
+        $stmt = Helper::getPdo()->query('SHOW TABLES');
+        $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
+        if (empty($result))
+        {
+            return null;
+        }
+        return $result;
     }
 
     public function createTables(array $tables): void
@@ -32,6 +60,17 @@ class Migration
         {
             $this->createTable($table);
         }
+    }
+
+    public function createTable(string $table): void
+    {   
+        $request = $this->mountTableRequest($table);
+        Helper::getPdo()->prepare($request)->execute();
+    }
+
+    public function dropTable(string $table): void
+    {
+         Helper::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
     }
 
     private function mountDbRequest(array $db): string
@@ -86,14 +125,17 @@ class Migration
     private function mountTableColumns(array $request, string $column, array $rules): array
     {
         // markers that will help replace with values
-        $request['column'] = "`$column` {{ type }}{{ maxLength }} {{ default }} {{ autoInc }}";
+        $request['column'] = "`$column` {{ type }}{{ maxLength }} {{ default }}";
 
         foreach ($rules as $rule => $value)
         {
-            // email is only used with the model validator
-            if ($value === 'email')
+            // email, password are only used with model and validator
+            if ($rule === 'type')
             {
-                $value = 'varchar';
+                if ($value === 'email' || $value === 'password')
+                {
+                    $value = 'varchar';
+                }
             }
             // if current rule exist in dummies, replace {{ $rule }} by $value
             if (strpos($request['column'], "{{ $rule }}") !== false)
@@ -117,14 +159,13 @@ class Migration
                 }
                 else if ($rule === 'foreignKey')
                 {
-                    $params = $value;
-                    if (isset($params['table']) && isset($params['column']))
+                    if (isset($value['table']) && isset($value['column']))
                     {
-                        $id = "{$params['table']}_{$params['column']}";
+                        $id = "{$value['table']}_{$value['column']}";
 
-                        $constraint = isset($params['constraint']) && $params['constraint'] === true ? "CONSTRAINT `fk_{$id}`" : '';
+                        $constraint = isset($value['constraint']) && $value['constraint'] === true ? "CONSTRAINT `fk_{$id}`" : '';
                         $fk = "FOREIGN KEY (`{$id}`)";
-                        $ref = "REFERENCES `{$params['table']}` (`{$params['column']}`)";
+                        $ref = "REFERENCES `{$value['table']}` (`{$value['column']}`)";
 
                         $request['foreignKey'][] = ", $constraint $fk $ref";
                     }

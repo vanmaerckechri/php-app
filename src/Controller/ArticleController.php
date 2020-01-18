@@ -17,7 +17,7 @@ class ArticleController extends AbstractController
 		];
 	}
 
-	public function show($id, $slug)
+	public function show(int $id, string $slug): void
 	{
 		$article = new Article();
 		if ($article->isValid(['id' => $id, 'slug' => $slug], false))
@@ -26,7 +26,6 @@ class ArticleController extends AbstractController
 			if (!is_null($this->varPage['article']))
 			{
 				$this->varPage['id'] = $id;
-				$this->varPage['slug'] = $slug;
 				$this->renderer(['ArticleView', 'show']);
 				return;
 			}

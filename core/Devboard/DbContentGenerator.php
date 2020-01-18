@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Migration;
+namespace Core\Devboard;
 
 use PDO;
 use Core\Helper;
@@ -16,7 +16,7 @@ class DbContentGenerator
 {
 	private static $faker;
 
-	public static function launch(array $tables): void
+	public static function createRows(array $tables): void
 	{
 		$pdo = Helper::getPdo();
 
@@ -52,15 +52,14 @@ class DbContentGenerator
 				foreach ($schema as $column => $rules)
 				{
 					$isForceRand = array_key_exists('forceRand', $params) && array_search($column, $params['forceRand']) !== false ? true : false;
-					$isAutoInc = isset($rules['autoInc']) && $rules['autoInc'] === 'AUTO_INCREMENT';
 					$isRequired = isset($rules['default']) && $rules['default'] === 'NOT NULL';
 
-					if ($isForceRand || (!$isAutoInc && $isRequired))
+					if ($isForceRand || $isRequired)
 					{
 						$iteration = $tables[$table];
 
 						// generate only column who are not an id link between 2 tables
-						if (strpos($column, '_id') === false)
+						if (!isset($rules['foreignKey']))
 						{
 							if (isset($rules['slug']))
 							{
@@ -80,8 +79,7 @@ class DbContentGenerator
 						}
 						else
 						{
-							$linkedTable = str_replace('_id', '', $column);
-							$generation[$column] = self::getRandId($linkedTable);
+							$generation[$column] = self::getRandRowValueByCol($rules['foreignKey']['table'], $rules['foreignKey']['column']);
 						}
 						$generation[$column] = addslashes($generation[$column]);
 					}
@@ -137,14 +135,15 @@ class DbContentGenerator
 	}
 
 
-	private static function getRandId(string $table): ?int
+	private static function getRandRowValueByCol(string $table, string $column): ?int
 	{
 		$class = 'App\\Repository\\' . ucfirst($table) . 'Repository';
-		$ids = $class::FindAll();
-		if (!is_null($ids))
+		$objs = $class::FindAll();
+		if (!is_null($objs))
 		{
-			$index = rand(0, count($ids) - 1);
-			return $ids[$index]->getId();			
+			$index = rand(0, count($objs) - 1);
+			$getCol = 'get' . ucfirst($column);
+			return $objs[$index]->$getCol();			
 		}
 		return null;
 	}

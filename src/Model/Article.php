@@ -2,17 +2,14 @@
 
 namespace App\Model;
 
-use Core\ {
-	Validator,
-	AbstractModel
-};
+use Core\AbstractModel;
 
 class Article extends AbstractModel
 {
 	private $id;
 	private $user_id;
-	private $slug;
 	private $title;
+	private $slug;
 	private $content;
 	private $created_at;
 
@@ -38,18 +35,6 @@ class Article extends AbstractModel
 		return $this;
 	}
 
-	public function getSlug(): ?string
-	{
-		return $this->slug;
-	}
-
-	public function setSlug(string $slug): self
-	{
-		$this->slug = $slug;
-
-		return $this;
-	}
-
 	public function getTitle(): ?string
 	{
 		return $this->title;
@@ -58,7 +43,18 @@ class Article extends AbstractModel
 	public function setTitle(string $title): self
 	{
 		$this->title = $title;
-		$this->slug = App::slugify($title);
+
+		return $this;
+	}
+
+	public function getSlug(): ?string
+	{
+		return $this->slug;
+	}
+
+	public function setSlug(string $slug): self
+	{
+		$this->slug = $slug;
 
 		return $this;
 	}
@@ -75,12 +71,12 @@ class Article extends AbstractModel
 		return $this;
 	}
 
-    public function getCreated_at(): ?\DateTime
-    {
-    	if (is_null($this->created_at))
-    	{
-    		return null;
-    	}
-        return new \DateTime($this->created_at);
-    }
+	public function getCreated_at(): ?\DateTime
+	{
+		if (is_null($this->created_at))
+		{
+			return null;
+		}
+		return new \DateTime($this->created_at);
+	}
 }

@@ -8,8 +8,7 @@ class CategorySchema
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL',
-            'autoInc' => 'AUTO_INCREMENT',
+            'default' => 'NOT NULL AUTO_INCREMENT',
             'primaryKey' => true
         ),
         'title' => array(

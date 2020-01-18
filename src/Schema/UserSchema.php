@@ -8,8 +8,7 @@ class UserSchema
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL',
-            'autoInc' => 'AUTO_INCREMENT',
+            'default' => 'NOT NULL AUTO_INCREMENT',
             'primaryKey' => true
         ),
         'email' => array(
@@ -27,7 +26,7 @@ class UserSchema
             'unique' => true
         ),
         'password' => array(
-            'type' => 'varchar',
+            'type' => 'password',
             'minLength' => 4,
             'maxLength' => 60,
             'default' => 'NOT NULL'
