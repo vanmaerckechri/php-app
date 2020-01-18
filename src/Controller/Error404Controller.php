@@ -17,6 +17,6 @@ class Error404Controller extends AbstractController
 	}
 	public function show()
 	{
-		$this->renderer(['error404View', 'show']);
+		$this->renderer('error404View', 'show');
 	}	
 }

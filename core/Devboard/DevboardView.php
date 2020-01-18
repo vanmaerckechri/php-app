@@ -33,6 +33,7 @@
 					<?php else: ?>
 						<input type="submit" value="CREER">
 					<?php endif; ?>
+					<?= $varPage['messages']["{$name}Sms"] ?? '' ?>
     			</form>
 			<?php endforeach ?>
 			<h2>Modèles:</h2>

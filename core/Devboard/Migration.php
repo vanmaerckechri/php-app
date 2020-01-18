@@ -70,8 +70,40 @@ class Migration
 
     public function dropTable(string $table): void
     {
-         Helper::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
+        Helper::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
     }
+
+    public function checkForeignKeyOutside(string $parentTable): ?string
+    {
+        $tables = $this->listTablesFromDb();
+        foreach ($tables as $table)
+        {
+            $tableInfos = $this->getTableInfos($table);
+            foreach ($tableInfos['schema'] as $column => $rules)
+            {
+                if (isset($rules['foreignKey']['table']) && $rules['foreignKey']['table'] === $parentTable)
+                {
+                    return $table;
+                }
+            }
+        }
+        return null;
+    }
+
+    public function checkForeignKeyInside(string $table): ?string
+    {
+        $tables = $this->listTablesFromDb();
+        $tableInfos = $this->getTableInfos($table);
+        foreach ($tableInfos['schema'] as $column => $rules)
+        {
+            if (isset($rules['foreignKey']['table']) && !array_search($rules['foreignKey']['table'], $tables))
+            {
+                return $rules['foreignKey']['table'];
+            }
+        }
+        return null;
+    }
+
 
     private function mountDbRequest(array $db): string
     {

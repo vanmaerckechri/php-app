@@ -15,7 +15,7 @@ class MessagesManager
 		}
 	}
 
-	public static function add(array $datas, $isCustomSms = false, string $customType = 'info'): void
+	public static function add(array $datas, bool $isCustomSms = false, string $customType = 'info'): void
 	{
 		self::loadMessages();
 

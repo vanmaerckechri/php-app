@@ -34,7 +34,7 @@ class InscriptionController extends AbstractController
 	{
 		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->renderer(['InscriptionView', 'show']);
+		$this->renderer('InscriptionView', 'show');
 	}
 
 	public function record()

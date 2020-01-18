@@ -32,7 +32,7 @@ class ConnexionController extends AbstractController
 		$this->varPage['google_id'] = GOOGLE_ID;
 		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->renderer(['ConnexionView', 'show']);
+		$this->renderer('ConnexionView', 'show');
 	}
 
 	public function check(): void

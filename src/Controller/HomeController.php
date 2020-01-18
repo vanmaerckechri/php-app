@@ -21,6 +21,6 @@ class HomeController extends AbstractController
 	public function show()
 	{
 		$this->varPage['articles'] = ArticleRepository::findAll("ORDER BY created_at DESC LIMIT $this->articlesByPage") ?? array();
-		$this->renderer(['HomeView', 'show']);
+		$this->renderer('HomeView', 'show');
 	}	
 }

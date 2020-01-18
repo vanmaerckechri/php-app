@@ -26,7 +26,7 @@ class ArticleController extends AbstractController
 			if (!is_null($this->varPage['article']))
 			{
 				$this->varPage['id'] = $id;
-				$this->renderer(['ArticleView', 'show']);
+				$this->renderer('ArticleView', 'show');
 				return;
 			}
 		}
