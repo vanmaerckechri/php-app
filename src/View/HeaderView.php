@@ -13,11 +13,12 @@ Class HeaderView
 		?>
 		<h1><?=$varPage['h1'] ?? ''?></h1>
 		<nav>
+			<a class="<?=self::getActive('')?>" href="<?=$GLOBALS['router']->url('home')?>">Les Articles</a>
 		<?php
 		if (!$user)
 		{
 			?>
-			<a href="<?=$GLOBALS['router']->url('connexion')?>">Mon Compte</a>
+			<a class="<?=self::getActive('connexion')?>" href="<?=$GLOBALS['router']->url('connexion')?>">Mon Compte</a>
 			<?php
 		}
 		else
@@ -30,5 +31,15 @@ Class HeaderView
 		</nav>
 		<?php
 		return ob_get_clean();
+	}
+
+	private static function getActive(string $route): ?string
+	{
+		$url = $_GET['url'];
+		if ($url === $route)
+		{
+			return 'active';
+		}
+		return null;
 	}
 }
