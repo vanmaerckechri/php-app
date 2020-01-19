@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use Core\Router\Router;
 use Core\AbstractController;
 use App\Model\Article;
 use App\Repository\ArticleRepository;
@@ -22,15 +23,15 @@ class ArticleController extends AbstractController
 		$article = new Article();
 		if ($article->isValid(['id' => $id, 'slug' => $slug], false))
 		{
-			$this->varPage['article'] = ArticleRepository::findArticleByIdSlug(['id' => $id, 'slug' => $slug]);
-			if (!is_null($this->varPage['article']))
+			$article = ArticleRepository::findArticleById($id);
+			if (!is_null($article) && $article->getSlug() === $slug)
 			{
-				$this->varPage['id'] = $id;
+				$this->varPage['article'] = $article;
 				$this->renderer('ArticleView', 'show');
 				return;
 			}
 		}
-		header('Location: ' . $GLOBALS['router']->url('error404'));
+		header('Location: ' . Router::url('error404'));
 		exit();
 	}	
 }

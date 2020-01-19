@@ -10,17 +10,9 @@ use App\Model\Article;
 
 class ArticleRepository extends AbstractRepository
 {
-	public static function findArticleByIdSlug(array $values): ?article
+	public static function findArticleById(int $id): ?article
 	{
-		$request = new Request();
-		$obj = $request
-			->select('*')
-			->from('Article')
-			->where('id', $values['id'])
-			->and('slug', $values['slug'])
-			->fetchClass();
-
-		return $obj ?: null;
+		return self::findObjByCol('id', $id);
 	}
 
 	public static function findArticleByTitle(string $title): ?article
