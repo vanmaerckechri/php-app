@@ -1,6 +1,6 @@
 <?php
 
-namespace Core;
+namespace Core\MessagesManager;
 
 class MessagesManager
 {
@@ -11,7 +11,14 @@ class MessagesManager
 	{
 		if (!self::$messages)
 		{
-			self::$messages = require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/messages.php';
+			self::$messages = require_once $_SERVER['DOCUMENT_ROOT'] . '/core/MessagesManager/messages.php';
+
+			$customSmsFile = $_SERVER['DOCUMENT_ROOT'] . '/src/Config/messages.php';
+			if (file_exists($customSmsFile))
+			{
+				$customSms = require_once $customSmsFile;
+				self::$messages = array_unique(array_merge(self::$messages, $customSms), SORT_REGULAR);
+			}
 		}
 	}
 

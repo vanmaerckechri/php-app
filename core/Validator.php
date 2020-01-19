@@ -2,6 +2,8 @@
 
 namespace Core;
 
+use Core\MessagesManager\MessagesManager;
+
 class Validator
 {
 	public static function isUnique(object $obj, string $column, $input): bool

@@ -4,10 +4,10 @@ namespace App\Controller;
 
 use Core\ {
 	Helper,
-	MessagesManager,
 	Validator,
 	AbstractController,
-	Router\Router
+	Router\Router,
+	MessagesManager\MessagesManager
 };
 use App\Model\User;
 use App\Repository\UserRepository;

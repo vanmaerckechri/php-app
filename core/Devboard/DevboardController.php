@@ -4,7 +4,7 @@ namespace Core\Devboard;
 
 use PDO;
 use Core\Helper;
-use Core\MessagesManager;
+use Core\MessagesManager\MessagesManager;
 
 class DevboardController
 {

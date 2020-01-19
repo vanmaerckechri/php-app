@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Core\{
-	MessagesManager,
-	Router\Router
+	Router\Router,
+	MessagesManager\MessagesManager
 };
 
 class DisconnectionController

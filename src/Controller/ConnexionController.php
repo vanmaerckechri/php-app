@@ -4,9 +4,9 @@ namespace App\Controller;
 
 use Core\ {
 	Helper,
-	MessagesManager,
 	AbstractController,
-	Router\Router
+	Router\Router,
+	MessagesManager\MessagesManager
 };
 use App\Authentification\Auth;
 
