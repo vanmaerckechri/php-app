@@ -2,6 +2,7 @@
 
 namespace App\Authentification;
 
+use Core\Router\Router;
 use App\Authentification\Auth;
 use App\Model\User;
 use App\Repository\UserRepository;
@@ -26,7 +27,7 @@ class Oauth
 	        'code' => $_GET['code'],
 			'client_id' => GOOGLE_ID,
 			'client_secret' => GOOGLE_SECRET,
-			'redirect_uri' => $GLOBALS['router']->url('googleConnexion'),
+			'redirect_uri' => Router::url('googleConnexion'),
 			'grant_type' => 'authorization_code'
 		);
 

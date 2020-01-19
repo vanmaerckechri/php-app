@@ -2,9 +2,11 @@
 
 namespace App\View;
 
+use Core\AbstractView;
+use Core\Router\Router;
 use App\Authentification\Auth;
 
-Class HeaderView
+Class HeaderView extends AbstractView
 {
 	public static function get($varPage)
 	{
@@ -13,33 +15,14 @@ Class HeaderView
 		?>
 		<h1><?=$varPage['h1'] ?? ''?></h1>
 		<nav>
-			<a class="<?=self::getActive('')?>" href="<?=$GLOBALS['router']->url('home')?>">Les Articles</a>
-		<?php
-		if (!$user)
-		{
-			?>
-			<a class="<?=self::getActive('connexion')?>" href="<?=$GLOBALS['router']->url('connexion')?>">Mon Compte</a>
-			<?php
-		}
-		else
-		{
-			?>
-			<a href="<?=$GLOBALS['router']->url('disconnect')?>">Se Déconnecter</a>
-			<?php
-		}
-		?>
+			<a class="<?=self::activeCurrentPage('home')?>" href="<?=Router::url('home')?>">Les Articles</a>
+		<?php if (!$user): ?>
+			<a class="<?=self::activeCurrentPage('connexion')?>" href="<?=Router::url('connexion')?>">Mon Compte</a>
+		<?php else: ?>
+			<a href="<?=Router::url('disconnect')?>">Se Déconnecter</a>
+		<?php endif; ?>
 		</nav>
-		<?php
+		<?php 
 		return ob_get_clean();
-	}
-
-	private static function getActive(string $route): ?string
-	{
-		$url = $_GET['url'];
-		if ($url === $route)
-		{
-			return 'active';
-		}
-		return null;
 	}
 }

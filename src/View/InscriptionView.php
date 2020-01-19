@@ -6,12 +6,11 @@ Class InscriptionView
 {
 	public static function show($varPage)
 	{
-		$action = $GLOBALS['router']->url('inscription');
 		ob_start();
 		?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<form action="<?= $action ?>" method="post" id='form'>
+			<form method="post" id='form'>
 				<label for="username">Login<input type="text" name="username" id="username" value="<?= htmlentities($varPage['recordedInputs']['username'] ?? '') ?>" required><?= $varPage['messages']['usernameSms'] ?? '' ?></label>
 				<label for="password">Password<input type="password" name="password" id="password" required><?= $varPage['messages']['passwordSms'] ?? '' ?></label>
 				<label for="pwdConfirm">Confirm Password<input type="password" name="pwdConfirm" id="pwdConfirm" required></label>

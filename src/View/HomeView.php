@@ -2,6 +2,7 @@
 
 namespace App\View;
 
+use Core\Router\Router;
 use Core\Helper;
 
 Class HomeView
@@ -18,7 +19,7 @@ Class HomeView
 					<h3><?=htmlentities($article->getTitle())?></h3>
 					<p class="content"><?=htmlentities(Helper::excerpt($article->getContent(), 125))?></p>
 					<p class="date"><?=$article->getCreated_at()->format('d/m/y')?></p>
-					<a class="btn" href="<?= $GLOBALS['router']->url('article', ['slug' => $article->getSlug(), 'id' => $article->getId()])?>">Voir Plus</a>
+					<a class="btn" href="<?=Router::url('article', ['slug' => $article->getSlug(), 'id' => $article->getId()])?>">Voir Plus</a>
 				</li>
 				<?php endforeach ?>
 			</ul>

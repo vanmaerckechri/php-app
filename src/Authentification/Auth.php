@@ -2,11 +2,9 @@
 
 namespace App\Authentification;
 
-use PDO;
-use App\App;
+use Core\Router\Router;
 use App\Model\User;
 use App\Repository\UserRepository;
-use App\Validator\Validator;
 
 class Auth
 {
@@ -46,7 +44,7 @@ class Auth
 	public static function addUserToSession(User $user): void
 	{
 		$_SESSION['auth'] = $user->getId();
-		header('Location: ' . $GLOBALS['router']->url('home'));
+		header('Location: ' . Router::url('home'));
 		exit();		
 	}
 }

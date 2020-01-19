@@ -14,7 +14,6 @@ class Helper
 		{
 			$dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
 			self::$pdo = new PDO("mysql:host={$dbServer['host']}; dbname={$dbServer['db']['name']}; charset={$dbServer['charset']}", $dbServer['user'], $dbServer['pwd'], [
-				PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
 			]);
 		}

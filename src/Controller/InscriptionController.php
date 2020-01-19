@@ -6,7 +6,8 @@ use Core\ {
 	Helper,
 	MessagesManager,
 	Validator,
-	AbstractController
+	AbstractController,
+	Router\Router
 };
 use App\Model\User;
 use App\Repository\UserRepository;
@@ -18,7 +19,7 @@ class InscriptionController extends AbstractController
 	{
 		if (!is_null(Auth::user()))
 		{
-			header('Location: ' . $GLOBALS['router']->url('home'));
+			header('Location: ' .  Router::url('home'));
 			exit();
 		}
 
@@ -63,12 +64,12 @@ class InscriptionController extends AbstractController
 			{
 				UserRepository::record($user);
 				MessagesManager::add(['info' => ['registerComplete' => null]]);
-				header('Location: ' . $GLOBALS['router']->url('connexion'));
+				header('Location: ' . Router::url('connexion'));
 				exit();
 			}
 		}
 
-		header('Location: ' . $GLOBALS['router']->url('inscription'));
+		header('Location: ' .  Router::url('inscription'));
 		exit();
 	}	
 }

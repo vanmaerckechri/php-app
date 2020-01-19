@@ -5,7 +5,8 @@ namespace App\Controller;
 use Core\ {
 	Helper,
 	MessagesManager,
-	AbstractController
+	AbstractController,
+	Router\Router
 };
 use App\Authentification\Auth;
 
@@ -15,7 +16,7 @@ class ConnexionController extends AbstractController
 	{
 		if (!is_null(Auth::user()))
 		{
-			header('Location: ' . $GLOBALS['router']->url('home'));
+			header('Location: ' . Router::url('home'));
 			exit();
 		}
 
@@ -45,7 +46,7 @@ class ConnexionController extends AbstractController
 				{
 					Helper::recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
-					header('Location: ' . $GLOBALS['router']->url('connexion'));
+					header('Location: ' . Router::url('connexion'));
 				}
 			}
 		}

@@ -9,34 +9,40 @@ Helper::startSession();
 
 $lang = "fr";
 
-$router = new Router($_GET['url']);
+Router::setUrl($_GET['url']);
 
-$router->get('/devboard', 'DevboardController#index', 'devboard');
+// Only for development!!! --->
 
-$router->delete('/devboard', 'DevboardController#delete');
+Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-$router->post('/devboard', 'DevboardController#create');
+Router::get('/devboard', 'DevboardController#index', 'devboard');
 
-$router->get('/', 'HomeController#show', 'home');
+Router::delete('/devboard', 'DevboardController#delete');
 
-$router->get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
+Router::post('/devboard', 'DevboardController#create');
 
-$router->get('/connexion', 'ConnexionController#show', 'connexion');
+// <--- Only for development!!!
 
-$router->post('/connexion', 'ConnexionController#check', 'connexion');
+Router::get('/', 'HomeController#show', 'home');
 
-$router->get('/google-connexion', 'GoogleConnexionController#check', 'googleConnexion');
+Router::get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
-$router->get('/inscription', 'InscriptionController#show', 'inscription');
+Router::get('/connexion', 'ConnexionController#show', 'connexion');
 
-$router->post('/inscription', 'InscriptionController#record', 'inscription');
+Router::post('/connexion', 'ConnexionController#check', 'connexion');
 
-$router->get('/disconnect', 'DisconnectionController#check', 'disconnect');
+Router::get('/google-connexion', 'GoogleConnexionController#check', 'googleConnexion');
+
+Router::get('/inscription', 'InscriptionController#show', 'inscription');
+
+Router::post('/inscription', 'InscriptionController#record', 'inscription');
+
+Router::get('/disconnect', 'DisconnectionController#check', 'disconnect');
 
 // unknow url
 
-$router->get('.+', 'Error404Controller#show');
+Router::get('.+', 'Error404Controller#show');
 
-$router->get('/404', 'Error404Controller#show', 'error404');
+Router::get('/404', 'Error404Controller#show', 'error404');
 
-$router->run();
+Router::run();

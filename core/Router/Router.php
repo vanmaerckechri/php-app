@@ -4,59 +4,48 @@ namespace Core\Router;
 
 class Router
 {
-	private $url;
-	private $routes = [];
-	private $namedRoutes = [];
+	private static $url;
+	private static $routes = [];
+	private static $namedRoutes = [];
 
-	public function __construct($url)
+	public static function setUrl(string $url): void
 	{
-		$this->url = $url;
+		self::$url = $url;
 	}
 
-	private function add($path, $callable, $name, $method)
+	public static function get(string $path, string $callable, ?string $name = null): Route
 	{
-		$route = new Route($path, $callable);
-		$this->routes[$method][] = $route;
-		if ($name)
-		{
-			$this->namedRoutes[$name] = $route;
-		}
-		return $route;		
+		return self::add($path, $callable, $name, 'GET');
 	}
 
-	public function get($path, $callable, $name = null)
+	public static function post(string $path, string $callable, ?string $name = null): Route
 	{
-		return $this->add($path, $callable, $name, 'GET');
+		return self::add($path, $callable, $name, 'POST');
 	}
 
-	public function post($path, $callable, $name = null)
+	public static function delete(string $path, string $callable, ?string $name = null): Route
 	{
-		return $this->add($path, $callable, $name, 'POST');
+		return self::add($path, $callable, $name, 'DELETE');
 	}
 
-	public function delete($path, $callable, $name = null)
+	public static function put(string $path, string $callable, ?string $name = null): Route
 	{
-		return $this->add($path, $callable, $name, 'DELETE');
+		return self::add($path, $callable, $name, 'PUT');
 	}
 
-	public function put($path, $callable, $name = null)
-	{
-		return $this->add($path, $callable, $name, 'PUT');
-	}
-
-	public function run()
+	public static function run(): ?string
 	{
 		$method = $_POST['method'] ?? $_SERVER['REQUEST_METHOD'];
 		$method = strtoupper($method);
 
-		if(!isset($this->routes[$method]))
+		if(!isset(self::$routes[$method]))
 		{
 			throw new RouterException('REQUEST_METHOD does not exist');
 		}
 
-		foreach ($this->routes[$method] as $route)
+		foreach (self::$routes[$method] as $route)
 		{
-			if ($route->match($this->url))
+			if ($route->match(self::$url))
 			{
 				return $route->call();
 			}
@@ -65,14 +54,38 @@ class Router
 		throw new RouterException('No matching routes');
 	}
 
-	public function url($name, $params = [])
+	public static function url(string $name, array $params = []): string
 	{
-		if (!isset($this->namedRoutes[$name]))
+		if (!isset(self::$namedRoutes[$name]))
 		{
 			throw new RouterException('No route matches this name');
 		}
 
-		$url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . $this->namedRoutes[$name]->getUrl($params);
+		$url = (!empty($_SERVER['HTTPS']) ? 'https' : 'http') . '://' . $_SERVER['HTTP_HOST'] . '/' . self::$namedRoutes[$name]->getUrl($params);
 		return $url;
 	}
+
+	public static function isCurrentRoute(string $name): bool
+	{
+		if (isset(self::$namedRoutes[$name]))
+		{
+			if (self::$url === self::$namedRoutes[$name]->getUrl([]))
+			{
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static function add(string $path, string $callable, ?string $name, string $method): Route
+	{
+		$route = new Route($path, $callable);
+		self::$routes[$method][] = $route;
+		if ($name)
+		{
+			self::$namedRoutes[$name] = $route;
+		}
+		return $route;
+	}
+
 }

@@ -2,7 +2,10 @@
 
 namespace App\Controller;
 
-use Core\MessagesManager;
+use Core\{
+	MessagesManager,
+	Router\Router
+};
 
 class DisconnectionController
 {
@@ -10,7 +13,7 @@ class DisconnectionController
 	{
 		$_SESSION['auth'] = null;
 		MessagesManager::add(['info' => ['disconnectComplete' => null]]);
-		header('Location: ' . $GLOBALS['router']->url('connexion'));
+		header('Location: ' . Router::url('connexion'));
 		exit();
 	}
 }
