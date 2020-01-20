@@ -21,6 +21,24 @@ class FillDatabase
 		self::hydrate($pdo, $tables);
 	}
 
+	public static function searchForeignKeyOnEmptyTable(string $table): ?string
+	{
+        $tableInfos = Helper::getTableInfos($table);
+        foreach ($tableInfos['schema'] as $column => $rules)
+        {
+            if (isset($rules['foreignKey']['table']))
+            {
+            	$stmt = Helper::getPdo()->prepare("SELECT * FROM {$rules['foreignKey']['table']} LIMIT 1");
+            	$stmt->execute();
+            	if ($stmt->fetch() === false)
+            	{
+            		return $rules['foreignKey']['table'];
+            	}
+            }
+        }
+        return null;
+	}
+
 	private static function deleteRows(PDO $pdo, array $tables): void
 	{
 		$pdo->exec('SET FOREIGN_KEY_CHECKS = 0');

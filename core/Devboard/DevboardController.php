@@ -16,7 +16,6 @@ class DevboardController extends AbstractController
 		$isDbExist = $migration->checkDbExist();
 		if ($isDbExist)
 		{
-			Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$schemas = Helper::getTablesFromSchemas();
 			$tablesFromDb = $migration->listTablesFromDb();
 
@@ -38,10 +37,10 @@ class DevboardController extends AbstractController
 		else if ($_POST['context'] === 'table')
 		{
 			$migration = new Migration();
-			$foreignKeyToTable = $migration->checkForeignKeyInside($_POST['table']);
-			if ($foreignKeyToTable)
+			$absentTable = $migration->searchForeignKeyOnAbsentTable($_POST['table']);
+			if ($absentTable)
 			{
-				MessagesManager::add(["{$_POST['table']}Sms" => ['sql_insideForeignKey' => $foreignKeyToTable]]);
+				MessagesManager::add(["{$_POST['table']}TableSms" => ['sql_foreignKeyOnAbsentTable' => $absentTable]]);
 			}
 			else
 			{
@@ -55,7 +54,16 @@ class DevboardController extends AbstractController
 		}
 		else if ($_POST['context'] === 'hydrate')
 		{
-			FillDatabase::createRows([$_POST['table'] => ['iteration' => $_POST['iteration'], 'forceRand' => ['created_at']]]);
+			$emptyTable = FillDatabase::searchForeignKeyOnEmptyTable($_POST['table']);
+			if ($emptyTable)
+			{
+				MessagesManager::add(["{$_POST['table']}FillSms" => ['sql_foreignKeyOnEmptyTable' => $emptyTable]]);
+			}
+			else
+			{
+				FillDatabase::createRows([$_POST['table'] => ['iteration' => $_POST['iteration'], 'forceRand' => ['created_at']]]);
+			}
+
 		}
 
 		$this->redirect('devboard');
@@ -72,10 +80,10 @@ class DevboardController extends AbstractController
 		else if ($_POST['context'] === 'table')
 		{
 			$migration = new Migration();
-			$foreignKeyFromTable = $migration->checkForeignKeyOutside($_POST['table']);
-			if ($foreignKeyFromTable)
+			$fromTable = $migration->searchForeignKeyFromTable($_POST['table']);
+			if ($fromTable)
 			{
-				MessagesManager::add(["{$_POST['table']}Sms" => ['sql_outsideForeignKey' => $foreignKeyFromTable]]);
+				MessagesManager::add(["{$_POST['table']}TableSms" => ['sql_foreignKeyFromAnotherTable' => $fromTable]]);
 			}
 			else
 			{

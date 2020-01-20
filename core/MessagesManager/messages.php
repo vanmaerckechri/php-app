@@ -85,18 +85,26 @@ return array(
 			'en' => 'This field must be a character string'
 		)
 	),
-	'sql_outsideForeignKey' => array(
+	'sql_foreignKeyFromAnotherTable' => array(
 		'type' => 'error',
 		'content' => array(
 			'fr' => 'Action impossible! La table \'{{x}}\' possède une clef étrangère pointant vers cette table.',
 			'en' => 'Impossible action! The table \'{{x}}\' has a foreign key pointing to this table.'
 		)
 	),
-	'sql_insideForeignKey' => array(
+	'sql_foreignKeyOnAbsentTable' => array(
 		'type' => 'error',
 		'content' => array(
 			'fr' => 'Action impossible! Cette table possède une clef étrangère pointant vers la table \'{{x}}\', cependant cette dernière n\'existe pas!',
 			'en' => 'Impossible action! This table has a foreign key pointing to the table \'{{x}}\', however the latter does not exist!'
 		)
+	),
+	'sql_foreignKeyOnEmptyTable' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'Action impossible! Cette table possède une clef étrangère pointant vers la table \'{{x}}\', cependant cette dernière est vide!',
+			'en' => 'Impossible action! This table has a foreign key pointing to the table \'{{x}}\', however the latter is empty!'
+		)
 	)
 );
+

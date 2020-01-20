@@ -33,7 +33,7 @@
 					<?php else: ?>
 						<input type="submit" value="CREER">
 					<?php endif; ?>
-					<?= $varPage['messages']["{$name}Sms"] ?? '' ?>
+					<?= $varPage['messages']["{$name}TableSms"] ?? '' ?>
     			</form>
 			<?php endforeach ?>
 			<h2>Modèles:</h2>
@@ -62,6 +62,7 @@
 							<input type="submit" value="REMPLIR">
 		    			</form>
 		    		<?php endif; ?>
+		    		<?= $varPage['messages']["{$name}FillSms"] ?? '' ?>
 				<?php endforeach ?>
 			<?php endif; ?>
 		<?php endif; ?>

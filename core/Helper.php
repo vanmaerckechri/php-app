@@ -77,4 +77,15 @@ class Helper
 		$files =  array_values(array_diff(scandir($_SERVER['DOCUMENT_ROOT'] . '/src/Schema/'), ['..', '.']));
 		return array_map('strtolower', preg_replace('/Schema.php/', '', $files));
 	}
+
+	public static function getTableInfos(string $table): array
+	{
+		$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
+
+		return array(
+            'name' => $table,
+			'schema' => $schema = $class::$schema,
+    		'options' => $options = $class::$options
+    	);
+	}
 }

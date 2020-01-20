@@ -74,12 +74,12 @@ class Migration
         Helper::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
     }
 
-    public function checkForeignKeyOutside(string $parentTable): ?string
+    public function searchForeignKeyFromTable(string $parentTable): ?string
     {
         $tables = $this->listTablesFromDb();
         foreach ($tables as $table)
         {
-            $tableInfos = $this->getTableInfos($table);
+            $tableInfos = Helper::getTableInfos($table);
             foreach ($tableInfos['schema'] as $column => $rules)
             {
                 if (isset($rules['foreignKey']['table']) && $rules['foreignKey']['table'] === $parentTable)
@@ -91,18 +91,17 @@ class Migration
         return null;
     }
 
-    public function checkForeignKeyInside(string $table): ?string
+    public function searchForeignKeyOnAbsentTable(string $table): ?string
     {
         $tables = $this->listTablesFromDb();
-        $tableInfos = $this->getTableInfos($table);
+        $tableInfos = Helper::getTableInfos($table);
         foreach ($tableInfos['schema'] as $column => $rules)
         {
-            if (isset($rules['foreignKey']['table']) && array_search($rules['foreignKey']['table'], $tables) === false)
+            if (isset($rules['foreignKey']['table']) && (is_null($tables) || array_search($rules['foreignKey']['table'], $tables) === false))
             {
                 return $rules['foreignKey']['table'];
             }
         }
-
         return null;
     }
 
@@ -114,7 +113,7 @@ class Migration
 
 	private function mountTableRequest(string $table): string
     {
-    	$table = $this->getTableInfos($table);
+    	$table = Helper::getTableInfos($table);
         $request = array(
             'column' => '',
             'primaryKey' => '',
@@ -144,17 +143,6 @@ class Migration
 
         return ($request['result'] . ')' . $options);
     }
-
-	private function getTableInfos(string $table): array
-	{
-		$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
-
-		return array(
-            'name' => $table,
-			'schema' => $schema = $class::$schema,
-    		'options' => $options = $class::$options
-    	);
-	}
 
     private function mountTableColumns(array $request, string $column, array $rules): array
     {
