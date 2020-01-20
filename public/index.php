@@ -13,7 +13,7 @@ Router::init();
 
 // Only for development!!! --->
 
-Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+Helper::devMode();
 
 Router::get('/devboard', 'DevboardController#index', 'devboard');
 

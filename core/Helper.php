@@ -88,4 +88,16 @@ class Helper
     		'options' => $options = $class::$options
     	);
 	}
+
+	public static function devMode()
+	{
+		try
+		{
+			Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+		}
+		catch(\PDOException $e)
+		{
+			
+		}
+	}
 }
