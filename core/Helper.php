@@ -8,14 +8,16 @@ class Helper
 {
 	private static $pdo;
 
-	public static function getPdo(): PDO
+	public static function getPdo(): ?PDO
 	{
 		if (!self::$pdo)
 		{
-			$dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
-			self::$pdo = new PDO("mysql:host={$dbServer['host']}; dbname={$dbServer['db']['name']}; charset={$dbServer['charset']}", $dbServer['user'], $dbServer['pwd'], [
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-			]);
+
+				$dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
+				self::$pdo = new PDO("mysql:host={$dbServer['host']}; dbname={$dbServer['db']['name']}; charset={$dbServer['charset']}", $dbServer['user'], $dbServer['pwd'], [
+					PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
+				]);
+
 		}
 
 		return self::$pdo;

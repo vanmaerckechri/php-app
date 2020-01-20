@@ -48,7 +48,7 @@ class FillDatabase
 				foreach ($schema as $column => $rules)
 				{
 					$isForceRand = array_key_exists('forceRand', $params) && array_search($column, $params['forceRand']) !== false ? true : false;
-					$isRequired = isset($rules['default']) && $rules['default'] === 'NOT NULL';
+					$isRequired = isset($rules['default']) && $rules['default'] === 'not null';
 
 					if ($isForceRand || $isRequired)
 					{

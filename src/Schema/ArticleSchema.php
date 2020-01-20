@@ -8,13 +8,13 @@ class ArticleSchema
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL AUTO_INCREMENT',
+            'default' => 'auto_increment',
             'primaryKey' => true
         ),
         'user_id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL',
+            'default' => 'not null',
             'foreignKey' => array(
                 'table' => 'user',
                 'column' => 'id',
@@ -24,27 +24,27 @@ class ArticleSchema
         'title' => array(
             'type' => 'varchar',
             'minLength' => 25,
-            'maxLength' => 125,
-            'default' => 'NOT NULL',
+            'maxLength' => 75,
+            'default' => 'not null',
             'unique' => true
         ),
         'slug' => array(
             'type' => 'varchar',
             'minLength' => 5,
-            'maxLength' => 125,
-            'default' => 'NOT NULL',
+            'maxLength' => 75,
+            'default' => 'not null',
             'slug' => 'title',
             'unique' => true
         ),
         'content' => array(
             'type' => 'text',
-            'minLength' => 200,
-            'maxLength' => 600,
-            'default' => 'NOT NULL'
+            'minLength' => 350,
+            'maxLength' => 1024,
+            'default' => 'not null'
         ),
         'created_at' => array(
             'type' => 'datetime',
-            'default' => 'NOT NULL DEFAULT CURRENT_TIMESTAMP'
+            'default' => 'not null default current_timestamp'
         )
     );
 

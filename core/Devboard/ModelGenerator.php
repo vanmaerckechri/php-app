@@ -96,7 +96,7 @@ class ModelGenerator
 
 			$getter = "\n\n\tpublic function get$ucfColumn(): ?$type\n\t{\n\t\t$getterContent\n\t}";
 			$setter = '';
-			if (isset($rules['default']) && preg_match('/AUTO_INCREMENT|CURRENT_TIMESTAMP/', strtoupper($rules['default'])) === 0)
+			if (isset($rules['default']) && preg_match('/auto_increment|current_timestamp/', strtoupper($rules['default'])) === 0)
 			{
 				$setter = "\n\n\tpublic function set$ucfColumn($type \$$column): self\n\t{\n\t\t$setterContent\n\t}";
 			}

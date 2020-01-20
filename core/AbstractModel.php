@@ -121,7 +121,7 @@ abstract class AbstractModel
 		{
 			foreach ($rules as $ruleName => $value)
 			{
-				if ($ruleName === 'default' && $value === 'NOT NULL')
+				if ($ruleName === 'default' && $value === 'not null')
 				{
 					$this->rules[$column]['required'] = true;
 				}

@@ -23,6 +23,13 @@ class Article extends AbstractModel
 		return $this->id;
 	}
 
+	public function setId(int $id): self
+	{
+		$this->id = $id;
+
+		return $this;
+	}
+
 	public function getUser_id(): ?int
 	{
 		return $this->user_id;
@@ -78,5 +85,12 @@ class Article extends AbstractModel
 			return null;
 		}
 		return new \DateTime($this->created_at);
+	}
+
+	public function setCreated_at(\DateTime $created_at): self
+	{
+		$this->created_at = $created_at;
+
+		return $this;
 	}
 }

@@ -8,14 +8,14 @@ class CategorySchema
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL AUTO_INCREMENT',
+            'default' => 'not null auto_increment',
             'primaryKey' => true
         ),
         'title' => array(
             'type' => 'varchar',
             'minLength' => 4,
             'maxLength' => 50,
-            'default' => 'NOT NULL',
+            'default' => 'not null',
             'unique' => true
         )
     );

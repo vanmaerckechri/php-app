@@ -65,6 +65,7 @@ class Migration
     public function createTable(string $table): void
     {   
         $request = $this->mountTableRequest($table);
+        var_dump($request);
         Helper::getPdo()->prepare($request)->execute();
     }
 
@@ -96,11 +97,12 @@ class Migration
         $tableInfos = $this->getTableInfos($table);
         foreach ($tableInfos['schema'] as $column => $rules)
         {
-            if (isset($rules['foreignKey']['table']) && !array_search($rules['foreignKey']['table'], $tables))
+            if (isset($rules['foreignKey']['table']) && array_search($rules['foreignKey']['table'], $tables) === false)
             {
                 return $rules['foreignKey']['table'];
             }
         }
+
         return null;
     }
 

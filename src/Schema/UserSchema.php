@@ -8,38 +8,38 @@ class UserSchema
         'id' => array(
             'type' => 'int',
             'maxLength' => 11,
-            'default' => 'NOT NULL AUTO_INCREMENT',
+            'default' => 'auto_increment',
             'primaryKey' => true
         ),
         'email' => array(
             'type' => 'email',
-            'minLength' => 4,
+            'minLength' => 5,
             'maxLength' => 254,
-            'default' => 'NOT NULL',
+            'default' => 'not null',
             'unique' => true
         ),
         'username' => array(
             'type' => 'varchar',
-            'minLength' => 4,
+            'minLength' => 5,
             'maxLength' => 30,
-            'default' => 'NOT NULL',
+            'default' => 'not null',
             'unique' => true
         ),
         'password' => array(
             'type' => 'password',
             'minLength' => 4,
             'maxLength' => 60,
-            'default' => 'NOT NULL'
+            'default' => 'not null'
         ),
         'role' => array(
             'type' => 'varchar',
             'maxLength' => 5,
-            'default' => 'NOT NULL DEFAULT \'user\'',
+            'default' => 'not null default \'user\'',
             'only' => array('user', 'admin')
         ),
         'created_at' => array(
             'type' => 'datetime',
-            'default' => 'NOT NULL DEFAULT CURRENT_TIMESTAMP'
+            'default' => 'not null default current_timestamp'
         )
     );
 

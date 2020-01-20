@@ -16,6 +16,7 @@ class DevboardController extends AbstractController
 		$isDbExist = $migration->checkDbExist();
 		if ($isDbExist)
 		{
+			Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 			$schemas = Helper::getTablesFromSchemas();
 			$tablesFromDb = $migration->listTablesFromDb();
 
