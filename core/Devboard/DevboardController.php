@@ -54,8 +54,7 @@ class DevboardController extends AbstractController
 		}
 		else if ($_POST['context'] === 'hydrate')
 		{
-			$dbContentGenerator = new DbContentGenerator();
-			$dbContentGenerator->createRows([$_POST['table'] => ['iteration' => $_POST['iteration']]]);
+			FillDatabase::createRows([$_POST['table'] => ['iteration' => $_POST['iteration'], 'forceRand' => ['created_at']]]);
 		}
 
 		$this->redirect('devboard');

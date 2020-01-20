@@ -6,22 +6,18 @@ use PDO;
 use Core\Helper;
 
 /*
-	DbContentGenerator::launch([
-		'user' => ['iteration' => 5, 'forceRand' => ['created_at']],
-		'category' => ['iteration' => 3],
-		'article' => ['iteration' => 30, 'forceRand' => ['created_at']]
+	FillDatabase::createRows([
+		'tableName1' => ['iteration' => 5, 'forceRand' => ['columnName1', 'columnName2']],
+		'tableName2' => ['iteration' => 3], ...
 	]);
 */
-class DbContentGenerator
+class FillDatabase
 {
-	private static $faker;
-
 	public static function createRows(array $tables): void
 	{
 		$pdo = Helper::getPdo();
 
 		self::deleteRows($pdo, $tables);
-		self::loadFakerContent();
 		self::hydrate($pdo, $tables);
 	}
 
@@ -70,10 +66,24 @@ class DbContentGenerator
 								$min = isset($rules['minLength']) ?: 0;
 								switch ($rules['type']) 
 								{
-									case 'int': $generation[$column] = self::generateInteger($min, $rules['maxLength']); break;
-									case 'datetime': $generation[$column] = self::generateDatetime(); break;
-									case 'email': $generation[$column] = self::generateEmail($min); break;
-									default: $generation[$column] = self::generateString($min, $rules['maxLength'], $column); break;
+									case 'int':
+										$generation[$column] = ContentGenerator::generateInteger($min, $rules['maxLength']);
+										break;
+									case 'datetime':
+										$generation[$column] = ContentGenerator::generateDatetime();
+										break;
+									case 'email':
+										$generation[$column] = ContentGenerator::generateEmail($min);
+										break;
+									case 'password':
+										$generation[$column] = '$2y$10$Qqgas1Ik8rqG/u1ZmOQegO7BNR11AGNVXIReY4cqURc/cc19ST3d6';
+										break;
+									case 'text':
+										$generation[$column] = ContentGenerator::generatePhrase($min, $rules['maxLength']);
+										break;
+									default:
+										$generation[$column] = ContentGenerator::generatePhrase($min, $rules['maxLength'], false, false, false);
+										break;
 								}
 							}
 						}
@@ -95,46 +105,6 @@ class DbContentGenerator
 		}
 	}
 
-	private static function generateInteger(int $min, int $max): int
-	{
-		$min = pow(10, $min);
-		$max = pow(10, $max);
-		return random_int($min, $max);
-	}
-
-	private static function generateDatetime(): string
-	{
-		$timestamp = mt_rand(1, time());
-		return date("Y-m-d H:i:s", $timestamp);
-	}
-
-	private static function generateEmail(int $min, int $max = 24): string
-	{
-		$output = '';
-		$max -= 5;
-		$length = rand($min, $max);
-		$characters = 'abcdefghijklmnopqrstuvwxyz01234abcdefghijklmnopqrstuvwxyz56789abcdefghijklmnopqrstuvwxyz';
-		$charLength = strlen($characters) - 1;
-		for ($i = 0; $i < $length; $i++)
-		{
-			$index = rand(0, $charLength);
-			$output .= $characters[$index];
-		}
-		$atPos = rand(2, intdiv(strlen($output), 2));
-		$output = substr_replace($output, '@', $atPos, 0) . '.com';
-		return $output;
-	}
-
-	private static function generateString(int $minLength, int $maxLength, string $column): ?string
-	{
-		$length = rand($minLength, $maxLength);
-		$maxPosition = mb_strlen(self::$faker) - $length;
-		$startPosition = rand(0, $maxPosition);
-		$result = mb_substr(self::$faker, $startPosition, $length);
-		return $result;
-	}
-
-
 	private static function getRandRowValueByCol(string $table, string $column): ?int
 	{
 		$class = 'App\\Repository\\' . ucfirst($table) . 'Repository';
@@ -147,11 +117,4 @@ class DbContentGenerator
 		}
 		return null;
 	}
-
-	private static function loadFakerContent(): void
-	{
-		$path = $_SERVER['DOCUMENT_ROOT'] . "/core/Devboard/faker.txt";
-		self::$faker = file_get_contents($path);
-	}
-	
 }
