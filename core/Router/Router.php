@@ -8,9 +8,9 @@ class Router
 	private static $routes = [];
 	private static $namedRoutes = [];
 
-	public static function setUrl(string $url): void
+	public static function init(): void
 	{
-		self::$url = $url;
+		self::$url = $_GET['url'];
 	}
 
 	public static function get(string $path, string $callable, ?string $name = null): Route

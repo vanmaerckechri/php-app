@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Authentification;
+namespace Core\Authentification;
 
 use Core\Router\Router;
 use App\Model\User;
@@ -20,7 +20,7 @@ class Auth
 		return $user;
 	}
 
-	public static function login(string $username, string $password): ?User
+	public static function login(string $username, string $password): bool
 	{
 		$user = new User();
 		$inputs = array('username' => $username, 'password' => $password);
@@ -28,23 +28,27 @@ class Auth
 		{
 			$user = UserRepository::findUserByUsername($username);
 
-			if ($user === null)
-			{
-				return null;
-			}
-
-			if (password_verify($password, $user->getPassword()))
+			if (!is_null($user) && password_verify($password, $user->getPassword()))
 			{
 				self::addUserToSession($user);
+				return true;
 			}
 		}
-		return null;
+		return false;
 	}
 
 	public static function addUserToSession(User $user): void
 	{
 		$_SESSION['auth'] = $user->getId();
-		header('Location: ' . Router::url('home'));
-		exit();		
+	}
+
+	public static function removeUserFromSession(): bool
+	{
+		if (isset($_SESSION['auth']) && !is_null($_SESSION['auth']))
+		{
+			$_SESSION['auth'] = null;
+			return true;
+		}
+		return false;
 	}
 }

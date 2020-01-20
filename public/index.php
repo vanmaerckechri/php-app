@@ -9,7 +9,7 @@ Helper::startSession();
 
 $lang = "fr";
 
-Router::setUrl($_GET['url']);
+Router::init();
 
 // Only for development!!! --->
 
@@ -27,17 +27,17 @@ Router::get('/', 'HomeController#show', 'home');
 
 Router::get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
-Router::get('/connexion', 'ConnexionController#show', 'connexion');
+Router::get('/connection', 'ConnectionController#index', 'connection');
 
-Router::post('/connexion', 'ConnexionController#check', 'connexion');
+Router::post('/connection', 'ConnectionController#dedicatedConnection');
 
-Router::get('/google-connexion', 'GoogleConnexionController#check', 'googleConnexion');
+Router::get('/google-connection', 'ConnectionController#googleConnection', 'googleConnection');
 
-Router::get('/inscription', 'InscriptionController#show', 'inscription');
+Router::get('/disconnect', 'ConnectionController#disconnect', 'disconnect');
 
-Router::post('/inscription', 'InscriptionController#record', 'inscription');
+Router::get('/registration', 'RegistrationController#new', 'registration');
 
-Router::get('/disconnect', 'DisconnectionController#check', 'disconnect');
+Router::post('/registration', 'RegistrationController#create');
 
 // unknow url
 

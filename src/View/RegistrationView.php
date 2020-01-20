@@ -2,9 +2,9 @@
 
 namespace App\View;
 
-Class InscriptionView
+Class RegistrationView
 {
-	public static function show($varPage)
+	public static function new($varPage)
 	{
 		ob_start();
 		?>

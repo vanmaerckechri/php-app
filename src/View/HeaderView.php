@@ -2,9 +2,11 @@
 
 namespace App\View;
 
-use Core\AbstractView;
-use Core\Router\Router;
-use App\Authentification\Auth;
+use Core\{
+	Router\Router,
+	Authentification\Auth,
+	AbstractView
+};
 
 Class HeaderView extends AbstractView
 {
@@ -17,7 +19,7 @@ Class HeaderView extends AbstractView
 		<nav>
 			<a class="<?=self::activeCurrentPage('home')?>" href="<?=Router::url('home')?>">Les Articles</a>
 		<?php if (!$user): ?>
-			<a class="<?=self::activeCurrentPage('connexion')?>" href="<?=Router::url('connexion')?>">Mon Compte</a>
+			<a class="<?=self::activeCurrentPage('connection')?>" href="<?=Router::url('connection')?>">Mon Compte</a>
 		<?php else: ?>
 			<a href="<?=Router::url('disconnect')?>">Se Déconnecter</a>
 		<?php endif; ?>
