@@ -5,8 +5,9 @@ namespace Core\Devboard;
 use PDO;
 use Core\Helper;
 use Core\MessagesManager\MessagesManager;
+use Core\AbstractController;
 
-class DevboardController
+class DevboardController extends AbstractController
 {
 	public function index()
 	{
@@ -57,7 +58,7 @@ class DevboardController
 			$dbContentGenerator->createRows([$_POST['table'] => ['iteration' => $_POST['iteration']]]);
 		}
 
-		header('Location: ' . $GLOBALS['router']->url('devboard'));
+		$this->redirect('devboard');
 		exit();
 	}
 
@@ -87,7 +88,7 @@ class DevboardController
 			$modelGenerator->dropModel($_POST['model']);
 		}
 
-		header('Location: ' . $GLOBALS['router']->url('devboard'));
+		$this->redirect('devboard');
 		exit();
 	}
 }

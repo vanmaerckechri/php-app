@@ -150,7 +150,7 @@ class DbContentGenerator
 
 	private static function loadFakerContent(): void
 	{
-		$path = $_SERVER['DOCUMENT_ROOT'] . "/src/Config/faker.txt";
+		$path = $_SERVER['DOCUMENT_ROOT'] . "/core/Devboard/faker.txt";
 		self::$faker = file_get_contents($path);
 	}
 	
