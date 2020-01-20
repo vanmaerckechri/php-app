@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Core\ {
-	Helper,
 	AbstractController,
 	Router\Router,
 	Authentification\Auth,
@@ -30,7 +29,7 @@ class ConnectionController extends AbstractController
 		$this->varPage['goole_id'] = $oauthConfig['goole_id'];
 		$this->varPage['google_route'] = $oauthConfig['google_route'];
 
-		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
+		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		
 		$this->renderer('ConnectionView', 'index');
@@ -51,7 +50,7 @@ class ConnectionController extends AbstractController
 				}
 				else
 				{
-					Helper::recordInputs(['username' => $_POST['username']]);
+					$this->recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
 					$this->redirect('connection');
 					exit();	

@@ -2,6 +2,8 @@
 
 namespace App\View;
 
+use Core\Router\Router;
+
 Class RegistrationView
 {
 	public static function new($varPage)
@@ -16,7 +18,7 @@ Class RegistrationView
 				<label for="pwdConfirm">Confirm Password<input type="password" name="pwdConfirm" id="pwdConfirm" required></label>
 				<label for="email">email<input type="email" name="email" id="email" value="<?= htmlentities($varPage['recordedInputs']['email'] ?? '') ?>" required><?= $varPage['messages']['emailSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="INSCRIPTION">
-				<?= $varPage['messages']['test'] ?? '' ?>
+				<a href="<?=Router::url('connection')?>">Vous avez déjà un compte ?</a>
 			</form>
 		</div>
 		<?php

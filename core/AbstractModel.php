@@ -10,7 +10,7 @@ abstract class AbstractModel
 
 	public function __construct($class)
 	{
-		$this->classname = Helper::convertNamespaceToClassname($class);
+		$this->classname = substr($class, strrpos($class, '\\') + 1);
 		$this->table = strtolower($this->classname);
 		$this->initValidationRules();
 	}

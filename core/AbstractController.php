@@ -16,6 +16,23 @@ abstract class AbstractController
 		call_user_func_array(['App\View\Template', 'load'], [$this->varPage]);
 	}
 
+	protected function recordInputs(array $inputs): void
+	{
+		$result = array();
+		foreach ($inputs as $key => $value)
+		{
+			$result[$key] = $value;
+		}
+		$_SESSION['recordedInputs'] = $result;
+	}
+
+	protected function getRecordedInputs(): ?array
+	{
+		$result = isset($_SESSION['recordedInputs']) ? $_SESSION['recordedInputs'] : null;
+		$_SESSION['recordedInputs'] = [];
+		return $result;
+	}
+
 	protected function redirect(string $route, ?array $params = null): void
 	{
 		if (is_null($params) || $this->processRedirectCondition($params))

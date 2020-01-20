@@ -3,7 +3,6 @@
 namespace Core\Devboard;
 
 use PDO;
-use Core\Helper;
 use Core\MessagesManager\MessagesManager;
 use Core\AbstractController;
 
@@ -16,7 +15,7 @@ class DevboardController extends AbstractController
 		$isDbExist = $migration->checkDbExist();
 		if ($isDbExist)
 		{
-			$schemas = Helper::getTablesFromSchemas();
+			$schemas = $this->getTablesFromSchemas();
 			$tablesFromDb = $migration->listTablesFromDb();
 
 			$modelGenerator = new ModelGenerator();
@@ -98,5 +97,11 @@ class DevboardController extends AbstractController
 
 		$this->redirect('devboard');
 		exit();
+	}
+
+	private function getTablesFromSchemas()
+	{
+		$files =  array_values(array_diff(scandir($_SERVER['DOCUMENT_ROOT'] . '/src/Schema/'), ['..', '.']));
+		return array_map('strtolower', preg_replace('/Schema.php/', '', $files));
 	}
 }

@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use Core\ {
-	Helper,
 	AbstractController,
 	MessagesManager\MessagesManager
 };
@@ -26,7 +25,7 @@ class RegistrationController extends AbstractController
 
 	public function new()
 	{
-		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
+		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 
 		$this->renderer('RegistrationView', 'new');
@@ -36,7 +35,7 @@ class RegistrationController extends AbstractController
 	{
 		if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email']))
 		{
-			Helper::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
+			$this->recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
 
 			$user = new User();
 			$isValid = false;
