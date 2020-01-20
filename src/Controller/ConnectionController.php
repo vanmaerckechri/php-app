@@ -27,8 +27,8 @@ class ConnectionController extends AbstractController
 		$this->redirect('home', ['logged' => true]);
 
 		$oauthConfig = Oauth::getConfig();
-		$this->varPage['GOOGLE_ID'] = $oauthConfig['GOOGLE_ID'];
-		$this->varPage['GOOGLE_ROUTE'] = $oauthConfig['GOOGLE_ROUTE'];
+		$this->varPage['goole_id'] = $oauthConfig['goole_id'];
+		$this->varPage['google_route'] = $oauthConfig['google_route'];
 
 		$this->varPage['recordedInputs'] = Helper::getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();

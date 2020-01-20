@@ -7,7 +7,7 @@ use Core\Helper;
 
 Class HomeView
 {
-	public static function show($varPage)
+	public static function index($varPage)
 	{
 		ob_start();
 		?>

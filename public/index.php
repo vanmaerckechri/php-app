@@ -23,7 +23,7 @@ Router::post('/devboard', 'DevboardController#create');
 
 // <--- Only for development!!!
 
-Router::get('/', 'HomeController#show', 'home');
+Router::get('/', 'HomeController#index', 'home');
 
 Router::get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 

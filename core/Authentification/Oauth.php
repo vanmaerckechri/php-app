@@ -75,9 +75,9 @@ class Oauth
 
 		$content  = array(
 	        'code' => $_GET['code'],
-			'client_id' => self::$config['GOOGLE_ID'],
-			'client_secret' => self::$config['GOOGLE_SECRET'],
-			'redirect_uri' => Router::url(self::$config['GOOGLE_ROUTE']),
+			'client_id' => self::$config['goole_id'],
+			'client_secret' => self::$config['google_secret'],
+			'redirect_uri' => Router::url(self::$config['google_route']),
 			'grant_type' => 'authorization_code'
 		);
 
