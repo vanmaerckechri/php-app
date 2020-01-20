@@ -46,7 +46,7 @@ class ConnectionController extends AbstractController
 			{
 				if (Auth::login($_POST['username'], $_POST['password']))
 				{
-					header('Location: ' . Router::url('home'));
+					$this->redirect('home');
 					exit();
 				}
 				else

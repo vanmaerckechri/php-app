@@ -82,9 +82,9 @@ abstract class AbstractModel
 	public function getValuesToRecord(): ?array
 	{
 		$output = array();
-		foreach ($this->rules as $varName => $rules)
+		foreach ($this->rules as $column => $rules)
 		{
-			$getVar = 'get' . ucfirst($varName);
+			$getVar = 'get' . ucfirst($column);
 			foreach ($rules as $ruleId => $ruleValue)
 			{
 				$value = $this->$getVar();
@@ -97,14 +97,14 @@ abstract class AbstractModel
 					}
 					else
 					{
-						$output[$varName] = $value;
+						$output[$column] = $value;
 					}
 				}
 				else
 				{
 					if (!is_null($value))
 					{
-						$output[$varName] = $value;
+						$output[$column] = $value;
 					}
 				}
 			}

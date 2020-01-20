@@ -39,13 +39,13 @@ class RegistrationController extends AbstractController
 			Helper::recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
 
 			$user = new User();
-			$isValid = true;
+			$isValid = false;
 
 			if ($user->isValid(['email' => $_POST['email'], 'username' => $_POST['username']]))
 			{
-				if (!$user->isUnique(['email', 'username']))
+				if ($user->isUnique(['email', 'username']))
 				{
-					$isValid = false;
+					$isValid = true;
 				}				
 			}
 

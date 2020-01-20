@@ -31,7 +31,7 @@ class ArticleController extends AbstractController
 				return;
 			}
 		}
-		header('Location: ' . Router::url('error404'));
+		$this->redirect('error404');
 		exit();
 	}	
 }
