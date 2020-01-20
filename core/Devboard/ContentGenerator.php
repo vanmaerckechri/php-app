@@ -115,13 +115,17 @@ Class ContentGenerator
 		// -2 for '@'' and '.'
 		$length -= 2;
 
+		// generates a word of fixed length
 		$charTemp = self::generateWord($length, $length);	
-
+		// takes most of the number of characters (min = 1)
 		$atPos = floor(mb_strlen($charTemp) / (rand(15, 20) / 10));
-		
+
 		$remainingLength = mb_strlen($charTemp) - $atPos;
-		$beforeExtLength = $remainingLength - (rand(2, 3));
-		$extPos = $beforeExtLength < 1 ? 1 : $beforeExtLength;
+		// subtract the remaining length by an extension between 2 and 3 characters
+		$extPos = $remainingLength - (rand(2, 3));
+		// result of the subtraction cannot be less than 1
+		$extPos = $extPos < 1 ? 1 : $extPos;
+		// count '@' position
 		$extPos += $atPos + 1;
 
 		$email = substr_replace($charTemp, '@', $atPos, 0);
