@@ -33,7 +33,7 @@ class Router
 		return self::add($path, $callable, $name, 'PUT');
 	}
 
-	public static function run(): ?string
+	public static function run()
 	{
 		$method = $_POST['method'] ?? $_SERVER['REQUEST_METHOD'];
 		$method = strtoupper($method);
