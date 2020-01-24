@@ -2,55 +2,12 @@
 
 namespace Core\Devboard;
 
-class ModelGenerator
+class ModelGenerator extends abstractClassGenerator
 {
-	private $pathModel;
+	protected $ext = '';
+	protected $directory = 'Model';
 
-	public function __construct()
-	{
-		$this->pathModel = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . 'Model' . DIRECTORY_SEPARATOR;
-	}
-
-	public function listModels(): ?array
-    {
-    	$result =  array_values(array_diff(scandir($this->pathModel), ['..', '.']));
-        if (empty($result))
-        {
-            return null;
-        }
-		return array_map('strtolower', preg_replace('/\.php/', '', $result));
-    }
-
-	public function createModels(array $tables): void
-	{
-		foreach ($tables as $table)
-		{
-			$this->createModel($table);
-		}
-	}
-
-	public function createModel(string $table): void
-	{
-		$table = ucfirst($table);
-		$filename = $this->pathModel . "$table.php";
-
-		if (!file_exists($filename))
-		{
-			$content = $this->mountContent($table);
-		    $file = fopen($filename, "x+");
-		    fputs($file, $content );
-		    fclose($file);
-		}
-	}
-
-	public function dropModel(string $table): void
-	{
-		$table = ucfirst($table);
-		$filename = $this->pathModel . "$table.php";
-		unlink($filename);
-	}
-
-	private function mountContent(string $table): string
+	protected function mountContent(string $table): string
 	{
 		// get schema of the table
 		$class = 'App\\Schema\\' . $table . 'Schema';

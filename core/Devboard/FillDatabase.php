@@ -125,13 +125,13 @@ class FillDatabase
 
 	private static function getRandRowValueByCol(string $table, string $column): ?int
 	{
-		$class = 'App\\Repository\\' . ucfirst($table) . 'Repository';
-		$objs = $class::FindAll();
-		if (!is_null($objs))
+		$stmt = Helper::getPdo()->prepare("SELECT * FROM $table");
+		$stmt->execute();
+		$result = $stmt->fetchAll();
+		if ($result)
 		{
-			$index = rand(0, count($objs) - 1);
-			$getCol = 'get' . ucfirst($column);
-			return $objs[$index]->$getCol();			
+			$index = rand(0, count($result) - 1);
+			return $result[$index]['id'];		
 		}
 		return null;
 	}

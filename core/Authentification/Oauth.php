@@ -43,7 +43,7 @@ class Oauth
 				}
 			}
 			// connect user
-			$user = UserRepository::findUserByEmail($email);
+			$user = UserRepository::findOneByCol('email', $email);
 			Auth::addUserToSession($user);
 			return true;
 		}

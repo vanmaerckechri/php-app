@@ -19,7 +19,10 @@ class DevboardController extends AbstractController
 			$tablesFromDb = $migration->listTablesFromDb();
 
 			$modelGenerator = new ModelGenerator();
-			$modelList = $modelGenerator->listModels();
+			$modelList = $modelGenerator->list();
+
+			$repoGenerator = new RepoGenerator();
+			$repoList = $repoGenerator->list();
 		}
 
 		$varPage['messages'] = MessagesManager::getMessages();
@@ -46,11 +49,6 @@ class DevboardController extends AbstractController
 				$migration->createTable($_POST['table']);
 			}
 		}
-		else if ($_POST['context'] === 'model')
-		{
-			$modelGenerator = new ModelGenerator();
-			$modelGenerator->createModel($_POST['model']);
-		}
 		else if ($_POST['context'] === 'hydrate')
 		{
 			$emptyTable = FillDatabase::searchForeignKeyOnEmptyTable($_POST['table']);
@@ -62,7 +60,16 @@ class DevboardController extends AbstractController
 			{
 				FillDatabase::createRows([$_POST['table'] => ['iteration' => $_POST['iteration'], 'forceRand' => ['created_at']]]);
 			}
-
+		}
+		else if ($_POST['context'] === 'model')
+		{
+			$modelGenerator = new ModelGenerator();
+			$modelGenerator->create($_POST['model']);
+		}
+		else if ($_POST['context'] === 'repo')
+		{
+			$repoGenerator = new RepoGenerator();
+			$repoGenerator->create($_POST['repo']);
 		}
 
 		$this->redirect('devboard');
@@ -92,7 +99,12 @@ class DevboardController extends AbstractController
 		else if ($_POST['context'] === 'model')
 		{
 			$modelGenerator = new ModelGenerator();
-			$modelGenerator->dropModel($_POST['model']);
+			$modelGenerator->drop($_POST['model']);
+		}
+		else if ($_POST['context'] === 'repo')
+		{
+			$repoGenerator = new RepoGenerator();
+			$repoGenerator->drop($_POST['repo']);
 		}
 
 		$this->redirect('devboard');

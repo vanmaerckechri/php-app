@@ -4,7 +4,7 @@ namespace Core;
 
 abstract class AbstractRepository
 {
-	public static function findObjByCol(string $column, $value, string $options = ''): ?Object
+	public static function findOneByCol(string $column, $value, string $options = ''): ?Object
 	{
 		$childClass = self::getChildClass();
 		$request = new Request();

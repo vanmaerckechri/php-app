@@ -10,11 +10,9 @@ class Validator
 	{
 		$repoClass = 'App\\Repository\\' . $obj->classname . 'Repository';
 		$errors = array();
-
 		$smsId = $column . 'Sms';
-		$findMethod = 'find' . $obj->classname . 'By' . ucfirst($column);
 
-		if ($repoClass::$findMethod($input))
+		if ($repoClass::findOneByCol($column, $input))
 		{
 			$errors[$smsId][$column . 'Taken'] = null;				
 		}

@@ -15,13 +15,15 @@ class Pagination
 		$repo = new $repo();
 
 		$count = $repo->countRowByCol($column);
-		self::$maxPage = ceil($count / $itemByPage);
-		self::$currentPage = (int)$_GET['page'] ?? 1;
 
-		if (self::$currentPage < 1 || self::$currentPage > self::$maxPage)
+		self::$maxPage = ceil($count / $itemByPage);
+
+		if (!isset($_GET['page']) || $_GET['page'] < 1 || $_GET['page'] > self::$maxPage)
 		{
-			header('Location: ' . Router::url('error404'));
+			header('Location: ' . Router::url('home') . '?page=1');
 		}
+
+		self::$currentPage = (int)$_GET['page'] ?? 1;
 
 		$offset = (self::$currentPage - 1) * $itemByPage;
 		$items = $repo->findAllLimitOffset('*', 'created_at DESC', $itemByPage, $offset);

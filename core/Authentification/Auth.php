@@ -16,7 +16,7 @@ class Auth
 		{
 			return null;
 		}
-		$user = UserRepository::findUserById($id);
+		$user = UserRepository::findOneByCol('id', $id);
 		return $user;
 	}
 
@@ -26,7 +26,7 @@ class Auth
 		$inputs = array('username' => $username, 'password' => $password);
 		if ($user->isValid($inputs, false))
 		{
-			$user = UserRepository::findUserByUsername($username);
+			$user = UserRepository::findOneByCol('username', $username);
 
 			if (!is_null($user) && password_verify($password, $user->getPassword()))
 			{
