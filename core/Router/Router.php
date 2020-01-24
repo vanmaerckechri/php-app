@@ -77,6 +77,18 @@ class Router
 		return false;
 	}
 
+	public static function getCurrentRouteName(): ?string
+	{
+		foreach (self::$namedRoutes as $name => $obj)
+		{
+			if ($obj->getPath() === self::$url)
+			{
+				return $name;
+			}
+		}
+		return null;
+	}
+
 	private static function add(string $path, string $callable, ?string $name, string $method): Route
 	{
 		$route = new Route($path, $callable);

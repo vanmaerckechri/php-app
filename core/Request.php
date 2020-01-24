@@ -52,28 +52,28 @@ class Request
 		return $this;
 	}
 
-	public function where(string $column, $value): self
+	public function where(string $column, string $operator, $value): self
 	{
 		$this->binds = array();
 		$this->binds[$column] = $value;
 		$this->prepare .= ' WHERE ';
-		$this->prepare .= "$column = :$column";
+		$this->prepare .= "$column $operator :$column";
 		return $this;
 	}
 
-	public function and(string $column, $value): self
+	public function and(string $column, string $operator, $value): self
 	{
 		$this->binds[$column] = $value;
 		$this->prepare .= ' AND ';
-		$this->prepare .= "$column = :$column";
+		$this->prepare .= "$column $operator :$column";
 		return $this;		
 	}
 
-	public function or(string $column, $value): self
+	public function or(string $column, string $operator, $value): self
 	{
 		$this->binds[$column] = $value;
 		$this->prepare .= ' OR ';
-		$this->prepare .= "$column = :$column";
+		$this->prepare .= "$column $operator :$column";
 		return $this;		
 	}
 

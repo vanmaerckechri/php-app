@@ -11,7 +11,7 @@ abstract class AbstractRepository
 		$obj = $request
 			->select('*')
 			->from(strtolower($childClass))
-			->where($column, $value)
+			->where($column, '=', $value)
 			->options($options)
 			->fetchClass();
 
@@ -43,6 +43,31 @@ abstract class AbstractRepository
 			->offset($offset)
 			->fetchAllClass();
 
+		return $output ?: null;
+	}
+
+	public static function findEarlerOrLater($select, int $id, string $createdAt, string $direction): ?Object
+	{
+		if ($direction === 'later')
+		{
+			$operator = '>=';
+			$direction = 'ASC';
+		}
+		else
+		{
+			$operator = '<=';
+			$direction = 'DESC';
+		}
+		$childClass = self::getChildClass();
+		$request = new Request();
+		$output = $request
+			->select($select)
+			->from(strtolower($childClass))
+			->where('created_at', $operator, $createdAt)
+			->and('id', '!=', $id)
+			->orderBy("created_at $direction")
+			->limit(1)
+			->fetchClass();
 		return $output ?: null;
 	}
 

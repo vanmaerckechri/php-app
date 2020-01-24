@@ -25,6 +25,8 @@ Router::post('/devboard', 'DevboardController#create');
 
 Router::get('/', 'HomeController#index', 'home');
 
+Router::get('/articles/page/:page', 'ArticlesController#index', 'articles')->with('page', '[0-9]+');
+
 Router::get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
 Router::get('/connection', 'ConnectionController#index', 'connection');

@@ -69,6 +69,11 @@ class Route
 		}
 	}
 
+	public function getPath(): string
+	{
+		return $this->path;
+	}
+
 	public function getUrl(array $params): string
 	{
 		$path = $this->path;
