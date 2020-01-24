@@ -46,18 +46,18 @@ abstract class AbstractRepository
 		return $output ?: null;
 	}
 
-	public static function findEarlerOrLater($select, int $id, string $createdAt, string $direction): ?Object
+	public static function findNextEarler($select, int $id, string $createdAt): ?Object
 	{
-		if ($direction === 'later')
-		{
-			$operator = '>=';
-			$direction = 'ASC';
-		}
-		else
-		{
-			$operator = '<=';
-			$direction = 'DESC';
-		}
+		return self::findNextEarlerOrLater($select, $id, $createdAt, '<=', 'DESC');
+	}
+
+	public static function findNextLater($select, int $id, string $createdAt): ?Object
+	{
+		return self::findNextEarlerOrLater($select, $id, $createdAt, '>=', 'ASC');
+	}
+
+	private static function findNextEarlerOrLater($select, int $id, string $createdAt, string $operator, string $direction): ?Object
+	{
 		$childClass = self::getChildClass();
 		$request = new Request();
 		$output = $request

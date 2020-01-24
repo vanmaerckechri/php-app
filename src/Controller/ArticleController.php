@@ -26,8 +26,8 @@ class ArticleController extends AbstractController
 			{
 				$createdAt = $article->getCreated_at()->format('Y-m-d H:i:s');
 				$this->varPage['article'] = $article;
-				$this->varPage['previous'] = ArticleRepository::findEarlerOrLater(['id', 'slug'], $id, $createdAt, 'later');
-				$this->varPage['next'] = ArticleRepository::findEarlerOrLater(['id', 'slug'], $id, $createdAt, 'earlier');
+				$this->varPage['previous'] = ArticleRepository::findNextLater(['id', 'slug'], $id, $createdAt, 'later');
+				$this->varPage['next'] = ArticleRepository::findNextEarler(['id', 'slug'], $id, $createdAt, 'earlier');
 				$this->renderer('ArticleView', 'show');
 				return;
 			}
