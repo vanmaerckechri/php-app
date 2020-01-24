@@ -7,8 +7,6 @@ use Core\Authentification\Auth;
 
 abstract class AbstractController
 {
-	protected $varPage = array();
-
 	protected function renderer(string $class, string $method): void
 	{
 		$class = "App\View\\$class";

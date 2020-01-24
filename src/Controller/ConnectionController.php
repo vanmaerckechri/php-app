@@ -12,14 +12,11 @@ use Core\ {
 
 class ConnectionController extends AbstractController
 {
-	public function __construct()
-	{
-		$this->varPage = [
-			'title' => 'APP-PHP::CONNEXION',
-			'h1' => 'APP-PHP',
-			'h2' => 'CONNEXION',
-		];
-	}
+	protected $varPage = [
+		'title' => 'APP-PHP::CONNEXION',
+		'h1' => 'APP-PHP',
+		'h2' => 'CONNEXION',
+	];
 
 	public function index(): void
 	{

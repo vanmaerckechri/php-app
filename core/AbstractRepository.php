@@ -7,7 +7,6 @@ abstract class AbstractRepository
 	public static function findObjByCol(string $column, $value, string $options = ''): ?Object
 	{
 		$childClass = self::getChildClass();
-
 		$request = new Request();
 		$obj = $request
 			->select('*')
@@ -22,7 +21,6 @@ abstract class AbstractRepository
 	public static function findAll(string $options = ''): ?array
 	{
 		$childClass = self::getChildClass();
-
 		$request = new Request();
 		$output = $request
 			->select('*')
@@ -31,6 +29,32 @@ abstract class AbstractRepository
 			->fetchAllClass();
 
 		return $output ?: null;
+	}
+
+	public static function findAllLimitOffset(string $select, string $orderBy, string $limit, string $offset): ?array
+	{
+		$childClass = self::getChildClass();
+		$request = new Request();
+		$output = $request
+			->select($select)
+			->from(strtolower($childClass))
+			->orderBy($orderBy)
+			->limit($limit)
+			->offset($offset)
+			->fetchAllClass();
+
+		return $output ?: null;
+	}
+
+	public static function countRowByCol(string $column): int
+	{
+		$childClass = self::getChildClass();
+		$request = new Request();
+		$obj = $request
+			->count($column)
+			->from(strtolower($childClass))
+			->fetchNum();
+		return intval($obj[0]);
 	}
 
 	public static function record(object $obj): bool

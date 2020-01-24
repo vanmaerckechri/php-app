@@ -11,16 +11,16 @@ use App\Repository\UserRepository;
 
 class RegistrationController extends AbstractController
 {
+	protected $varPage = [
+		'title' => 'APP-PHP::INSCRIPTION',
+		'h1' => 'APP-PHP',
+		'h2' => 'INSCRIPTION',
+		'jsFileNames' => ['confirmPassword']
+	];
+
 	public function __construct()
 	{
 		$this->redirect('home', ['logged' => true]);
-
-		$this->varPage = [
-			'title' => 'APP-PHP::INSCRIPTION',
-			'h1' => 'APP-PHP',
-			'h2' => 'INSCRIPTION',
-			'jsFileNames' => ['confirmPassword']
-		];
 	}
 
 	public function new()

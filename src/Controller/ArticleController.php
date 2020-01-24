@@ -9,14 +9,11 @@ use App\Repository\ArticleRepository;
 
 class ArticleController extends AbstractController
 {
-	public function __construct()
-	{
-		$this->varPage = [
-			'title' => 'APP-PHP::ARTICLE',
-			'h1' => 'APP-PHP',
-			'h2' => 'Article',
-		];
-	}
+	protected $varPage = [
+		'title' => 'APP-PHP::ARTICLE',
+		'h1' => 'APP-PHP',
+		'h2' => 'Article',
+	];
 
 	public function show(int $id, string $slug): void
 	{

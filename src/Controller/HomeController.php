@@ -3,24 +3,21 @@
 namespace App\Controller;
 
 use Core\AbstractController;
+use Core\Pagination;
 use App\Model\Article;
 use App\Repository\ArticleRepository;
 
 class HomeController extends AbstractController
 {
-	private $articlesByPage = 12;
-	public function __construct()
-	{
-		$this->varPage = [
-			'title' => 'APP-PHP::HOME',
-			'h1' => 'APP-PHP',
-			'h2' => 'HOME',
-		];
-	}
+	protected $varPage = [
+		'title' => 'APP-PHP::HOME',
+		'h1' => 'APP-PHP',
+		'h2' => 'HOME',
+	];
 
 	public function index()
 	{
-		$this->varPage['articles'] = ArticleRepository::findAll("ORDER BY created_at DESC LIMIT $this->articlesByPage") ?? array();
+		$this->varPage['articles'] = Pagination::getItems('article', 'created_at', 12);
 		$this->renderer('HomeView', 'index');
 	}	
 }

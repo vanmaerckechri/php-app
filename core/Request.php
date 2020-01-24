@@ -29,6 +29,12 @@ class Request
 
 	// SELECT
 
+	public function count($column): self
+	{
+		$this->prepare = "SELECT COUNT($column)";
+		return $this;		
+	}
+
 	public function select($columns): self
 	{
 		if (is_array($columns))
@@ -71,6 +77,24 @@ class Request
 		return $this;		
 	}
 
+	public function orderBy(string $orderBy): self
+	{
+		$this->prepare .= " ORDER BY $orderBy";
+		return $this;		
+	}
+
+	public function limit(int $size): self
+	{
+		$this->prepare .= " LIMIT $size";
+		return $this;		
+	}
+
+	public function offset(int $size): self
+	{
+		$this->prepare .= " OFFSET $size";
+		return $this;		
+	}
+
 	public function options(string $options): self
 	{
 		$this->prepare .= " $options";
@@ -91,6 +115,14 @@ class Request
 		$stmt = $this->execute();
 		$result = $stmt->fetchAll(PDO::FETCH_CLASS, $class);
 		return $result ?: null;		
+	}
+
+	public function fetchNum(): ?array
+	{
+		$class = 'App\\Model\\' . ucfirst($this->table);
+		$stmt = $this->execute();
+		$result = $stmt->fetch(PDO::FETCH_NUM);
+		return $result ?: null;
 	}
 
 	private function execute()

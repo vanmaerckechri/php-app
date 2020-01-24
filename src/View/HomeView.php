@@ -2,8 +2,11 @@
 
 namespace App\View;
 
-use Core\Router\Router;
-use Core\AbstractView;
+use Core\{
+	Router\Router,
+	AbstractView,
+	Pagination
+};
 
 Class HomeView extends AbstractView
 {
@@ -23,6 +26,7 @@ Class HomeView extends AbstractView
 				</li>
 				<?php endforeach ?>
 			</ul>
+			<?=Pagination::getNav();?>
 		</div>
 		<?php
 		return ob_get_clean();
