@@ -58,7 +58,7 @@ class Pagination
 				{
 					break;
 				}
-				$prevPages[] = $prev;
+				array_unshift($prevPages, $prev);
 			}
 		}
 		$prevPages[] = 'current';
