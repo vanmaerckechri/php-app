@@ -35,30 +35,35 @@ class Pagination
 		return $items;
 	}
 
-	public static function getNav(string $cssContainer = 'pagination-container', string $cssBtn = 'btn'): ?string
+	public static function getNav(int $pageBySide = 4, string $cssContainer = 'pagination-container', string $cssBtn = 'btn'): ?string
 	{
 		if (self::$maxPage > 0)
 		{
-			$pageButtons = self::managePageButtons();
+			$pageButtons = self::managePageButtons($pageBySide);
 			return self::buildButtons($pageButtons, $cssContainer, $cssBtn);
 		}
 		return null;
 	}
 
-	private static function managePageButtons(): array
+	private static function managePageButtons(int $pageBySide): array
 	{
 		$prevPages = array();
 		$nextPages = array();
 
 		// skip some pages until the first
-		if (self::$currentPage > 3)
+		if (self::$currentPage > $pageBySide + 1)
 		{
-			$prevPages = [1, null, self::$currentPage - 1];
+			$prevPages = [1, null];
+
+			for ($i = $pageBySide - 1; $i > 0; $i--)
+			{
+				$prevPages[] = self::$currentPage - $i;
+			}
 		}
-		// current page is only two pages from the first page displays the button for these pages
+		// current page is only $pageBySide pages from the first page displays the button for these pages
 		else
 		{
-			for ($i = 1; $i < 3; $i++)
+			for ($i = 1; $i < $pageBySide + 1; $i++)
 			{
 				$prev = self::$currentPage - $i;
 				if ($prev < 1)
@@ -71,14 +76,19 @@ class Pagination
 		$prevPages[] = 'current';
 
 		// skip some pages until the last
-		if (self::$currentPage < self::$maxPage - 2)
+		if (self::$currentPage < (self::$maxPage - $pageBySide))
 		{
-			$nextPages = [self::$currentPage + 1, null, (int)self::$maxPage];
+			for ($i = $pageBySide - 1; $i > 0; $i--)
+			{
+				array_unshift($nextPages, self::$currentPage + $i);
+			}
+
+			$nextPages = array_merge($nextPages, [null, (int)self::$maxPage]);
 		}
-		// the current page is only two pages from the last page displays the button for these pages
+		// the current page is only $pageBySide pages from the last page displays the button for these pages
 		else
 		{
-			for ($i = 1; $i < 3; $i++)
+			for ($i = 1; $i <= $pageBySide; $i++)
 			{
 				$next = self::$currentPage + $i;
 				if ($next > self::$maxPage)

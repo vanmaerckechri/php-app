@@ -26,7 +26,7 @@ Class ArticlesView extends AbstractView
 				</li>
 				<?php endforeach ?>
 			</ul>
-			<?=Pagination::getNav() ?: 'Aucun article trouvé!';?>
+			<?=Pagination::getNav(4) ?: 'Aucun article trouvé!';?>
 		</div>
 		<?php
 		return ob_get_clean();
