@@ -111,11 +111,11 @@ class Pagination
 		?>
 			<div class="<?=$cssContainer?>">
 			<?php if ($previousPage >= 1): ?>
-				<a class="<?=$cssBtn?>" href="<?="{$route}{$previousPage}"?>">PAGE PRECEDENTE</a>
+				<a class="<?=$cssBtn?>" href="<?=Router::url($route, ['page' => $previousPage])?>">PAGE PRECEDENTE</a>
 			<?php endif; ?>
 			<?php foreach ($pageButtons as $page): ?>
 				<?php if (is_int($page)): ?>
-					<a class="<?=$cssBtn?>" href="<?="{$route}{$page}"?>"><?=$page?></a>
+					<a class="<?=$cssBtn?>" href="<?=Router::url($route, ['page' => $page])?>"><?=$page?></a>
 				<?php elseif (is_string($page) && $page === 'current'): ?>
 					<p class="<?=$cssBtn?> disable"><?=self::$currentPage?></p>
 				<?php else: ?>
@@ -123,7 +123,7 @@ class Pagination
 				<?php endif; ?>
 			<?php endforeach; ?>
 			<?php if ($nextPage <= self::$maxPage): ?>
-				<a class="<?=$cssBtn?>" href="<?="{$route}{$nextPage}"?>">PAGE SUIVANTE</a>
+				<a class="<?=$cssBtn?>" href="<?=Router::url($route, ['page' => $nextPage])?>">PAGE SUIVANTE</a>
 			<?php endif; ?>
 			</div>
 		<?php

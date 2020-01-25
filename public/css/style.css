@@ -39,6 +39,16 @@ input
 	display: block;
 	width: 100%;
 }
+nav a
+{
+	margin-left: 0.2rem;
+	padding: 0.2rem 0.4rem;
+}
+nav a.active
+{
+	color: white;
+	background-color: black;
+}
 .main
 {
 	width: 100%;

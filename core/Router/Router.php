@@ -69,7 +69,7 @@ class Router
 	{
 		if (isset(self::$namedRoutes[$name]))
 		{
-			if (self::$url === self::$namedRoutes[$name]->getUrl([]))
+			if (self::$namedRoutes[$name]->match(self::$url))
 			{
 				return true;
 			}
@@ -81,7 +81,7 @@ class Router
 	{
 		foreach (self::$namedRoutes as $name => $obj)
 		{
-			if ($obj->getPath() === self::$url)
+			if (self::isCurrentRoute($name))
 			{
 				return $name;
 			}
