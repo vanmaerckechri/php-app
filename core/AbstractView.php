@@ -8,7 +8,7 @@ abstract class AbstractView
 {
 	protected static function activeCurrentPage(string $route): ?string
 	{
-		if (Router::isCurrentRoute($route))
+		if (Router::isRouteForUrl($route, $_GET['url']))
 		{
 			return 'active';
 		}

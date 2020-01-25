@@ -65,11 +65,11 @@ class Router
 		return $url;
 	}
 
-	public static function isCurrentRoute(string $name): bool
+	public static function isRouteForUrl(string $routeName, string $url): bool
 	{
-		if (isset(self::$namedRoutes[$name]))
+		if (isset(self::$namedRoutes[$routeName]))
 		{
-			if (self::$namedRoutes[$name]->match(self::$url))
+			if (self::$namedRoutes[$routeName]->match($url))
 			{
 				return true;
 			}
@@ -81,7 +81,7 @@ class Router
 	{
 		foreach (self::$namedRoutes as $name => $obj)
 		{
-			if (self::isCurrentRoute($name))
+			if (self::isRouteForUrl($name, self::$url))
 			{
 				return $name;
 			}
