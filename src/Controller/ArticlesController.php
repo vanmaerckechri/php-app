@@ -15,7 +15,12 @@ class ArticlesController extends AbstractController
 
 	public function index($page)
 	{
-		$this->varPage['articles'] = Pagination::getItems('article', 'created_at', 12, $page, 'error404');
+		$articles = Pagination::getItems('article', 'created_at DESC', 12, $page);
+		if (is_null($articles))
+		{
+			$this->redirect('error404');
+		}
+		$this->varPage['articles'] = $articles;
 		$this->renderer('ArticlesView', 'index');
 	}	
 }

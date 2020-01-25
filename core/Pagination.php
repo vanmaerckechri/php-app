@@ -6,38 +6,34 @@ use Core\Router\Router;
 
 class Pagination
 {
-	private static $maxPage;
+	private static $numOfPages;
 	private static $currentPage;
 
-	public static function getItems(string $table, string $column, int $itemByPage, int $page, string $redirectRoute, array $routeParams = []): array
+	public static function getItems(string $table, string $orderBy, int $itemByPage, int $page): ?array
 	{
 		$repo = 'App\\Repository\\' . ucfirst($table) . 'Repository';
 		$repo = new $repo();
 
-		$count = $repo->countRowByCol($column);
+		$count = $repo->countRowByCol('*');
+		self::$numOfPages = (int)ceil($count / $itemByPage);
 
-		self::$maxPage = ceil($count / $itemByPage);
-		self::$currentPage = isset($page) ? $page : 1;
-
-		if (self::$currentPage < 1 || self::$currentPage > self::$maxPage)
+		if ($page < 1 || ($page > 1 && $page > self::$numOfPages))
 		{
-			if (self::$maxPage > 0)
-			{
-				header('Location: ' . Router::url($redirectRoute, $routeParams));
-				exit;
-			}
+			return null;
+		}
+		if (self::$numOfPages < 1)
+		{
 			return [];
 		}
 
+		self::$currentPage = $page;
 		$offset = (self::$currentPage - 1) * $itemByPage;
-		$items = $repo->findAllLimitOffset('*', 'created_at DESC', $itemByPage, $offset);
-
-		return $items;
+		return $repo->findAllLimitOffset('*', $orderBy, $itemByPage, $offset);
 	}
 
 	public static function getNav(int $pageBySide = 4, string $cssContainer = 'pagination-container', string $cssBtn = 'btn'): ?string
 	{
-		if (self::$maxPage > 0)
+		if (self::$numOfPages > 0)
 		{
 			$pageButtons = self::managePageButtons($pageBySide);
 			return self::buildButtons($pageButtons, $cssContainer, $cssBtn);
@@ -48,12 +44,10 @@ class Pagination
 	private static function managePageButtons(int $pageBySide): array
 	{
 		$prevPages = array();
-		$nextPages = array();
-
 		// skip some pages until the first
 		if (self::$currentPage > $pageBySide + 1)
 		{
-			$prevPages = [1, null];
+			$prevPages = [1, '...'];
 
 			for ($i = $pageBySide - 1; $i > 0; $i--)
 			{
@@ -73,17 +67,17 @@ class Pagination
 				array_unshift($prevPages, $prev);
 			}
 		}
-		$prevPages[] = 'current';
 
+		$nextPages = array();
 		// skip some pages until the last
-		if (self::$currentPage < (self::$maxPage - $pageBySide))
+		if (self::$currentPage < (self::$numOfPages - $pageBySide))
 		{
 			for ($i = $pageBySide - 1; $i > 0; $i--)
 			{
 				array_unshift($nextPages, self::$currentPage + $i);
 			}
 
-			$nextPages = array_merge($nextPages, [null, (int)self::$maxPage]);
+			$nextPages = array_merge($nextPages, ['...', (int)self::$numOfPages]);
 		}
 		// the current page is only $pageBySide pages from the last page displays the button for these pages
 		else
@@ -91,14 +85,14 @@ class Pagination
 			for ($i = 1; $i <= $pageBySide; $i++)
 			{
 				$next = self::$currentPage + $i;
-				if ($next > self::$maxPage)
+				if ($next > self::$numOfPages)
 				{
 					break;
 				}
 				$nextPages[] = $next;
 			}
 		}
-		return array_merge($prevPages, $nextPages);
+		return array_merge($prevPages, ['current'], $nextPages);
 	}
 
 	private static function buildButtons(array $pageButtons, string $cssContainer, string $cssBtn): string
@@ -116,13 +110,13 @@ class Pagination
 			<?php foreach ($pageButtons as $page): ?>
 				<?php if (is_int($page)): ?>
 					<a class="<?=$cssBtn?>" href="<?=Router::url($route, ['page' => $page])?>"><?=$page?></a>
-				<?php elseif (is_string($page) && $page === 'current'): ?>
+				<?php elseif ($page === 'current'): ?>
 					<p class="<?=$cssBtn?> disable"><?=self::$currentPage?></p>
 				<?php else: ?>
 					<p class="<?=$cssBtn?> disable">...</p>
 				<?php endif; ?>
 			<?php endforeach; ?>
-			<?php if ($nextPage <= self::$maxPage): ?>
+			<?php if ($nextPage <= self::$numOfPages): ?>
 				<a class="<?=$cssBtn?>" href="<?=Router::url($route, ['page' => $nextPage])?>">PAGE SUIVANTE</a>
 			<?php endif; ?>
 			</div>
