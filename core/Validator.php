@@ -6,15 +6,15 @@ use Core\MessagesManager\MessagesManager;
 
 class Validator
 {
-	public static function isUnique(object $obj, string $column, $input): bool
+	public static function isUnique(object $obj, string $column, $input, $idToExclude): bool
 	{
 		$repoClass = 'App\\Repository\\' . $obj->classname . 'Repository';
 		$errors = array();
 		$smsId = $column . 'Sms';
 
-		if ($repoClass::findOneByCol($column, $input))
+		if ($repoClass::findUnique($column, $input, $idToExclude))
 		{
-			$errors[$smsId][$column . 'Taken'] = null;				
+			$errors[$smsId]['unique'] = null;
 		}
 
 		return self::noErrorDetected($errors, $smsId);

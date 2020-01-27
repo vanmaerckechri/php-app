@@ -3,6 +3,7 @@
 namespace App\View;
 
 use Core\Router\Router;
+use Core\Authentification\Auth;
 
 Class ArticleView
 {
@@ -10,6 +11,7 @@ Class ArticleView
 	{
 		$previous = $varPage['previous'];
 		$next = $varPage['next'];
+		$user = Auth::user();
 
 		ob_start();
 		?>
@@ -22,6 +24,9 @@ Class ArticleView
 					<p><?=$varPage['article']->getCreated_at()->format('d/m/y')?></p>
 				</li>
 			</ul>
+			<?php if ($user && $user->getId() === $varPage['article']->getUser_id()): ?>
+				<a class="btn" href="<?=Router::url('editArticle', ['id' => $varPage['article']->getId(), 'slug' => $varPage['article']->getSlug()])?>">EDIT</a>
+			<?php endif; ?>
 			<div class="pagination-container">
 				<?php if ($previous): ?>
 					<a class="btn" href="<?=Router::url('article', ['id' => $previous->getId(), 'slug' => $previous->getSlug()])?>">PREVIOUS</a>
@@ -32,6 +37,42 @@ Class ArticleView
 			</div>
 		</div>
 		<?php 
+		return ob_get_clean();
+	}
+
+	public static function new($varPage)
+	{
+		ob_start();
+		?>
+		<div class="container">
+			<h2><?=$varPage['h2'] ?? ''?></h2>
+			<form method="post" id='form'>
+
+				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
+
+				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
+				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
+			</form>
+		</div>
+		<?php
+		return ob_get_clean();
+	}
+
+	public static function edit($varPage)
+	{
+		ob_start();
+		?>
+		<div class="container">
+			<h2><?=$varPage['h2'] ?? ''?></h2>
+			<form method="post" id='form'>
+
+				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
+
+				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
+				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
+			</form>
+		</div>
+		<?php
 		return ob_get_clean();
 	}
 }

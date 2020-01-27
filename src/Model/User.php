@@ -66,12 +66,12 @@ class User extends AbstractModel
 		return $this;
 	}
 
-	public function getRole(): ?string
+	public function getRole(): ?int
 	{
 		return $this->role;
 	}
 
-	public function setRole(string $role): self
+	public function setRole(int $role): self
 	{
 		$this->role = $role;
 

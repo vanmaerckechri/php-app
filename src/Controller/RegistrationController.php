@@ -58,11 +58,9 @@ class RegistrationController extends AbstractController
 				UserRepository::record($user);
 				MessagesManager::add(['info' => ['registerComplete' => null]]);
 				$this->redirect('connection');
-				exit();
 			}
 		}
 
 		$this->redirect('registration');
-		exit();
 	}	
 }

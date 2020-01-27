@@ -25,6 +25,10 @@ abstract class AbstractModel
 				if ($setColumns === true)
 				{
 					$setCol = 'set' . ucfirst($column);
+					if (is_string($value) || is_int($value))
+					{
+						$value = trim($value);
+					}
 					$this->$setCol($value);
 				}
 			}
@@ -36,14 +40,14 @@ abstract class AbstractModel
 		return $isValid;
 	}
 
-	public function isUnique(array $columns): bool
+	public function isUnique(array $columns, int $idToExclude = null): bool
 	{
 		$isValid = true;
 		foreach ($columns as $column) 
 		{
 			$getCol = 'get' . ucfirst($column);
 			$value = $this->$getCol();
-			if (!Validator::isUnique($this, $column, $value))
+			if (!Validator::isUnique($this, $column, $value, $idToExclude))
 			{
 				$isValid = false;
 			}
@@ -79,7 +83,7 @@ abstract class AbstractModel
 		return $newString;
 	}
 
-	public function getValuesToRecord(): ?array
+	public function getValuesToPush(bool $isCheckRequired = true): ?array
 	{
 		$output = array();
 		foreach ($this->rules as $column => $rules)
@@ -89,7 +93,7 @@ abstract class AbstractModel
 			{
 				$value = $this->$getVar();
 				// save all columns that have a value, if one of the required columns has a null value, return null
-				if ($ruleId === 'required' && $ruleValue === true)
+				if ($isCheckRequired === true && $ruleId === 'required' && $ruleValue === true)
 				{
 					if (is_null($value))
 					{

@@ -32,10 +32,10 @@ class UserSchema
             'default' => 'not null'
         ),
         'role' => array(
-            'type' => 'varchar',
-            'maxLength' => 5,
-            'default' => 'not null default \'user\'',
-            'only' => array('user', 'admin')
+            'type' => 'int',
+            'maxLength' => 1,
+            'default' => 'not null default 1',
+            'only' => array(1, 2)
         ),
         'created_at' => array(
             'type' => 'datetime',

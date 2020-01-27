@@ -89,7 +89,7 @@ class Article extends AbstractModel
 
 	public function setCreated_at(\DateTime $created_at): self
 	{
-		$this->created_at = $created_at;
+		$this->created_at = new \DateTime('now');
 
 		return $this;
 	}

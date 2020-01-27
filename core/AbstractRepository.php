@@ -4,7 +4,7 @@ namespace Core;
 
 abstract class AbstractRepository
 {
-	public static function findOneByCol(string $column, $value, string $options = ''): ?Object
+	public static function findOneByCol(string $column, $value): ?Object
 	{
 		$childClass = self::getChildClass();
 		$request = new Request();
@@ -12,8 +12,27 @@ abstract class AbstractRepository
 			->select('*')
 			->from(strtolower($childClass))
 			->where($column, '=', $value)
-			->options($options)
+			->limit(1)
 			->fetchClass();
+
+		return $obj ?: null;
+	}
+
+	public static function findUnique(string $column, $value, ?int $idToExclude): ?Object
+	{
+		$childClass = self::getChildClass();
+		$request = new Request();
+		$obj = $request
+			->select('*')
+			->from(strtolower($childClass))
+			->where($column, '=', $value);
+
+		if ($idToExclude !== null)
+		{
+			$obj->and('id', '!=', $idToExclude);
+		}
+
+		$obj = $obj->fetchClass();
 
 		return $obj ?: null;
 	}
@@ -46,26 +65,26 @@ abstract class AbstractRepository
 		return $output ?: null;
 	}
 
-	public static function findNextEarler($select, int $id, string $createdAt): ?Object
+	public static function findNextEarler($select, int $id, string $createdAt, string $createdColName = 'created_at'): ?Object
 	{
-		return self::findNextEarlerOrLater($select, $id, $createdAt, '<=', 'DESC');
+		return self::findNextEarlerOrLater($select, $id, $createdAt, $createdColName, '<=', 'DESC');
 	}
 
-	public static function findNextLater($select, int $id, string $createdAt): ?Object
+	public static function findNextLater($select, int $id, string $createdAt, string $createdColName = 'created_at'): ?Object
 	{
-		return self::findNextEarlerOrLater($select, $id, $createdAt, '>=', 'ASC');
+		return self::findNextEarlerOrLater($select, $id, $createdAt, $createdColName, '>=', 'ASC');
 	}
 
-	private static function findNextEarlerOrLater($select, int $id, string $createdAt, string $operator, string $direction): ?Object
+	private static function findNextEarlerOrLater($select, int $id, string $createdAt, string $createdColName, string $operator, string $direction): ?Object
 	{
 		$childClass = self::getChildClass();
 		$request = new Request();
 		$output = $request
 			->select($select)
 			->from(strtolower($childClass))
-			->where('created_at', $operator, $createdAt)
+			->where($createdColName, $operator, $createdAt)
 			->and('id', '!=', $id)
-			->orderBy("created_at $direction")
+			->orderBy("$createdColName $direction")
 			->limit(1)
 			->fetchClass();
 		return $output ?: null;
@@ -85,11 +104,23 @@ abstract class AbstractRepository
 	public static function record(object $obj): bool
 	{
 		// insert into table if all required columns are not null
-		$inputs = $obj->getValuesToRecord();
+		$inputs = $obj->getValuesToPush();
 		if ($inputs)
 		{
 			$request = new Request();
-			$request->insertInto($obj->table)->values($inputs);
+			$request->insertInto($obj->table, $inputs)->execute();
+			return true;
+		}
+		return false;
+	}
+
+	public static function updateById(object $obj, int $id): bool
+	{
+		$inputs = $obj->getValuesToPush(false);
+		if ($inputs)
+		{
+			$request = new Request();
+			$request->update($obj->table, $inputs)->where('id', '=', $id)->execute();
 			return true;
 		}
 		return false;

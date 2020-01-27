@@ -31,11 +31,22 @@ abstract class AbstractController
 		return $result;
 	}
 
-	protected function redirect(string $route, ?array $params = null): void
+	protected function redirect(string $route, ?array $params = []): void
 	{
-		if (is_null($params) || $this->processRedirectCondition($params))
+		if (is_null($params) || $this->processRedirectCondition($params) === true)
 		{
-			header('Location: ' . Router::url($route));
+			if (array_key_exists('code', $params))
+			{
+				http_response_code($params['code']);
+			}
+			if (array_key_exists('url', $params))
+			{
+				header('Location: ' . Router::url($route, $params['url']));
+			}
+			else
+			{
+				header('Location: ' . Router::url($route));
+			}
 			exit();
 		}
 	}
@@ -43,30 +54,22 @@ abstract class AbstractController
 	private function processRedirectCondition(array $params): bool
 	{
 		$user = Auth::user();
-		if (array_key_exists('logged', $params))
+
+		if (array_key_exists('logged', $params) && is_null($user) === $params['logged'])
 		{
-			if (is_null($user) === $params['logged'])
-			{
-				return false;
-			}
+			return false;
 		}		
 		if ($user)
 		{
 			$role = $user->getRole();
 
-			if (array_key_exists('minRole', $params))
+			if (array_key_exists('minRole', $params) && $role < $params['minRole'])
 			{
-				if ($role < $params['minRole'])
-				{
-					return false;
-				}
+				return false;
 			}
-			if (array_key_exists('maxRole', $params))
+			if (array_key_exists('maxRole', $params) && $role > $params['maxRole'])
 			{
-				if ($role > $params['maxRole'])
-				{
-					return false;
-				}
+				return false;
 			}
 		}
 		return true;

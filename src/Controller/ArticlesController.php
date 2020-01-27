@@ -18,7 +18,7 @@ class ArticlesController extends AbstractController
 		$articles = Pagination::getItems('article', 'created_at DESC', 12, $page);
 		if (is_null($articles))
 		{
-			$this->redirect('error404');
+			$this->redirect('error404', ['code' => 404]);
 		}
 		$this->varPage['articles'] = $articles;
 		$this->renderer('ArticlesView', 'index');

@@ -15,6 +15,13 @@ return array(
 			'en' => 'You are disconnected'
 		)
 	),
+	'notHaveRights' => array(
+		'type' => 'error',
+		'content' => array(
+			'fr' => 'Vous n\'avez pas les droits pour effectuer cette action',
+			'en' => 'You do not have the rights to perform this action'
+		)
+	),
 	'auth' => array(
 		'type' => 'error',
 		'content' => array(
@@ -22,18 +29,11 @@ return array(
 			'en' => 'Username or password incorrect'
 		)
 	),
-	'usernameTaken' => array(
+	'unique' => array(
 		'type' => 'error',
 		'content' => array(
-			'fr' => 'Le nom d\'utilisateur est déjà utilisé',
-			'en' => 'Username is already in use'
-		)
-	),
-	'emailTaken' => array(
-		'type' => 'error',
-		'content' => array(
-			'fr' => 'L\'adresse email est déjà utilisée',
-			'en' => 'The email address is already used'
+			'fr' => 'Déjà utilisé!',
+			'en' => 'Already used!'
 		)
 	),
 	'required' => array(

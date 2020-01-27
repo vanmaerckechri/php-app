@@ -10,24 +10,27 @@ class Request
 	private $prepare;
 	private $binds = array();
 
-	// INSERT INTO
-
-	public function insertInto(string $table): self
+	public function insertInto(string $table, array $binds): self
 	{
 		$this->table = $table;
 		$this->prepare = 'INSERT INTO ' . $table;
-		return $this;
-	}
-
-	public function values(array $binds): self
-	{
 		$this->binds = $binds;
 		$this->prepare .= '(' . implode(', ', array_keys($binds)) . ') VALUES (' . ':' . implode(', :', array_keys($binds)) . ')';
-		$this->execute();
 		return $this;
 	}
 
-	// SELECT
+	public function update(string $table, array $binds): self
+	{
+		$this->table = $table;
+		$this->prepare = 'UPDATE ' . $table . ' SET ';
+		$this->binds = $binds;
+		foreach ($binds as $column => $value)
+		{
+			$this->prepare .= $column . "=:" . $column . ", ";
+		}
+		$this->prepare = trim($this->prepare, ', ');
+		return $this;
+	}
 
 	public function count($column): self
 	{
@@ -54,27 +57,42 @@ class Request
 
 	public function where(string $column, string $operator, $value): self
 	{
-		$this->binds = array();
-		$this->binds[$column] = $value;
-		$this->prepare .= ' WHERE ';
-		$this->prepare .= "$column $operator :$column";
-		return $this;
+		return $this->addCondition($column, $operator, $value, 'WHERE');
 	}
 
 	public function and(string $column, string $operator, $value): self
 	{
-		$this->binds[$column] = $value;
-		$this->prepare .= ' AND ';
-		$this->prepare .= "$column $operator :$column";
-		return $this;		
+		return $this->addCondition($column, $operator, $value, 'AND');	
 	}
 
 	public function or(string $column, string $operator, $value): self
 	{
-		$this->binds[$column] = $value;
-		$this->prepare .= ' OR ';
-		$this->prepare .= "$column $operator :$column";
-		return $this;		
+		return $this->addCondition($column, $operator, $value, 'OR');
+	}
+
+	private function addCondition(string $column, string $operator, $value, string $condition): self
+	{
+		$uniqueBind = $this->makeUniqueBind();
+		$this->binds[$column] = array('bind' => $uniqueBind, 'value' => $value);
+		$this->prepare .= " $condition ";
+		$this->prepare .= "$column $operator :$uniqueBind";
+		return $this;	
+	}
+
+	private function makeUniqueBind()
+	{
+		$chars = 'bcdfghjklmnpqrstvwxzaeiouy';
+		$newBind = '';
+		while (strlen($newBind) < 8)
+		{
+			$rand = rand(0, strlen($chars) - 1);
+			$newBind .= $chars[$rand];
+			if (array_search($newBind, $this->binds))
+			{
+				$newBind = '';
+			}
+		}
+		return $newBind;
 	}
 
 	public function orderBy(string $orderBy): self
@@ -125,18 +143,27 @@ class Request
 		return $result ?: null;
 	}
 
-	private function execute()
+	public function execute()
 	{
 		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
 		$schema = $schemaClass::$schema;
-
+		
 		$stmt = Helper::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
-			$bind = ':'. $column;
 			$param = $this->getBindParam($schema[$column]['type']);
-
-			$stmt->bindValue($bind, $value, $param);
+			// array $value for binds from condition (with unique bind name)
+			if (is_array($value))
+			{
+				$input = $value['value'];
+				$bind = ':' . $value['bind'];
+			}
+			else
+			{
+				$input = $value;
+				$bind = ':' . $column;
+			}
+			$stmt->bindValue($bind, $input, $param);
 		}
 		$stmt->execute();
 		return $stmt;

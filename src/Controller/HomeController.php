@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use Core\AbstractController;
+use Core\MessagesManager\MessagesManager;
 
 class HomeController extends AbstractController
 {
@@ -14,6 +15,7 @@ class HomeController extends AbstractController
 
 	public function index()
 	{
+		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer('HomeView', 'index');
 	}	
 }

@@ -29,6 +29,14 @@ Router::get('/articles/page/:page', 'ArticlesController#index', 'articles')->wit
 
 Router::get('/article/:id-:slug', 'ArticleController#show', 'article')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
 
+Router::get('/article/new', 'ArticleController#new', 'newArticle');
+
+Router::post('/article/new', 'ArticleController#create');
+
+Router::get('/article/edit/:id-:slug', 'ArticleController#edit', 'editArticle')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
+
+Router::post('/article/edit/:id-:slug', 'ArticleController#update')->with('id', '[0-9]+')->with('slug', '([a-z\-0-9]+)');
+
 Router::get('/connection', 'ConnectionController#index', 'connection');
 
 Router::post('/connection', 'ConnectionController#dedicatedConnection');
