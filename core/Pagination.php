@@ -3,32 +3,34 @@
 namespace Core;
 
 use Core\Router\Router;
+use Core\Helper;
 
 class Pagination
 {
 	private static $numOfPages;
 	private static $currentPage;
 
-	public static function getItems(string $table, string $orderBy, int $itemByPage, int $page): ?array
+	public static function init(string $table, int $itemByPage, int $currentPage): int
 	{
 		$repo = 'App\\Repository\\' . ucfirst($table) . 'Repository';
 		$repo = new $repo();
 
-		$count = $repo->countRowByCol('*');
-		self::$numOfPages = (int)ceil($count / $itemByPage);
+		$itemsCount = $repo->countRowByCol('*');
+		self::$numOfPages = (int)ceil($itemsCount / $itemByPage);
+		self::$currentPage = $currentPage;
 
-		if ($page < 1 || ($page > 1 && $page > self::$numOfPages))
+		// current page doesn't exist ?
+		if (self::$currentPage < 1 || (self::$currentPage > 1 && self::$currentPage > self::$numOfPages))
 		{
-			return null;
+			return -2;
 		}
+		// items don't exist ?
 		if (self::$numOfPages < 1)
 		{
-			return [];
+			return -1;
 		}
 
-		self::$currentPage = $page;
-		$offset = (self::$currentPage - 1) * $itemByPage;
-		return $repo->findAllLimitOffset('*', $orderBy, $itemByPage, $offset);
+		return (self::$currentPage - 1) * $itemByPage;
 	}
 
 	public static function getNav(int $pageBySide = 4, string $cssContainer = 'pagination-container', string $cssBtn = 'btn'): ?string

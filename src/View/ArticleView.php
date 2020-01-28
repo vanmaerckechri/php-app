@@ -17,23 +17,21 @@ Class ArticleView
 		?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<ul>
-				<li>
-					<h3><?=htmlentities($varPage['article']->getTitle())?></h3>
-					<p><?=nl2br(htmlentities($varPage['article']->getContent()))?></p>
-					<p><?=$varPage['article']->getCreated_at()->format('d/m/y')?></p>
-				</li>
-			</ul>
-			<?php if ($user && $user->getId() === $varPage['article']->getUser_id()): ?>
-				<a class="btn" href="<?=Router::url('editArticle', ['id' => $varPage['article']->getId(), 'slug' => $varPage['article']->getSlug()])?>">EDIT</a>
-			<?php endif; ?>
-			<div class="pagination-container">
+			<div class="article-buttons">
 				<?php if ($previous): ?>
 					<a class="btn" href="<?=Router::url('article', ['id' => $previous->getId(), 'slug' => $previous->getSlug()])?>">PREVIOUS</a>
 				<?php endif; ?>
 				<?php if ($next): ?>
 					<a class="btn" href="<?=Router::url('article', ['id' => $next->getId(), 'slug' => $next->getSlug()])?>">NEXT</a>
 				<?php endif; ?>
+			</div>
+			<div class="article-container">
+				<?php if ($user && $user->getId() === $varPage['article']->getUser_id()): ?>
+					<a class="btn" href="<?=Router::url('editArticle', ['id' => $varPage['article']->getId(), 'slug' => $varPage['article']->getSlug()])?>">EDIT</a>
+				<?php endif; ?>
+				<h3><?=htmlentities($varPage['article']->getTitle())?></h3>
+				<p><?=nl2br(htmlentities($varPage['article']->getContent()))?></p>
+				<p><?=$varPage['article']->getCreated_at()->format('d/m/y')?></p>
 			</div>
 		</div>
 		<?php 
@@ -46,10 +44,8 @@ Class ArticleView
 		?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<form method="post" id='form'>
-
+			<form class="article-form" method="post">
 				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
-
 				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
 			</form>
@@ -64,12 +60,10 @@ Class ArticleView
 		?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<form method="post" id='form'>
-
+			<form class="article-form" method="post">
 				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
-
 				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
-				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
+				<input id="validation" class="btn" type="submit" value="MODIFIER">
 			</form>
 		</div>
 		<?php
