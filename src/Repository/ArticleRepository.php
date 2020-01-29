@@ -11,7 +11,7 @@ class ArticleRepository extends AbstractRepository
 	{
 		$request = new Request();
 		$output = $request
-			->select('article.*, user.username as user_name, user.role as user_role')
+			->select('article.*, user.username AS user_name, user.role AS user_role')
 			->from('article')
 			->innerJoin('user')
 			->on('article.user_id = user.id')
@@ -27,7 +27,7 @@ class ArticleRepository extends AbstractRepository
 	{
 		$request = new Request();
 		$output = $request
-			->select('article.*, user.username as user_name, user.role as user_role')
+			->select('article.*, user.username AS user_name, user.role AS user_role')
 			->from('article')
 			->innerJoin('user')
 			->on('article.user_id = user.id')

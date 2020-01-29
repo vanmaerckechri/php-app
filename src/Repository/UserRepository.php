@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use Core\AbstractRepository;
-use App\Model\User;
+use Core\Request;
 
 class UserRepository extends AbstractRepository
 {

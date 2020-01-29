@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use Core\AbstractRepository;
-use App\Model\Category;
+use Core\Request;
 
 class CategoryRepository extends AbstractRepository
 {
