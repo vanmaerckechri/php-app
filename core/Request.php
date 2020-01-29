@@ -20,6 +20,13 @@ class Request
 		return $this;
 	}
 
+	public function from(string $table): self
+	{
+		$this->table = $table;
+		$this->prepare .= ' FROM ' . $table;
+		return $this;
+	}
+
 	public function insertInto(string $table, array $binds): self
 	{
 		$this->table = $table;
@@ -51,13 +58,6 @@ class Request
 	public function on(string $table): self
 	{
 		$this->prepare .= ' ON ' . $table;
-		return $this;
-	}
-
-	public function from(string $table): self
-	{
-		$this->table = $table;
-		$this->prepare .= ' FROM ' . $table;
 		return $this;
 	}
 
@@ -141,12 +141,11 @@ class Request
 
 	public function execute()
 	{
-		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
-		$schema = $schemaClass::$schema;
 		$stmt = Helper::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
 			$column = explode('.', $column);
+			$schema = count($column) > 1 ? $this->getSchema($column[0]) : $this->getSchema($this->table);
 			$column = array_pop($column);
 			$param = $this->getBindParam($schema[$column]['type']);
 			// array $value for binds from condition (with unique bind name)
@@ -164,6 +163,12 @@ class Request
 		}
 		$stmt->execute();
 		return $stmt;
+	}
+
+	private function getSchema(string $table)
+	{
+		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
+		return $schemaClass::$schema;
 	}
 
 	private function getBindParam(string $type): string
