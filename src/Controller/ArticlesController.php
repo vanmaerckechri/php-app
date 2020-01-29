@@ -4,7 +4,7 @@ namespace App\Controller;
 
 use Core\AbstractController;
 use Core\Pagination;
-use Core\Helper;
+use App\Repository\ArticleRepository;
 
 class ArticlesController extends AbstractController
 {
@@ -32,16 +32,7 @@ class ArticlesController extends AbstractController
 		}
 		else
 		{
-			$stmt = Helper::getPdo()->query("
-				SELECT article.*, user.username as user_name 
-				FROM article 
-				INNER JOIN user 
-				ON article.user_id = user.id 
-				ORDER BY article.created_at DESC
-				LIMIT $itemsByPage 
-				OFFSET $firstItemIndex
-			");
-			$this->varPage['articles'] = $stmt->fetchAll(\PDO::FETCH_CLASS, 'App\\Model\\Article');
+			$this->varPage['articles'] = ArticleRepository::findArticlesByPage($itemsByPage, $firstItemIndex);
 		}
 
 		$this->renderer('ArticlesView', 'index');

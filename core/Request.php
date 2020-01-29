@@ -10,6 +10,16 @@ class Request
 	private $prepare;
 	private $binds = array();
 
+	public function select($columns): self
+	{
+		if (is_array($columns))
+		{
+			$columns = implode(', ', $columns);
+		}
+		$this->prepare = 'SELECT ' . $columns;
+		return $this;
+	}
+
 	public function insertInto(string $table, array $binds): self
 	{
 		$this->table = $table;
@@ -32,19 +42,15 @@ class Request
 		return $this;
 	}
 
-	public function count($column): self
+	public function innerJoin(string $link): self
 	{
-		$this->prepare = "SELECT COUNT($column)";
-		return $this;		
+		$this->prepare .= ' INNER JOIN ' . $link;
+		return $this;
 	}
 
-	public function select($columns): self
+	public function on(string $table): self
 	{
-		if (is_array($columns))
-		{
-			$columns = implode(', ', $columns);
-		}
-		$this->prepare = 'SELECT ' . $columns;
+		$this->prepare .= ' ON ' . $table;
 		return $this;
 	}
 
@@ -79,20 +85,10 @@ class Request
 		return $this;	
 	}
 
-	private function makeUniqueBind()
+	public function count($column): self
 	{
-		$chars = 'bcdfghjklmnpqrstvwxzaeiouy';
-		$newBind = '';
-		while (strlen($newBind) < 8)
-		{
-			$rand = rand(0, strlen($chars) - 1);
-			$newBind .= $chars[$rand];
-			if (array_search($newBind, $this->binds))
-			{
-				$newBind = '';
-			}
-		}
-		return $newBind;
+		$this->prepare = "SELECT COUNT($column)";
+		return $this;		
 	}
 
 	public function orderBy(string $orderBy): self
@@ -147,10 +143,11 @@ class Request
 	{
 		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
 		$schema = $schemaClass::$schema;
-		
 		$stmt = Helper::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
+			$column = explode('.', $column);
+			$column = array_pop($column);
 			$param = $this->getBindParam($schema[$column]['type']);
 			// array $value for binds from condition (with unique bind name)
 			if (is_array($value))
@@ -183,5 +180,21 @@ class Request
 			default:
 				return PDO::PARAM_STR;
 		}
+	}
+
+	private function makeUniqueBind()
+	{
+		$chars = 'bcdfghjklmnpqrstvwxzaeiouy';
+		$newBind = '';
+		while (strlen($newBind) < 8)
+		{
+			$rand = rand(0, strlen($chars) - 1);
+			$newBind .= $chars[$rand];
+			if (array_search($newBind, $this->binds))
+			{
+				$newBind = '';
+			}
+		}
+		return $newBind;
 	}
 }

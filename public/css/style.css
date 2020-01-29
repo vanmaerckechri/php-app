@@ -135,7 +135,7 @@ nav a.active
 {
 	margin-bottom: 5vw;
 	width: 30%;
-	height: 300px;
+	min-height: 220px;
 	display: flex;
 	flex-direction: column;
 	background-color: rgb(200, 200, 200);
@@ -144,9 +144,11 @@ nav a.active
 {
 	overflow: hidden;
 	text-overflow: ellipsis;
-	height: 100px;
+	min-height: 66px;
+	color: white;
+	background-color: black;
 }
-.articles-container .article .content, .articles-container .article h3, .articles-container .article .date
+.articles-container .article .content, .articles-container .article h3, .articles-container .article .date, .articles-container .article .user
 {
 	padding: 0.75rem;
 }
@@ -156,13 +158,14 @@ nav a.active
 	overflow: hidden;
 	text-overflow: ellipsis;
 }
-.articles-container .article .date
+.articles-container .creation-infos
 {
-	text-align: right;
+	display: flex;
+	justify-content: space-between;
 }
 .articles-container .article .btn
 {
-	margin-bottom: 0;
+	margin: 0;
 }
 .pagination-container
 {

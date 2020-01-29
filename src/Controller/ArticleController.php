@@ -25,7 +25,7 @@ class ArticleController extends AbstractController
 		if ($article->isValid(['id' => $id, 'slug' => $slug], false))
 		{
 			// item with this 'id' and this 'slug' does exist ?
-			$article = ArticleRepository::findOneByCol('id', $id);
+			$article = ArticleRepository::findArticleById($id);
 
 			if (!is_null($article) && $article->getSlug() === $slug)
 			{

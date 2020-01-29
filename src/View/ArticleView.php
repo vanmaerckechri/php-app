@@ -31,7 +31,10 @@ Class ArticleView
 				<?php endif; ?>
 				<h3><?=htmlentities($varPage['article']->getTitle())?></h3>
 				<p><?=nl2br(htmlentities($varPage['article']->getContent()))?></p>
-				<p><?=$varPage['article']->getCreated_at()->format('d/m/y')?></p>
+				<div class="creation-infos">
+					<p class="user"><?=$varPage['article']->user_name?></p>
+					<p class="date"><?=$varPage['article']->getCreated_at()->format('d/m/y')?></p>
+				</div>
 			</div>
 		</div>
 		<?php 

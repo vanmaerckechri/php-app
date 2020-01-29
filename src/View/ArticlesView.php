@@ -21,7 +21,10 @@ Class ArticlesView extends AbstractView
 				<li class="article">
 					<h3><?=htmlentities($article->getTitle())?></h3>
 					<p class="content"><?=htmlentities(self::excerpt($article->getContent(), 125))?></p>
-					<p class="date"><?=$article->getCreated_at()->format('d/m/y')?></p>
+					<div class="creation-infos">
+						<p class="user"><?=$article->user_name?></p>
+						<p class="date"><?=$article->getCreated_at()->format('d/m/y')?></p>
+					</div>
 					<a class="btn" href="<?=Router::url('article', ['slug' => $article->getSlug(), 'id' => $article->getId()])?>">Voir Plus</a>
 				</li>
 				<?php endforeach ?>
