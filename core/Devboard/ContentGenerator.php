@@ -20,7 +20,7 @@ Class ContentGenerator
 			// if is the final itération, adapt the final word
 			if ($remainingSpace < (2 * $max))
 			{
-				$min = --$max;
+				$min = $max = $remainingSpace - 1;
 				$isOver = true;
 			}
 

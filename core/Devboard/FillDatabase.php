@@ -86,7 +86,7 @@ class FillDatabase
 							}
 							else
 							{
-								$min = isset($rules['minLength']) ?: 0;
+								$min = $rules['minLength'] ?? 0;
 								switch ($rules['type']) 
 								{
 									case 'int':
