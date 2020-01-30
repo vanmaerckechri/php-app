@@ -2,6 +2,11 @@
 
 namespace Core\MessagesManager;
 
+use Core\ {
+	App,
+	Helper
+};
+
 class MessagesManager
 {
 	private static $messages = [];
@@ -11,12 +16,13 @@ class MessagesManager
 	{
 		if (!self::$messages)
 		{
-			self::$messages = require_once $_SERVER['DOCUMENT_ROOT'] . '/core/MessagesManager/messages.php';
+			$file = $_SERVER['DOCUMENT_ROOT'] . '/core/MessagesManager/messages.json';
+			self::$messages = json_decode(file_get_contents($file), true);
 
-			$customSmsFile = $_SERVER['DOCUMENT_ROOT'] . '/src/Config/messages.php';
-			if (file_exists($customSmsFile))
+        	$customFile = Helper::getAppDirectory() . 'Config/messages.json';
+			if (file_exists($customFile))
 			{
-				$customSms = require_once $customSmsFile;
+				$customSms = json_decode(file_get_contents($file), true);
 				self::$messages = array_unique(array_merge(self::$messages, $customSms), SORT_REGULAR);
 			}
 		}
@@ -32,7 +38,8 @@ class MessagesManager
 			{
 				if ($isCustomSms === false)
 				{
-					$sms = self::$messages[$key]['content'][$GLOBALS['lang']];
+					$language = App::getConfig('language');
+					$sms = self::$messages[$key]['content'][$language];
 					$sms = str_replace('{{x}}', $value, $sms);
 					$smsType = self::$messages[$key]['type'];
 				}

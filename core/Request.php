@@ -3,6 +3,10 @@
 namespace Core;
 
 use PDO;
+use Core\ {
+	App,
+	Helper
+};
 
 class Request
 {
@@ -117,23 +121,22 @@ class Request
 
 	public function fetchClass(): ?object
 	{
-		$class = 'App\\Model\\' . ucfirst($this->table);
+		$entity = Helper::getClass('entity', $this->table);
 		$stmt = $this->execute();
-		$result = $stmt->fetchObject($class);
+		$result = $stmt->fetchObject($entity);
 		return $result ?: null;
 	}
 
 	public function fetchAllClass(): ?array
 	{
-		$class = 'App\\Model\\' . ucfirst($this->table);
+		$entity = Helper::getClass('entity', $this->table);
 		$stmt = $this->execute();
-		$result = $stmt->fetchAll(PDO::FETCH_CLASS, $class);
+		$result = $stmt->fetchAll(PDO::FETCH_CLASS, $entity);
 		return $result ?: null;		
 	}
 
 	public function fetchNum(): ?array
 	{
-		$class = 'App\\Model\\' . ucfirst($this->table);
 		$stmt = $this->execute();
 		$result = $stmt->fetch(PDO::FETCH_NUM);
 		return $result ?: null;
@@ -141,7 +144,7 @@ class Request
 
 	public function execute()
 	{
-		$stmt = Helper::getPdo()->prepare($this->prepare);
+		$stmt = App::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
 			$column = explode('.', $column);
@@ -167,7 +170,7 @@ class Request
 
 	private function getSchema(string $table)
 	{
-		$schemaClass = 'App\\Schema\\' . $this->table . 'Schema';
+		$schemaClass = Helper::getClass('schema', $this->table);
 		return $schemaClass::$schema;
 	}
 

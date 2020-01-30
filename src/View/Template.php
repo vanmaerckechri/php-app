@@ -2,6 +2,7 @@
 
 namespace App\View;
 
+use Core\App;
 use App\View\HeaderView;
 
 Class Template
@@ -35,7 +36,7 @@ Class Template
 
 		?>
 			<!DOCTYPE html>
-			<html lang=<?= $GLOBALS['lang'] ?>>
+			<html lang=<?=App::getConfig('language')?>>
 			<head>
 			    <meta charset="UTF-8">
 			    <meta name="viewport" content="width=device-width, initial-scale=1.0">

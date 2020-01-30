@@ -2,6 +2,8 @@
 
 namespace Core\Router;
 
+use Core\App;
+
 class Route
 {
 	private $path;
@@ -56,7 +58,7 @@ class Route
 			}
 			else
 			{
-				$controller = 'App\\Controller\\' . $params[0];
+				$controller = App::getConfig('autoload')['namespace'] . 'Controller\\' . $params[0];
 			}
 
 			$controller = new $controller();

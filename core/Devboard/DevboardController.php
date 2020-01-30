@@ -3,8 +3,12 @@
 namespace Core\Devboard;
 
 use PDO;
-use Core\MessagesManager\MessagesManager;
-use Core\AbstractController;
+use Core\ {
+	App,
+	Helper,
+	AbstractController,
+	MessagesManager\MessagesManager
+};
 
 class DevboardController extends AbstractController
 {
@@ -18,8 +22,8 @@ class DevboardController extends AbstractController
 			$schemas = $this->getTablesFromSchemas();
 			$tablesFromDb = $migration->listTablesFromDb();
 
-			$modelGenerator = new ModelGenerator();
-			$modelList = $modelGenerator->list();
+			$entityGenerator = new EntityGenerator();
+			$modelList = $entityGenerator->list();
 
 			$repoGenerator = new RepoGenerator();
 			$repoList = $repoGenerator->list();
@@ -63,8 +67,8 @@ class DevboardController extends AbstractController
 		}
 		else if ($_POST['context'] === 'model')
 		{
-			$modelGenerator = new ModelGenerator();
-			$modelGenerator->create($_POST['model']);
+			$entityGenerator = new EntityGenerator();
+			$entityGenerator->create($_POST['model']);
 		}
 		else if ($_POST['context'] === 'repo')
 		{
@@ -98,8 +102,8 @@ class DevboardController extends AbstractController
 		}
 		else if ($_POST['context'] === 'model')
 		{
-			$modelGenerator = new ModelGenerator();
-			$modelGenerator->drop($_POST['model']);
+			$entityGenerator = new EntityGenerator();
+			$entityGenerator->drop($_POST['model']);
 		}
 		else if ($_POST['context'] === 'repo')
 		{
@@ -113,7 +117,7 @@ class DevboardController extends AbstractController
 
 	private function getTablesFromSchemas()
 	{
-		$files =  array_values(array_diff(scandir($_SERVER['DOCUMENT_ROOT'] . '/src/Schema/'), ['..', '.']));
+		$files =  array_values(array_diff(scandir(Helper::getAppDirectory() . 'Schema/'), ['..', '.']));
 		return array_map('strtolower', preg_replace('/Schema.php/', '', $files));
 	}
 }

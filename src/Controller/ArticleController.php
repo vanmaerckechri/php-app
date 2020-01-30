@@ -2,12 +2,16 @@
 
 namespace App\Controller;
 
-use Core\Helper;
-use Core\AbstractController;
-use	Core\MessagesManager\MessagesManager;
-use Core\Authentification\Auth;
-use App\Model\Article;
-use App\Repository\ArticleRepository;
+use Core\ {
+	Helper,
+	AbstractController,
+	MessagesManager\MessagesManager,
+	Authentification\Auth
+};
+use App\ {
+	Entity\Article,
+	Repository\ArticleRepository
+};
 
 class ArticleController extends AbstractController
 {

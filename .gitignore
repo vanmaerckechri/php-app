@@ -1,2 +1,3 @@
 src/Config/dbServer.php
 src/Config/oauth.php
+src/Config/security.json

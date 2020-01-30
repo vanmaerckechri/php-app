@@ -3,7 +3,10 @@
 namespace Core\Devboard;
 
 use PDO;
-use Core\Helper;
+use Core\ {
+	App,
+	Helper
+};
 
 /*
 	FillDatabase::createRows([
@@ -13,22 +16,24 @@ use Core\Helper;
 */
 class FillDatabase
 {
+	use TableInfos;
+
 	public static function createRows(array $tables): void
 	{
-		$pdo = Helper::getPdo();
+		$pdo = App::getPdo();
 
 		self::deleteRows($pdo, $tables);
 		self::hydrate($pdo, $tables);
 	}
 
 	public static function searchForeignKeyOnEmptyTable(string $table): ?string
-	{
-        $tableInfos = Helper::getTableInfos($table);
+	{	
+        $tableInfos = TableInfos::get($table);
         foreach ($tableInfos['schema'] as $column => $rules)
         {
             if (isset($rules['foreignKey']['table']))
             {
-            	$stmt = Helper::getPdo()->prepare("SELECT * FROM {$rules['foreignKey']['table']} LIMIT 1");
+            	$stmt = App::getPdo()->prepare("SELECT * FROM {$rules['foreignKey']['table']} LIMIT 1");
             	$stmt->execute();
             	if ($stmt->fetch() === false)
             	{
@@ -56,8 +61,8 @@ class FillDatabase
 		foreach ($tables as $table => $params)
 		{
 			// get schema/rules of columns
-			$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
-			$schema = $class::$schema;
+			$schemaClass = Helper::getClass('schema', $table);
+			$schema = $schemaClass::$schema;
 
 			for ($i = 0; $i < $params['iteration']; $i++)
 			{
@@ -125,7 +130,7 @@ class FillDatabase
 
 	private static function getRandRowValueByCol(string $table, string $column): ?int
 	{
-		$stmt = Helper::getPdo()->prepare("SELECT * FROM $table");
+		$stmt = App::getPdo()->prepare("SELECT * FROM $table");
 		$stmt->execute();
 		$result = $stmt->fetchAll();
 		if ($result)

@@ -6,8 +6,10 @@ use Core\ {
 	AbstractController,
 	MessagesManager\MessagesManager
 };
-use App\Model\User;
-use App\Repository\UserRepository;
+use App\ {
+	Entity\User,
+	Repository\UserRepository
+};
 
 class RegistrationController extends AbstractController
 {

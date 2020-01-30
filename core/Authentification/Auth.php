@@ -2,31 +2,36 @@
 
 namespace Core\Authentification;
 
-use Core\Router\Router;
-use App\Model\User;
-use App\Repository\UserRepository;
+use Core\ {
+	Helper,
+	Router\Router
+};
 
 class Auth
 {
-	public static function user(): ?User
+	public static function user(): ?object
 	{
-		$user = new User();
+		$entity = Helper::getClass('entity', 'user');
+		$user = new $entity();
 		$id = $_SESSION['auth'] ?? null;
 		if (!$user->isValid(['id' => $id], false))
 		{
 			return null;
 		}
-		$user = UserRepository::findOneByCol('id', $id);
+		$repo = Helper::getClass('repository', 'user');
+		$user = call_user_func_array([$repo, 'findOneByCol'], ['id', $id]);
 		return $user;
 	}
 
 	public static function login(string $username, string $password): bool
 	{
-		$user = new User();
+		$entity = Helper::getClass('entity', 'user');
+		$user = new $entity();
 		$inputs = array('username' => $username, 'password' => $password);
 		if ($user->isValid($inputs, false))
 		{
-			$user = UserRepository::findOneByCol('username', $username);
+			$repo = Helper::getClass('repository', 'user');
+			$user = call_user_func_array([$repo, 'findOneByCol'], ['username', $username]);
 
 			if (!is_null($user) && password_verify($password, $user->getPassword()))
 			{
@@ -37,7 +42,7 @@ class Auth
 		return false;
 	}
 
-	public static function addUserToSession(User $user): void
+	public static function addUserToSession(object $user): void
 	{
 		$_SESSION['auth'] = $user->getId();
 	}

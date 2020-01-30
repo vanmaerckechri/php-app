@@ -2,18 +2,20 @@
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/core/Autoloader.php';
 
-use Core\Helper;
-use Core\Router\Router;
+use Core\ {
+	App,
+	Router\Router
+};
 
-Helper::startSession();
+$lang = 'fr';
 
-$lang = "fr";
+App::start();
 
 Router::init();
 
 // Only for development!!! --->
 
-Helper::devMode();
+App::devMode();
 
 Router::get('/devboard', 'DevboardController#index', 'devboard');
 

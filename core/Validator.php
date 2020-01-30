@@ -2,13 +2,16 @@
 
 namespace Core;
 
-use Core\MessagesManager\MessagesManager;
+use Core\ {
+	Helper,
+	MessagesManager\MessagesManager
+};
 
 class Validator
 {
 	public static function isUnique(object $obj, string $column, $input, $idToExclude): bool
 	{
-		$repoClass = 'App\\Repository\\' . $obj->classname . 'Repository';
+		$repoClass = Helper::getClass('repository', $obj->table);
 		$errors = array();
 		$smsId = $column . 'Sms';
 

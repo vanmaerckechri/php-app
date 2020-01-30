@@ -2,16 +2,16 @@
 
 namespace Core;
 
-abstract class AbstractModel
+use Core\Helper;
+
+abstract class AbstractEntity
 {
-	public $classname;
 	public $table;
 	public $rules;
 
 	public function __construct($class)
 	{
-		$this->classname = substr($class, strrpos($class, '\\') + 1);
-		$this->table = strtolower($this->classname);
+		$this->table = strtolower(substr($class, strrpos($class, '\\') + 1));
 		$this->initValidationRules();
 	}
 
@@ -55,11 +55,11 @@ abstract class AbstractModel
 		return $isValid;
 	}
 
-	public function incrementAlreadyUsed($column): string
+	public function incrementAlreadyUsed(string $column): string
 	{
-		$repoClass = 'App\\Repository\\' . $this->classname . 'Repository';
+		$repoClass = Helper::getClass('repository', $this->table);
 		$getMethod = 'get' . ucfirst($column);
-		$findMethod = 'find' . $this->classname . 'By' . ucfirst($column);
+		$findMethod = 'find' . ucfirst($this->table) . 'By' . ucfirst($column);
 
 		$string = $this->$getMethod();
 		$newString = $string;
@@ -118,7 +118,7 @@ abstract class AbstractModel
 
 	private function initValidationRules(): void
 	{
-		$schemaClass = 'App\\Schema\\' . $this->classname . 'Schema';
+		$schemaClass = Helper::getClass('schema', $this->table);
 		$this->rules = $schemaClass::$schema;
 
 		foreach ($this->rules as $column => $rules)

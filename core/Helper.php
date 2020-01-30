@@ -3,57 +3,26 @@
 namespace Core;
 
 use PDO;
+use Core\App;
 
 class Helper
 {
-	private static $pdo;
-
-	public static function getPdo(): ?PDO
-	{
-		if (!self::$pdo)
-		{
-			$dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
-			self::$pdo = new PDO("mysql:host={$dbServer['host']}; dbname={$dbServer['db']['name']}; charset={$dbServer['charset']}", $dbServer['user'], $dbServer['pwd'], [
-				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC
-			]);
-		}
-
-		return self::$pdo;
-	}
-
-	public static function startSession(): void
-	{
-		if (session_status() === PHP_SESSION_NONE)
-		{
-			session_start();
-		}
-	}
-
-	public static function slugify($string)
+	public static function slugify(string $string): string
 	{
         return strtolower(trim(preg_replace('/[^A-Za-z0-9-]+/', '-', $string), '-'));
 	}
 
-	public static function getTableInfos(string $table): array
+	public static function getClass(string $classType, string $table): string
 	{
-		$class = 'App\\Schema\\' . ucfirst($table) . 'Schema';
-
-		return array(
-            'name' => $table,
-			'schema' => $schema = $class::$schema,
-    		'options' => $options = $class::$options
-    	);
+		$directory = ucfirst($classType);
+		$classType = $classType === 'entity' ? '' : $classType;
+		$table = ucfirst($table);
+		return App::getConfig('autoload')['namespace'] . $directory . '\\' . $table . $classType;
 	}
 
-	public static function devMode()
+	public static function getAppDirectory(): string
 	{
-		try
-		{
-			Helper::getPdo()->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-		}
-		catch(\PDOException $e)
-		{
-			
-		}
+		$appDir = App::getConfig('autoload')['directory'];
+        return $_SERVER['DOCUMENT_ROOT'] . '/' . $appDir;		
 	}
 }

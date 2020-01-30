@@ -2,8 +2,10 @@
 
 namespace App\Repository;
 
-use Core\AbstractRepository;
-use Core\Request;
+use Core\ {
+	AbstractRepository,
+	Request
+};
 
 class ArticleRepository extends AbstractRepository
 {

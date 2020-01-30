@@ -2,19 +2,21 @@
 
 namespace Core\Devboard;
 
+use Core\App;
+
 abstract class abstractClassGenerator
 {
-	private $pathModel;
+	private $path;
 
 	public function __construct()
 	{
-		$this->pathModel = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'src' . DIRECTORY_SEPARATOR . $this->directory . DIRECTORY_SEPARATOR;
+		$this->path = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . App::getConfig('autoload')['directory'] . DIRECTORY_SEPARATOR . $this->directory . DIRECTORY_SEPARATOR;
 		$this->createDirectory();
 	}
 
 	public function list(): ?array
     {
-    	$result =  array_values(array_diff(scandir($this->pathModel), ['..', '.']));
+    	$result =  array_values(array_diff(scandir($this->path), ['..', '.']));
         if (empty($result))
         {
             return null;
@@ -33,7 +35,7 @@ abstract class abstractClassGenerator
 	public function create(string $table): void
 	{
 		$table = ucfirst($table);
-		$filename = $this->pathModel . $table . $this->ext . '.php';
+		$filename = $this->path . $table . $this->ext . '.php';
 
 		if (!file_exists($filename))
 		{
@@ -47,15 +49,15 @@ abstract class abstractClassGenerator
 	public function drop(string $table): void
 	{
 		$table = ucfirst($table);
-		$filename = $this->pathModel . $table . $this->ext . '.php';
+		$filename = $this->path . $table . $this->ext . '.php';
 		unlink($filename);
 	}
 
 	private function createDirectory(): void
 	{
-		if (!file_exists($this->pathModel))
+		if (!file_exists($this->path))
 		{
-    		mkdir($this->pathModel, 0777, true);
+    		mkdir($this->path, 0777, true);
 		}
 	}
 }

@@ -22,9 +22,9 @@ class ConnectionController extends AbstractController
 	{
 		$this->redirect('home', ['logged' => true]);
 
-		$oauthConfig = Oauth::getConfig();
-		$this->varPage['goole_id'] = $oauthConfig['goole_id'];
-		$this->varPage['google_route'] = $oauthConfig['google_route'];
+		$oauthGoogle = Oauth::getConfig('google');
+		$this->varPage['goole_id'] = $oauthGoogle['goole_id'];
+		$this->varPage['google_route'] = $oauthGoogle['google_route'];
 
 		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();

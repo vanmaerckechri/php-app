@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Entity;
 
-use Core\AbstractModel;
+use Core\AbstractEntity;
 
-class User extends AbstractModel
+class User extends AbstractEntity
 {
 	private $id;
 	private $email;

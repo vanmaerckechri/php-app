@@ -51,7 +51,7 @@
 		    		<?= $varPage['messages']["{$name}FillSms"] ?? '' ?>
 				<?php endforeach ?>
 			<?php endif; ?>
-			<h2>Modèles:</h2>
+			<h2>Entity:</h2>
 			<?php foreach ($schemas as $name): ?>
 				<form method="post">
 					<input type="hidden" name="context" value="model">

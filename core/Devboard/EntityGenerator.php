@@ -2,19 +2,25 @@
 
 namespace Core\Devboard;
 
-class ModelGenerator extends abstractClassGenerator
+use Core\ {
+	App,
+	Helper
+};
+
+class EntityGenerator extends abstractClassGenerator
 {
 	protected $ext = '';
-	protected $directory = 'Model';
+	protected $directory = 'Entity';
 
 	protected function mountContent(string $table): string
 	{
 		// get schema of the table
-		$class = 'App\\Schema\\' . $table . 'Schema';
-		$schema = $class::$schema;
+		$schemaClass = Helper::getClass('schema', $table);
+		$schema = $schemaClass::$schema;
 
 		// mount intro and constructor
-		$intro = "<?php\n\nnamespace App\Model;\n\nuse Core\AbstractModel;\n\nclass $table extends AbstractModel\n{";
+		$namespace = App::getConfig('autoload')['namespace'];
+		$intro = "<?php\n\nnamespace {$namespace}Entity;\n\nuse Core\AbstractEntity;\n\nclass $table extends AbstractEntity\n{";
 		$construct = "\n\n\tpublic function __construct()\n\t{\n\t\tparent::__construct(__CLASS__);\n\t}";
 
 		$variables = '';

@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Model;
+namespace App\Entity;
 
-use Core\AbstractModel;
+use Core\AbstractEntity;
 
-class Category extends AbstractModel
+class Category extends AbstractEntity
 {
 	private $id;
 	private $title;

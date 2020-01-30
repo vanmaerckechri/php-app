@@ -2,8 +2,10 @@
 
 namespace Core;
 
-use Core\Router\Router;
-use Core\Helper;
+use Core\ {
+	Helper,
+	Router\Router
+};
 
 class Pagination
 {
@@ -12,7 +14,7 @@ class Pagination
 
 	public static function init(string $table, int $itemByPage, int $currentPage): int
 	{
-		$repo = 'App\\Repository\\' . ucfirst($table) . 'Repository';
+		$repo = Helper::getClass('repository', $table);
 		$repo = new $repo();
 
 		$itemsCount = $repo->countRowByCol('*');

@@ -3,27 +3,33 @@
 namespace Core\Devboard;
 
 use PDO;
-use Core\Helper;
+use Core\ {
+    App,
+    Helper
+};
 
 class Migration
 {
-    private $dbServer;
+    use TableInfos;
+    
+    private $server;
     private $connectServ;
 
     public function __construct()
     {
-        $this->dbServer = require $_SERVER['DOCUMENT_ROOT'] . '/src/Config/dbServer.php';
-        $this->connectServ = new PDO("mysql:host={$this->dbServer['host']}", $this->dbServer['user'], $this->dbServer['pwd']);
+        $file = Helper::getAppDirectory() . 'Config/security.json';
+        $this->server = json_decode(file_get_contents($file), true)['server'];
+        $this->connectServ = new PDO("mysql:host={$this->server['host']}", $this->server['user'], $this->server['pwd']);
     }
 
     public function getDbName(): ?string
     {
-        return $this->dbServer['db']['name'];
+        return $this->server['db']['name'];
     }
 
     public function checkDbExist(): bool
     {
-        $stmt = $this->connectServ->prepare("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{$this->dbServer['db']['name']}'");
+        $stmt = $this->connectServ->prepare("SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME = '{$this->server['db']['name']}'");
         $stmt->execute();
         if ($stmt->fetch() !== false)
         {
@@ -34,18 +40,18 @@ class Migration
 
     public function createDatabase(): void
     {
-        $request = $this->mountDbRequest($this->dbServer['db']);
+        $request = $this->mountDbRequest($this->server['db']);
         $this->connectServ->prepare($request)->execute();
     }
 
     public function dropDatabase(): void
     {
-        $this->connectServ->prepare("DROP DATABASE IF EXISTS `{$this->dbServer['db']['name']}`")->execute();
+        $this->connectServ->prepare("DROP DATABASE IF EXISTS `{$this->server['db']['name']}`")->execute();
     }
 
     public function listTablesFromDb(): ?array
     {
-        $stmt = Helper::getPdo()->query('SHOW TABLES');
+        $stmt = App::getPdo()->query('SHOW TABLES');
         $result = $stmt->fetchAll(PDO::FETCH_COLUMN);
         if (empty($result))
         {
@@ -65,12 +71,12 @@ class Migration
     public function createTable(string $table): void
     {   
         $request = $this->mountTableRequest($table);
-        Helper::getPdo()->prepare($request)->execute();
+        App::getPdo()->prepare($request)->execute();
     }
 
     public function dropTable(string $table): void
     {
-        Helper::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
+        App::getPdo()->prepare("DROP TABLE IF EXISTS `{$table}`")->execute();
     }
 
     public function searchForeignKeyFromTable(string $parentTable): ?string
@@ -78,7 +84,7 @@ class Migration
         $tables = $this->listTablesFromDb();
         foreach ($tables as $table)
         {
-            $tableInfos = Helper::getTableInfos($table);
+            $tableInfos = TableInfos::get($table);
             foreach ($tableInfos['schema'] as $column => $rules)
             {
                 if (isset($rules['foreignKey']['table']) && $rules['foreignKey']['table'] === $parentTable)
@@ -93,7 +99,7 @@ class Migration
     public function searchForeignKeyOnAbsentTable(string $table): ?string
     {
         $tables = $this->listTablesFromDb();
-        $tableInfos = Helper::getTableInfos($table);
+        $tableInfos = TableInfos::get($table);
         foreach ($tableInfos['schema'] as $column => $rules)
         {
             if (isset($rules['foreignKey']['table']) && (is_null($tables) || array_search($rules['foreignKey']['table'], $tables) === false))
@@ -112,7 +118,7 @@ class Migration
 
 	private function mountTableRequest(string $table): string
     {
-    	$table = Helper::getTableInfos($table);
+    	$table = TableInfos::get($table);
         $request = array(
             'column' => '',
             'primaryKey' => '',

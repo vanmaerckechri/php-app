@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
-use Core\AbstractController;
-use Core\Pagination;
+use Core\ {
+	AbstractController,
+	Pagination
+};
 use App\Repository\ArticleRepository;
 
 class ArticlesController extends AbstractController

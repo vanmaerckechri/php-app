@@ -2,17 +2,21 @@
 
 namespace Core\Authentification;
 
-use Core\Router\Router;
-use Core\Authentification\Auth;
-use App\Model\User;
-use App\Repository\UserRepository;
+use Core\ {
+	App,
+	Helper,
+	Router\Router,
+	Authentification\Auth
+};
 
 class Oauth
 {
 	private static $config;
+	private static $network;
 
 	public static function login(string $network): bool
 	{
+		self::$network = $network;
 		$userInfos = self::getUserInfos();
 		if (!$userInfos)
 		{
@@ -23,10 +27,12 @@ class Oauth
 		$password = $userInfos->sub;
 		$username = $userInfos->name;
 
-		$user = new User();
+		$entity = Helper::getClass('entity', 'user');
+		$user = new $entity();
 		// check that the user inputs respect the filters
 		if ($user->isValid(['email' => $email, 'username' => $username, 'password' => $password]))
 		{
+			$repo = Helper::getClass('repository', 'user');
 			// if email is unique create a new account
 			if ($user->isUnique(['email']))
 			{
@@ -37,26 +43,27 @@ class Oauth
 					$user->isValid(['username' => $newUsername]);
 				}
 				// try to record new user
-				if (!UserRepository::record($user))
+				if (!call_user_func_array([$repo, 'record'], [$user]))
 				{
 					return false;
 				}
 			}
 			// connect user
-			$user = UserRepository::findOneByCol('email', $email);
+			$user = call_user_func_array([$repo, 'findOneByCol'], ['email', $email]);
 			Auth::addUserToSession($user);
 			return true;
 		}
 		return false;
 	}
 
-	public static function getConfig(): array
+	public static function getConfig(string $network = null): array
 	{
 		if (is_null(self::$config))
 		{
-			self::$config = require_once $_SERVER['DOCUMENT_ROOT'] . '/src/Config/oauth.php';
+			$file = Helper::getAppDirectory() . 'Config/security.json';
+			self::$config = json_decode(file_get_contents($file), true)['oauth'];
 		}
-		return self::$config;
+		return $network ? self::$config[$network] : self::$config[self::$network];
 	}
 
 	private static function getEndPoint(): ?object
@@ -75,9 +82,9 @@ class Oauth
 
 		$content  = array(
 	        'code' => $_GET['code'],
-			'client_id' => self::$config['goole_id'],
-			'client_secret' => self::$config['google_secret'],
-			'redirect_uri' => Router::url(self::$config['google_route']),
+			'client_id' => $config['goole_id'],
+			'client_secret' => $config['google_secret'],
+			'redirect_uri' => Router::url($config['google_route']),
 			'grant_type' => 'authorization_code'
 		);
 

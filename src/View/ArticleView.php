@@ -2,8 +2,10 @@
 
 namespace App\View;
 
-use Core\Router\Router;
-use Core\Authentification\Auth;
+use Core\ {
+	Router\Router,
+	Authentification\Auth
+};
 
 Class ArticleView
 {

@@ -2,8 +2,10 @@
 
 namespace App\Controller;
 
-use Core\AbstractController;
-use Core\MessagesManager\MessagesManager;
+use Core\ {
+	AbstractController,
+	MessagesManager\MessagesManager
+};
 
 class HomeController extends AbstractController
 {

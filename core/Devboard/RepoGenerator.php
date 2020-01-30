@@ -2,6 +2,8 @@
 
 namespace Core\Devboard;
 
+use Core\App;
+
 class RepoGenerator extends abstractClassGenerator
 {
 	protected $ext = 'Repository';
@@ -9,6 +11,7 @@ class RepoGenerator extends abstractClassGenerator
 
 	protected function mountContent(string $table): string
 	{
-		return "<?php\n\nnamespace App\Repository;\n\nuse Core\AbstractRepository;\nuse Core\Request;\n\nclass {$table}Repository extends AbstractRepository\n{\n}";
+		$namespace = App::getConfig('autoload')['namespace'];
+		return "<?php\n\nnamespace {$namespace}Repository;\n\nuse Core\ {\n\tAbstractRepository,\n\tRequest\n};\n\nclass {$table}Repository extends AbstractRepository\n{\n}";
 	}
 }

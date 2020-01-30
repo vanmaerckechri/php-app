@@ -2,16 +2,20 @@
 
 namespace Core;
 
-use Core\Router\Router;
-use Core\Authentification\Auth;
+use Core\ {
+	App,
+	Router\Router,
+	Authentification\Auth
+};
 
 abstract class AbstractController
 {
 	protected function renderer(string $class, string $method): void
 	{
-		$class = "App\View\\$class";
+		$namespace = App::getConfig('autoload')['namespace'];
+		$class = $namespace . "View\\$class";
 		$this->varPage['content'] = call_user_func_array([$class, $method], [$this->varPage]);
-		call_user_func_array(['App\View\Template', 'load'], [$this->varPage]);
+		call_user_func_array([$namespace . 'View\Template', 'load'], [$this->varPage]);
 	}
 
 	protected function recordInputs(array $inputs): void
