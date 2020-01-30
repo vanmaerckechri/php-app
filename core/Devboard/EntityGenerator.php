@@ -2,12 +2,9 @@
 
 namespace Core\Devboard;
 
-use Core\ {
-	App,
-	Helper
-};
+use Core\App;
 
-class EntityGenerator extends abstractClassGenerator
+class EntityGenerator extends abstractFileGenerator
 {
 	protected $ext = '';
 	protected $directory = 'Entity';
@@ -15,7 +12,7 @@ class EntityGenerator extends abstractClassGenerator
 	protected function mountContent(string $table): string
 	{
 		// get schema of the table
-		$schemaClass = Helper::getClass('schema', $table);
+		$schemaClass = App::getClass('schema', $table);
 		$schema = $schemaClass::$schema;
 
 		// mount intro and constructor

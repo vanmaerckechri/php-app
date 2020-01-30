@@ -42,6 +42,13 @@ class ArticleSchema
             'maxLength' => 1024,
             'default' => 'not null'
         ),
+        'img_file' => array(
+            'type' => 'varchar',
+            'minLength' => 5,
+            'maxLength' => 75,
+            'default' => 'null',
+            'unique' => true
+        ),
         'created_at' => array(
             'type' => 'datetime',
             'default' => 'not null default current_timestamp'

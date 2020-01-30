@@ -3,10 +3,7 @@
 namespace Core;
 
 use PDO;
-use Core\ {
-	App,
-	Helper
-};
+use Core\App;
 
 class Request
 {
@@ -121,7 +118,7 @@ class Request
 
 	public function fetchClass(): ?object
 	{
-		$entity = Helper::getClass('entity', $this->table);
+		$entity = App::getClass('entity', $this->table);
 		$stmt = $this->execute();
 		$result = $stmt->fetchObject($entity);
 		return $result ?: null;
@@ -129,7 +126,7 @@ class Request
 
 	public function fetchAllClass(): ?array
 	{
-		$entity = Helper::getClass('entity', $this->table);
+		$entity = App::getClass('entity', $this->table);
 		$stmt = $this->execute();
 		$result = $stmt->fetchAll(PDO::FETCH_CLASS, $entity);
 		return $result ?: null;		
@@ -170,7 +167,7 @@ class Request
 
 	private function getSchema(string $table)
 	{
-		$schemaClass = Helper::getClass('schema', $this->table);
+		$schemaClass = App::getClass('schema', $this->table);
 		return $schemaClass::$schema;
 	}
 

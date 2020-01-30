@@ -5,7 +5,6 @@ namespace Core\Devboard;
 use PDO;
 use Core\ {
 	App,
-	Helper,
 	AbstractController,
 	MessagesManager\MessagesManager
 };
@@ -117,7 +116,7 @@ class DevboardController extends AbstractController
 
 	private function getTablesFromSchemas()
 	{
-		$files =  array_values(array_diff(scandir(Helper::getAppDirectory() . 'Schema/'), ['..', '.']));
+		$files =  array_values(array_diff(scandir(App::getAppDirectory() . 'Schema/'), ['..', '.']));
 		return array_map('strtolower', preg_replace('/Schema.php/', '', $files));
 	}
 }

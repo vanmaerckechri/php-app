@@ -42,33 +42,18 @@ Class ArticleView
 		<?php 
 		return ob_get_clean();
 	}
-
-	public static function new($varPage)
+	
+	public static function form($varPage)
 	{
 		ob_start();
 		?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<form class="article-form" method="post">
+			<form class="article-form" method="post" enctype="multipart/form-data">
 				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
+				<label for="image">Image<input type="file" name="image" accept="image/*"><?= $varPage['messages']['uploadSms'] ?? '' ?></label>
 				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
-			</form>
-		</div>
-		<?php
-		return ob_get_clean();
-	}
-
-	public static function edit($varPage)
-	{
-		ob_start();
-		?>
-		<div class="container">
-			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<form class="article-form" method="post">
-				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
-				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
-				<input id="validation" class="btn" type="submit" value="MODIFIER">
 			</form>
 		</div>
 		<?php

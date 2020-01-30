@@ -11,6 +11,7 @@ class Article extends AbstractEntity
 	private $title;
 	private $slug;
 	private $content;
+	private $img_file;
 	private $created_at;
 
 	public function __construct()
@@ -78,6 +79,18 @@ class Article extends AbstractEntity
 		return $this;
 	}
 
+	public function getImg_file(): ?string
+	{
+		return $this->img_file;
+	}
+
+	public function setImg_file(string $img_file): self
+	{
+		$this->img_file = $img_file;
+
+		return $this;
+	}
+
 	public function getCreated_at(): ?\DateTime
 	{
 		if (is_null($this->created_at))
@@ -89,7 +102,7 @@ class Article extends AbstractEntity
 
 	public function setCreated_at(\DateTime $created_at): self
 	{
-		$this->created_at = new \DateTime('now');
+		$this->created_at = $created_at;
 
 		return $this;
 	}

@@ -3,7 +3,6 @@
 namespace Core;
 
 use PDO;
-use Core\Helper;
 
 class App
 {
@@ -25,6 +24,20 @@ class App
 	public static function getConfig(string $name = null)
 	{
 		return $name ? self::$config[$name] : self::$config;
+	}
+
+	public static function getClass(string $classType, string $table): string
+	{
+		$directory = ucfirst($classType);
+		$classType = $classType === 'entity' ? '' : $classType;
+		$table = ucfirst($table);
+		return self::getConfig('autoload')['namespace'] . $directory . '\\' . $table . $classType;
+	}
+
+	public static function getAppDirectory(): string
+	{
+		$appDir = self::getConfig('autoload')['directory'];
+        return $_SERVER['DOCUMENT_ROOT'] . '/' . $appDir;		
 	}
 
 	public static function devMode()
@@ -63,7 +76,7 @@ class App
 	{
 		if (!self::$pdo)
 		{
-			$file = Helper::getAppDirectory() . 'Config/security.json';
+			$file = self::getAppDirectory() . 'Config/security.json';
 			$server = json_decode(file_get_contents($file), true)['server'];
 			self::$pdo = new PDO("mysql:host={$server['host']}; dbname={$server['db']['name']}; charset={$server['charset']}", $server['user'], $server['pwd'], [
 				PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC

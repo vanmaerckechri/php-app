@@ -4,7 +4,7 @@ namespace Core\Devboard;
 
 use Core\App;
 
-abstract class abstractClassGenerator
+abstract class abstractFileGenerator
 {
 	private $path;
 

@@ -2,7 +2,7 @@
 
 namespace Core;
 
-use Core\Helper;
+use Core\App;
 
 abstract class AbstractEntity
 {
@@ -57,7 +57,7 @@ abstract class AbstractEntity
 
 	public function incrementAlreadyUsed(string $column): string
 	{
-		$repoClass = Helper::getClass('repository', $this->table);
+		$repoClass = App::getClass('repository', $this->table);
 		$getMethod = 'get' . ucfirst($column);
 		$findMethod = 'find' . ucfirst($this->table) . 'By' . ucfirst($column);
 
@@ -118,7 +118,7 @@ abstract class AbstractEntity
 
 	private function initValidationRules(): void
 	{
-		$schemaClass = Helper::getClass('schema', $this->table);
+		$schemaClass = App::getClass('schema', $this->table);
 		$this->rules = $schemaClass::$schema;
 
 		foreach ($this->rules as $column => $rules)

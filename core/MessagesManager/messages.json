@@ -103,6 +103,34 @@
 			"fr":   "Action impossible! Cette table possède une clef étrangère pointant vers la table '{{x}}', cependant cette dernière est vide!",
 			"en":   "Impossible action! This table has a foreign key pointing to the table '{{x}}', however the latter is empty!"
 		}
+	},
+	"uploadFileType": {
+		"type":   "error",
+		"content": {
+			"fr":   "Le type de fichier n'est pas reconnu!",
+			"en":   "The file type is not recognized!"
+		}
+	},
+	"uploadFileSize": {
+		"type":   "error",
+		"content": {
+			"fr":   "La taille du fichier est trop grande!",
+			"en":   "The file size is too large!"
+		}
+	},
+	"uploadFileMove": {
+		"type":   "error",
+		"content": {
+			"fr":   "Impossible de copier le fichier!",
+			"en":   "Unable to copy file!"
+		}
+	},
+	"uploadFileRequired": {
+		"type":   "error",
+		"content": {
+			"fr":   "Fichier est requis!",
+			"en":   "File is required!"
+		}
 	}
-}
 
+}

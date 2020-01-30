@@ -4,7 +4,6 @@ namespace Core\Authentification;
 
 use Core\ {
 	App,
-	Helper,
 	Router\Router,
 	Authentification\Auth
 };
@@ -27,12 +26,12 @@ class Oauth
 		$password = $userInfos->sub;
 		$username = $userInfos->name;
 
-		$entity = Helper::getClass('entity', 'user');
+		$entity = App::getClass('entity', 'user');
 		$user = new $entity();
 		// check that the user inputs respect the filters
 		if ($user->isValid(['email' => $email, 'username' => $username, 'password' => $password]))
 		{
-			$repo = Helper::getClass('repository', 'user');
+			$repo = App::getClass('repository', 'user');
 			// if email is unique create a new account
 			if ($user->isUnique(['email']))
 			{
@@ -60,7 +59,7 @@ class Oauth
 	{
 		if (is_null(self::$config))
 		{
-			$file = Helper::getAppDirectory() . 'Config/security.json';
+			$file = App::getAppDirectory() . 'Config/security.json';
 			self::$config = json_decode(file_get_contents($file), true)['oauth'];
 		}
 		return $network ? self::$config[$network] : self::$config[self::$network];

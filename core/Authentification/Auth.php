@@ -3,7 +3,7 @@
 namespace Core\Authentification;
 
 use Core\ {
-	Helper,
+	App,
 	Router\Router
 };
 
@@ -11,26 +11,26 @@ class Auth
 {
 	public static function user(): ?object
 	{
-		$entity = Helper::getClass('entity', 'user');
+		$entity = App::getClass('entity', 'user');
 		$user = new $entity();
 		$id = $_SESSION['auth'] ?? null;
 		if (!$user->isValid(['id' => $id], false))
 		{
 			return null;
 		}
-		$repo = Helper::getClass('repository', 'user');
+		$repo = App::getClass('repository', 'user');
 		$user = call_user_func_array([$repo, 'findOneByCol'], ['id', $id]);
 		return $user;
 	}
 
 	public static function login(string $username, string $password): bool
 	{
-		$entity = Helper::getClass('entity', 'user');
+		$entity = App::getClass('entity', 'user');
 		$user = new $entity();
 		$inputs = array('username' => $username, 'password' => $password);
 		if ($user->isValid($inputs, false))
 		{
-			$repo = Helper::getClass('repository', 'user');
+			$repo = App::getClass('repository', 'user');
 			$user = call_user_func_array([$repo, 'findOneByCol'], ['username', $username]);
 
 			if (!is_null($user) && password_verify($password, $user->getPassword()))

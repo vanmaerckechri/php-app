@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use Core\ {
+	App,
 	Helper,
 	AbstractController,
+	FilesManager,
 	MessagesManager\MessagesManager,
 	Authentification\Auth
 };
@@ -50,7 +52,7 @@ class ArticleController extends AbstractController
 		$this->redirect('connection', ['logged' => false]);
 		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
-		$this->renderer('ArticleView', 'new');
+		$this->renderer('ArticleView', 'form');
 	}
 
 	public function create(): void
@@ -65,10 +67,22 @@ class ArticleController extends AbstractController
 
 			if ($article->isValid(['title' => $_POST['title'], 'content' => $_POST['content']]) && $article->isUnique(['title']))
 			{
-				$article->setSlug(Helper::slugify($_POST['title']));
-				$article->setUser_id($userId);
-				ArticleRepository::record($article);
-				$this->redirect('articles', ['url' => ['page' => 1]]);
+				$imagePath = '/public/images/';
+				$schemaClass = App::getClass('schema', 'article');
+				$schema = $schemaClass::$schema['img_file'];
+
+				if (FilesManager::uploadImage($imagePath, 'image', $schema, false))
+				{
+					if ($img_file = FilesManager::getLastFileName())
+					{
+						$article->setImg_file($img_file);
+					}
+
+					$article->setSlug(Helper::slugify($_POST['title']));
+					$article->setUser_id($userId);
+					ArticleRepository::record($article);
+					$this->redirect('articles', ['url' => ['page' => 1]]);
+				}
 			}
 		}
 
@@ -96,7 +110,7 @@ class ArticleController extends AbstractController
 					$this->varPage['recordedInputs']['title'] = isset($recordInputs['title']) ? $recordInputs['title'] : $article->getTitle();
 					$this->varPage['recordedInputs']['content'] = isset($recordInputs['content']) ? $recordInputs['content'] : $article->getContent();
 					$this->varPage['messages'] = MessagesManager::getMessages();
-					$this->renderer('ArticleView', 'edit');
+					$this->renderer('ArticleView', 'form');
 					return;
 				}
 				MessagesManager::add(['info' => ['notHaveRights' => null]]);
@@ -125,14 +139,30 @@ class ArticleController extends AbstractController
 
 				if (!is_null($articleOld) && $articleOld->getSlug() === $slug)
 				{
-					if ($articleOld->getUser_id() === $userId);
+					$imagePath = '/public/images/';
+					$schemaClass = App::getClass('schema', 'article');
+					$schema = $schemaClass::$schema['img_file'];
+
+					// try to upload img (schema for validation (minLength, maxLength) && required = false)
+					if (FilesManager::uploadImage($imagePath, 'image', $schema, false))
 					{
-						$article->setSlug(Helper::slugify($_POST['title']));
-						ArticleRepository::updateById($article, $id);
-						$this->redirect('articles', ['url' => ['page' => 1]]);
+						if ($articleOld->getUser_id() === $userId);
+						{
+							// if a new image is uploaded, set new filename in database and remove last file
+							if ($img_file = FilesManager::getLastFileName())
+							{
+								$oldFileName = $articleOld->getImg_file();
+								$article->setImg_file($img_file);
+								FilesManager::dropFile($imagePath, $oldFileName);
+							}
+
+							$article->setSlug(Helper::slugify($_POST['title']));
+							ArticleRepository::updateById($article, $id);
+							$this->redirect('articles', ['url' => ['page' => 1]]);
+						}
+						MessagesManager::add(['info' => ['notHaveRights' => null]]);
+						$this->redirect('home');
 					}
-					MessagesManager::add(['info' => ['notHaveRights' => null]]);
-					$this->redirect('home');
 				}
 			}
 		}

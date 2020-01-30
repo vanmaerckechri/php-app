@@ -3,10 +3,7 @@
 namespace Core\Devboard;
 
 use PDO;
-use Core\ {
-    App,
-    Helper
-};
+use Core\App;
 
 class Migration
 {
@@ -17,7 +14,7 @@ class Migration
 
     public function __construct()
     {
-        $file = Helper::getAppDirectory() . 'Config/security.json';
+        $file = App::getAppDirectory() . 'Config/security.json';
         $this->server = json_decode(file_get_contents($file), true)['server'];
         $this->connectServ = new PDO("mysql:host={$this->server['host']}", $this->server['user'], $this->server['pwd']);
     }

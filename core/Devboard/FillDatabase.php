@@ -61,7 +61,7 @@ class FillDatabase
 		foreach ($tables as $table => $params)
 		{
 			// get schema/rules of columns
-			$schemaClass = Helper::getClass('schema', $table);
+			$schemaClass = App::getClass('schema', $table);
 			$schema = $schemaClass::$schema;
 
 			for ($i = 0; $i < $params['iteration']; $i++)

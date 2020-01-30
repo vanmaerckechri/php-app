@@ -2,10 +2,7 @@
 
 namespace Core\MessagesManager;
 
-use Core\ {
-	App,
-	Helper
-};
+use Core\App;
 
 class MessagesManager
 {
@@ -19,7 +16,7 @@ class MessagesManager
 			$file = $_SERVER['DOCUMENT_ROOT'] . '/core/MessagesManager/messages.json';
 			self::$messages = json_decode(file_get_contents($file), true);
 
-        	$customFile = Helper::getAppDirectory() . 'Config/messages.json';
+        	$customFile = App::getAppDirectory() . 'Config/messages.json';
 			if (file_exists($customFile))
 			{
 				$customSms = json_decode(file_get_contents($file), true);

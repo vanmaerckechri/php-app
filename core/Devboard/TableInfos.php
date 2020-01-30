@@ -2,13 +2,13 @@
 
 namespace Core\Devboard;
 
-use Core\Helper;
+use Core\App;
 
 trait TableInfos
 {
 	public static function get(string $table): array
 	{
-		$class = Helper::getClass('schema', $table);
+		$class = App::getClass('schema', $table);
 
 		return array(
             'name' => $table,
