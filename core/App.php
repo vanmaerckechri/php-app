@@ -51,7 +51,7 @@ class App
 	{
 		if (!self::$config)
 		{
-			$file = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'config.json';
+			$file = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'cvm_php_init.json';
 			if (file_exists($file))
 			{
 				self::$config = json_decode(file_get_contents($file), true);

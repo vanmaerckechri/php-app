@@ -25,7 +25,7 @@ Class Autoloader
 
 	private static function loadConfig(): void
 	{
-		$file = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'config.json';
+		$file = $_SERVER['DOCUMENT_ROOT'] . DIRECTORY_SEPARATOR . 'cvm_php_init.json';
 		if (file_exists($file))
 		{
 			$autoload = json_decode(file_get_contents($file), true)['autoload'];

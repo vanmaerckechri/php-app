@@ -1,1 +1,1 @@
-# php-app
+# Environnement PHP-MVC (en dév.)
