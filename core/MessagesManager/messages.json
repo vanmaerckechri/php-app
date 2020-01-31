@@ -1,9 +1,9 @@
 {
-	"registerComplete": {
+	"accountActivated": {
 		"type":   "info",
 		"content": {
-			"fr":   "Un mail de validation vient de vous être envoyé",
-			"en":   "A validation email has just been sent to you"
+			"fr":   "Votre compte vient d'être activé, vous pouvez vous connecter dès à presént!",
+			"en":   "Your account has just been activated, you can log in now!!"
 		}
 	},
 	"disconnectComplete": {
@@ -11,6 +11,13 @@
 		"content": {
 			"fr":   "Vous êtes déconnecté",
 			"en":   "You are disconnected"
+		}
+	},
+	"registerComplete": {
+		"type":   "info",
+		"content": {
+			"fr":   "Un mail de validation vient de vous être envoyé",
+			"en":   "A validation email has just been sent to you"
 		}
 	},
 	"notHaveRights": {
@@ -131,6 +138,19 @@
 			"fr":   "Fichier est requis!",
 			"en":   "File is required!"
 		}
+	},
+	"accountNotActivated": {
+		"type":   "error",
+		"content": {
+			"fr":   "Vous n'avez pas encore activé votre compte. Un nouveau mail de validation vient de vous être envoyé!",
+			"en":   "You have not yet activated your account. A new validation email has just been sent to you!"
+		}
+	},
+	"tokenInvalid": {
+		"type":   "error",
+		"content": {
+			"fr":   "Token invalide!",
+			"en":   "Invalid token!"
+		}
 	}
-
 }

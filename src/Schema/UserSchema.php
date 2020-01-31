@@ -40,6 +40,16 @@ class UserSchema
         'created_at' => array(
             'type' => 'datetime',
             'default' => 'not null default current_timestamp'
+        ),
+        'status' => array(
+            'type' => 'int',
+            'maxLength' => 1,
+            'default' => 'not null default 1',
+        ),
+        'token' => array(
+            'type' => 'varchar',
+            'maxLength' => 32,
+            'default' => 'null',
         )
     );
 

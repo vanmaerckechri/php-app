@@ -80,7 +80,7 @@ class Request
 	private function addCondition(string $column, string $operator, $value, string $condition): self
 	{
 		$uniqueBind = $this->makeUniqueBind();
-		$this->binds[$column] = array('bind' => $uniqueBind, 'value' => $value);
+		$this->binds[$uniqueBind] = array($column => $value);
 		$this->prepare .= " $condition ";
 		$this->prepare .= "$column $operator :$uniqueBind";
 		return $this;	
@@ -144,25 +144,32 @@ class Request
 		$stmt = App::getPdo()->prepare($this->prepare);
 		foreach ($this->binds as $column => $value)
 		{
-			$column = explode('.', $column);
-			$schema = count($column) > 1 ? $this->getSchema($column[0]) : $this->getSchema($this->table);
-			$column = array_pop($column);
-			$param = $this->getBindParam($schema[$column]['type']);
-			// array $value for binds from condition (with unique bind name)
+			// $value is an array for 'where', 'and', 'or' (prevent multiple treatments on same column)...
 			if (is_array($value))
 			{
-				$input = $value['value'];
-				$bind = ':' . $value['bind'];
+				foreach ($value as $col => $val)
+				{
+					$bind = $this->getBind($column, $col, $val);
+					$stmt->bindValue($bind[0], $bind[1], $bind[2]);
+				}
 			}
 			else
 			{
-				$input = $value;
-				$bind = ':' . $column;
+				$bind = $this->getBind($column, $column, $value);
+				$stmt->bindValue($bind[0], $bind[1], $bind[2]);
 			}
-			$stmt->bindValue($bind, $input, $param);
 		}
 		$stmt->execute();
 		return $stmt;
+	}
+
+	private function getBind(string $bindName, string $column, $value): array
+	{
+		$column = explode('.', $column);
+		$schema = count($column) > 1 ? $this->getSchema($column[0]) : $this->getSchema($this->table);
+		$column = array_pop($column);
+		$type = $this->getBindType($schema[$column]['type']);
+		return [":$bindName", $value, $type];
 	}
 
 	private function getSchema(string $table)
@@ -171,7 +178,7 @@ class Request
 		return $schemaClass::$schema;
 	}
 
-	private function getBindParam(string $type): string
+	private function getBindType(string $type): string
 	{
 		$type = strtoupper($type);
 		switch ($type)
@@ -195,7 +202,7 @@ class Request
 		{
 			$rand = rand(0, strlen($chars) - 1);
 			$newBind .= $chars[$rand];
-			if (array_search($newBind, $this->binds))
+			if (array_key_exists($newBind, $this->binds))
 			{
 				$newBind = '';
 			}

@@ -51,7 +51,7 @@ abstract class AbstractController
 			{
 				header('Location: ' . Router::url($route));
 			}
-			exit();
+			exit;
 		}
 	}
 

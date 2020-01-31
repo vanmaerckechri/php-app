@@ -5,11 +5,11 @@ namespace Core\Devboard;
 use PDO;
 use Core\ {
 	App,
-	AbstractController,
+	Router\Router,
 	MessagesManager\MessagesManager
 };
 
-class DevboardController extends AbstractController
+class DevboardController
 {
 	public function index()
 	{
@@ -75,7 +75,7 @@ class DevboardController extends AbstractController
 			$repoGenerator->create($_POST['repo']);
 		}
 
-		$this->redirect('devboard');
+		header('Location: ' . Router::url('devboard'));
 		exit();
 	}
 
@@ -110,7 +110,7 @@ class DevboardController extends AbstractController
 			$repoGenerator->drop($_POST['repo']);
 		}
 
-		$this->redirect('devboard');
+		header('Location: ' . Router::url('devboard'));
 		exit();
 	}
 

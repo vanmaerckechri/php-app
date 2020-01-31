@@ -56,8 +56,10 @@ class EntityGenerator extends abstractFileGenerator
 
 			$getter = "\n\n\tpublic function get$ucfColumn(): ?$type\n\t{\n\t\t$getterContent\n\t}";
 			$setter = '';
-			if (isset($rules['default']) && preg_match('/auto_increment|current_timestamp/', strtoupper($rules['default'])) === 0)
+			if (isset($rules['default']) && preg_match('/auto_increment|current_timestamp/', $rules['default']) === 0)
 			{
+				$type = strpos($rules['default'], 'not null') === false ? '?' . $type : $type;
+
 				$setter = "\n\n\tpublic function set$ucfColumn($type \$$column): self\n\t{\n\t\t$setterContent\n\t}";
 			}
 			$methods .= $getter . $setter;

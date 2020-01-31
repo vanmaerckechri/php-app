@@ -117,7 +117,7 @@ class Validator
 
 	private static function checkMaxLength($input, int $length): bool
 	{
-		return strlen($input) < $length;
+		return strlen($input) <= $length;
 	}
 
 	private static function noErrorDetected(array $errors, string $smsId): bool

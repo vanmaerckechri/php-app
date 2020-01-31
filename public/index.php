@@ -47,6 +47,8 @@ Router::get('/google-connection', 'ConnectionController#googleConnection', 'goog
 
 Router::get('/disconnect', 'ConnectionController#disconnect', 'disconnect');
 
+Router::get('/registration/:token', 'RegistrationController#validation', 'registrationValidation')->with('token', '([a-z\-0-9]+)');
+
 Router::get('/registration', 'RegistrationController#new', 'registration');
 
 Router::post('/registration', 'RegistrationController#create');

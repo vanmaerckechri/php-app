@@ -10,6 +10,8 @@ use Core\ {
 	MessagesManager\MessagesManager
 };
 
+use App\Mail\RegistrationMail;
+
 class ConnectionController extends AbstractController
 {
 	protected $varPage = [
@@ -42,15 +44,26 @@ class ConnectionController extends AbstractController
 			{
 				if (Auth::login($_POST['username'], $_POST['password']))
 				{
+					$user = Auth::user();
+					$status = $user->getStatus();
+					// status 1 => need activation by email, status 0 => account disable
+					if ($status < 2)
+					{
+						$email = $user->getEmail();
+						$token = $user->getToken();
+
+						RegistrationMail::send($email, ['token' => $token]);
+						Auth::removeUserFromSession();
+						MessagesManager::add(['info' => ['accountNotActivated' => null]]);
+						$this->redirect('connection');
+					}
 					$this->redirect('home');
-					exit();
 				}
 				else
 				{
 					$this->recordInputs(['username' => $_POST['username']]);
 					MessagesManager::add(['authSms' => ['auth' => null]]);
 					$this->redirect('connection');
-					exit();	
 				}
 			}
 		}
@@ -64,10 +77,8 @@ class ConnectionController extends AbstractController
 		if (!$oauth->login('google'))
 		{
 			$this->redirect('connection');
-			exit();
 		}
 		$this->redirect('home');
-		exit();
 	}
 
 	public function disconnect(): void
@@ -77,6 +88,5 @@ class ConnectionController extends AbstractController
 			MessagesManager::add(['info' => ['disconnectComplete' => null]]);
 		}
 		$this->redirect('connection');
-		exit();
 	}
 }

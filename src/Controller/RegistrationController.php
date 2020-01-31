@@ -3,12 +3,14 @@
 namespace App\Controller;
 
 use Core\ {
+	App,
 	AbstractController,
 	MessagesManager\MessagesManager
 };
 use App\ {
 	Entity\User,
-	Repository\UserRepository
+	Repository\UserRepository,
+	Mail\RegistrationMail
 };
 
 class RegistrationController extends AbstractController
@@ -20,21 +22,20 @@ class RegistrationController extends AbstractController
 		'jsFileNames' => ['confirmPassword']
 	];
 
-	public function __construct()
+	public function new(): void
 	{
 		$this->redirect('home', ['logged' => true]);
-	}
 
-	public function new()
-	{
 		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 
 		$this->renderer('RegistrationView', 'new');
 	}
 
-	public function create()
+	public function create(): void
 	{
+		$this->redirect('home', ['logged' => true]);
+
 		if (isset($_POST['username']) && isset($_POST['password']) && isset($_POST['email']))
 		{
 			$this->recordInputs(['username' => $_POST['username'], 'email' => $_POST['email']]);
@@ -57,6 +58,10 @@ class RegistrationController extends AbstractController
 
 			if ($isValid)
 			{
+				$token = md5(microtime(TRUE)*100000);
+				$user->setToken($token);
+				RegistrationMail::send($_POST['email'], ['token' => $token]);
+
 				UserRepository::record($user);
 				MessagesManager::add(['info' => ['registerComplete' => null]]);
 				$this->redirect('connection');
@@ -64,5 +69,35 @@ class RegistrationController extends AbstractController
 		}
 
 		$this->redirect('registration');
-	}	
+	}
+
+	public function validation(string $token): void
+	{
+		$this->redirect('home', ['logged' => true]);
+
+		$userWithNewInputs = new user();
+		if ($userWithNewInputs->isValid(['token' => $token]))
+		{
+			$user = UserRepository::findOneByCol('token', $token);
+			if ($user)
+			{
+				$status = $user->getStatus();
+				if ($status < 2)
+				{
+					$userWithNewInputs->setStatus(2);
+
+					$id = $user->getId();
+					UserRepository::updateById($userWithNewInputs, $id);
+					$this->recordInputs(['username' => $user->getUsername()]);
+					MessagesManager::add(['info' => ['accountActivated' => null]]);
+					$this->redirect('connection');
+				}
+			}
+			else
+			{
+				MessagesManager::add(['info' => ['tokenInvalid' => null]]);
+			}
+		}
+		$this->redirect('connection');
+	}
 }

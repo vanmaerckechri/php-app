@@ -68,6 +68,7 @@ class Migration
     public function createTable(string $table): void
     {   
         $request = $this->mountTableRequest($table);
+        var_dump($request);
         App::getPdo()->prepare($request)->execute();
     }
 

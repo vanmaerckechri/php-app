@@ -12,6 +12,8 @@ class User extends AbstractEntity
 	private $password;
 	private $role;
 	private $created_at;
+	private $status;
+	private $token;
 
 	public function __construct()
 	{
@@ -21,13 +23,6 @@ class User extends AbstractEntity
 	public function getId(): ?int
 	{
 		return $this->id;
-	}
-
-	public function setId(int $id): self
-	{
-		$this->id = $id;
-
-		return $this;
 	}
 
 	public function getEmail(): ?string
@@ -87,9 +82,26 @@ class User extends AbstractEntity
 		return new \DateTime($this->created_at);
 	}
 
-	public function setCreated_at(\DateTime $created_at): self
+	public function getStatus(): ?int
 	{
-		$this->created_at = $created_at;
+		return $this->status;
+	}
+
+	public function setStatus(int $status): self
+	{
+		$this->status = $status;
+
+		return $this;
+	}
+
+	public function getToken(): ?string
+	{
+		return $this->token;
+	}
+
+	public function setToken(?string $token): self
+	{
+		$this->token = $token;
 
 		return $this;
 	}
