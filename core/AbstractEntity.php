@@ -59,7 +59,6 @@ abstract class AbstractEntity
 	{
 		$repoClass = App::getClass('repository', $this->table);
 		$getMethod = 'get' . ucfirst($column);
-		$findMethod = 'find' . ucfirst($this->table) . 'By' . ucfirst($column);
 
 		$string = $this->$getMethod();
 		$newString = $string;
@@ -77,7 +76,7 @@ abstract class AbstractEntity
 				$newString .= '1';
 			}
 
-			$string = $repoClass::$findMethod($newString);
+			$string = $repoClass::findOneByCol($column, $newString);
 		}
 
 		return $newString;
