@@ -67,7 +67,7 @@ class RegistrationController extends AbstractController
 				$this->redirect('connection');
 			}
 		}
-
+		
 		$this->redirect('registration');
 	}
 

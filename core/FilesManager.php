@@ -28,7 +28,7 @@ class FilesManager
 		return self::noErrorDetected();
 	}
 
-	public static function getLastFileName(): ?string
+	public static function getFileName(): ?string
 	{
 		return self::$fileName;
 	}

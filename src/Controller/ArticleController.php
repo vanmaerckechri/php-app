@@ -27,12 +27,11 @@ class ArticleController extends AbstractController
 	{
 		$article = new Article();
 
-		// 'id' and 'slug' are valid before request db ?
+		// validate before request db (set = false)
 		if ($article->isValid(['id' => $id, 'slug' => $slug], false))
 		{
-			// item with this 'id' and this 'slug' does exist ?
 			$article = ArticleRepository::findArticleById($id);
-
+			// item exists and slug matches id ?
 			if (!is_null($article) && $article->getSlug() === $slug)
 			{
 				$createdAt = $article->getCreated_at()->format('Y-m-d H:i:s');
@@ -40,7 +39,6 @@ class ArticleController extends AbstractController
 				$this->varPage['previous'] = ArticleRepository::findNextLater(['id', 'slug'], $id, $createdAt);
 				$this->varPage['next'] = ArticleRepository::findNextEarler(['id', 'slug'], $id, $createdAt);
 				$this->renderer('ArticleView', 'show');
-				return;
 			}
 		}
 
@@ -65,19 +63,11 @@ class ArticleController extends AbstractController
 		{
 			$article = new Article();
 
-			if ($article->isValid(['title' => $_POST['title'], 'content' => $_POST['content']]) && $article->isUnique(['title']))
-			{
-				$imagePath = '/public/images/';
-				$schemaClass = App::getClass('schema', 'article');
-				$schema = $schemaClass::$schema['img_file'];
-
-				if (FilesManager::uploadImage($imagePath, 'image', $schema, false))
+			if ($article->isValid(['title' => $_POST['title'], 'content' => $_POST['content']]) && $article->isUnique(['title'])
+			){
+				if ($uploadInfos = $this->uploadImage(false))
 				{
-					if ($img_file = FilesManager::getLastFileName())
-					{
-						$article->setImg_file($img_file);
-					}
-
+					$article->setImg_file($uploadInfos['fileName']);
 					$article->setSlug(Helper::slugify($_POST['title']));
 					$article->setUser_id($userId);
 					ArticleRepository::record($article);
@@ -101,23 +91,17 @@ class ArticleController extends AbstractController
 		{
 			$article = ArticleRepository::findOneByCol('id', $id);
 
-			if (!is_null($article) && $article->getSlug() === $slug)
-			{
-				// item belongs to the user ?
-				if ($article->getUser_id() === $userId)
-				{
-					$recordInputs = $this->getRecordedInputs();
-					$this->varPage['recordedInputs']['title'] = isset($recordInputs['title']) ? $recordInputs['title'] : $article->getTitle();
-					$this->varPage['recordedInputs']['content'] = isset($recordInputs['content']) ? $recordInputs['content'] : $article->getContent();
-					$this->varPage['messages'] = MessagesManager::getMessages();
-					$this->renderer('ArticleView', 'form');
-					return;
-				}
-				MessagesManager::add(['info' => ['notHaveRights' => null]]);
-				$this->redirect('home');
+			if (!is_null($article)
+				&& $article->getSlug() === $slug
+				&& $article->getUser_id() === $userId // belongs to the user ?
+			){
+				$recordInputs = $this->getRecordedInputs();
+				$this->varPage['recordedInputs']['title'] = isset($recordInputs['title']) ? $recordInputs['title'] : $article->getTitle();
+				$this->varPage['recordedInputs']['content'] = isset($recordInputs['content']) ? $recordInputs['content'] : $article->getContent();
+				$this->varPage['messages'] = MessagesManager::getMessages();
+				$this->renderer('ArticleView', 'form');
 			}
 		}
-
 		$this->redirect('error404', ['code' => 404]);
 	}
 
@@ -131,43 +115,46 @@ class ArticleController extends AbstractController
 		{
 			$article = new Article();
 
-			if ($article->isValid(['id' => $id, 'slug' => $slug], false) &&
-				$article->isValid(['title' => $_POST['title'], 'content' => $_POST['content']]) &&
-				$article->isUnique(['title'], $id))
-			{
-				$articleOld = ArticleRepository::findOneByCol('id', $id);
+			if ($article->isValid(['id' => $id, 'slug' => $slug], false)
+				&& $article->isValid(['title' => $_POST['title'], 'content' => $_POST['content']]) 
+				&& $article->isUnique(['title'], $id)
+			){
+				$articleOldVer = ArticleRepository::findOneByCol('id', $id);
 
-				if (!is_null($articleOld) && $articleOld->getSlug() === $slug)
-				{
-					$imagePath = '/public/images/';
-					$schemaClass = App::getClass('schema', 'article');
-					$schema = $schemaClass::$schema['img_file'];
-
-					// try to upload img (schema for validation (minLength, maxLength) && required = false)
-					if (FilesManager::uploadImage($imagePath, 'image', $schema, false))
+				if (!is_null($articleOldVer)
+					&& $articleOldVer->getSlug() === $slug
+					&& $articleOldVer->getUser_id() === $userId
+				){
+					if ($uploadInfos = $this->uploadImage(false));
 					{
-						if ($articleOld->getUser_id() === $userId);
+						// new file and last file exist ? remove last file
+						if ($uploadInfos['fileName'] && $oldFileName = $articleOldVer->getImg_file())
 						{
-							// if a new image is uploaded, set new filename in database and remove last file
-							if ($img_file = FilesManager::getLastFileName())
-							{
-								$oldFileName = $articleOld->getImg_file();
-								$article->setImg_file($img_file);
-								FilesManager::dropFile($imagePath, $oldFileName);
-							}
-
-							$article->setSlug(Helper::slugify($_POST['title']));
-							ArticleRepository::updateById($article, $id);
-							$this->redirect('articles', ['url' => ['page' => 1]]);
+							FilesManager::dropFile($uploadInfos['path'], $oldFileName);
 						}
-						MessagesManager::add(['info' => ['notHaveRights' => null]]);
-						$this->redirect('home');
+						$article->setImg_file($uploadInfos['fileName']);
+						$article->setSlug(Helper::slugify($_POST['title']));
+						ArticleRepository::updateById($article, $id);
+						$this->redirect('articles', ['url' => ['page' => 1]]);
 					}
 				}
 			}
 		}
-
 		$this->recordInputs(['title' => $_POST['title'], 'content' => $_POST['content']]);
 		$this->redirect('editArticle', ['url' => ['id' => $id, 'slug' => $slug]]);
+	}
+
+	private function uploadImage(bool $required = true): ?array
+	{
+		$imagePath = '/public/images/';
+		$schemaClass = App::getClass('schema', 'article');
+		$schema = $schemaClass::$schema['img_file'];
+
+		// try to upload img (schema for validation (minLength, maxLength))
+		if (FilesManager::uploadImage($imagePath, 'image', $schema, $required))
+		{
+			return ['path' => $imagePath, 'fileName' => FilesManager::getFileName()];
+		}
+		return null;
 	}
 }

@@ -16,6 +16,7 @@ abstract class AbstractController
 		$class = $namespace . "View\\$class";
 		$this->varPage['content'] = call_user_func_array([$class, $method], [$this->varPage]);
 		call_user_func_array([$namespace . 'View\Template', 'load'], [$this->varPage]);
+		exit;
 	}
 
 	protected function recordInputs(array $inputs): void
