@@ -31,4 +31,10 @@ abstract class AbstractMail
 		ini_set('sendmail_from', $config['sendmail_from']);
 		ini_set('smtp_port', $config['smtp_port']);
 	}
+
+	abstract protected static function getHeader(): string;
+
+	abstract protected static function getSubject(): string;
+
+	abstract protected static function getMessage(array $vars = []): string;
 }

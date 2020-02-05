@@ -19,9 +19,6 @@ class HomeController extends AbstractController
 
 	public function index()
 	{
-		$token = md5(microtime(TRUE)*100000);
-		//RegistrationMail::send('christophe.vm@skynet.be', ['token' => $token]);
-
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer('HomeView', 'index');
 	}

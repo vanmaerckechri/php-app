@@ -4,7 +4,7 @@ namespace Core\Devboard;
 
 use Core\App;
 
-abstract class abstractFileGenerator
+abstract class AbstractFileGenerator
 {
 	private $path;
 
@@ -60,4 +60,6 @@ abstract class abstractFileGenerator
     		mkdir($this->path, 0777, true);
 		}
 	}
+
+	abstract protected function mountContent(string $table): string;
 }

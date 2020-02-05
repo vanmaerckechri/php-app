@@ -2,9 +2,6 @@
 
 namespace Core;
 
-use PDO;
-use Core\App;
-
 class Helper
 {
 	public static function slugify(string $string): string

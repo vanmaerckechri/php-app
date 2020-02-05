@@ -23,7 +23,7 @@ class RegistrationMail extends AbstractMail
 		return 'Validation de Votre Compte';
 	}
 
-	protected static function getMessage(array $vars): string
+	protected static function getMessage(array $vars = []): string
 	{
 		$link = Router::url('registrationValidation', ['token' => $vars['token']]);
 		ob_start();

@@ -75,21 +75,6 @@ abstract class AbstractRepository
 		return self::findNextEarlerOrLater($select, $id, $createdAt, $createdColName, '>=', 'ASC');
 	}
 
-	private static function findNextEarlerOrLater($select, int $id, string $createdAt, string $createdColName, string $operator, string $direction): ?Object
-	{
-		$childClass = self::getChildClass();
-		$request = new Request();
-		$output = $request
-			->select($select)
-			->from(strtolower($childClass))
-			->where($createdColName, $operator, $createdAt)
-			->and('id', '!=', $id)
-			->orderBy("$createdColName $direction")
-			->limit(1)
-			->fetchClass();
-		return $output ?: null;
-	}
-
 	public static function countRowByCol(string $column): int
 	{
 		$childClass = self::getChildClass();
@@ -125,6 +110,21 @@ abstract class AbstractRepository
 			return true;
 		}
 		return false;
+	}
+
+	private static function findNextEarlerOrLater($select, int $id, string $createdAt, string $createdColName, string $operator, string $direction): ?Object
+	{
+		$childClass = self::getChildClass();
+		$request = new Request();
+		$output = $request
+			->select($select)
+			->from(strtolower($childClass))
+			->where($createdColName, $operator, $createdAt)
+			->and('id', '!=', $id)
+			->orderBy("$createdColName $direction")
+			->limit(1)
+			->fetchClass();
+		return $output ?: null;
 	}
 
 	private static function getChildClass()

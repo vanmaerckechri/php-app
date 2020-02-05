@@ -4,7 +4,7 @@ namespace Core\Devboard;
 
 use Core\App;
 
-class EntityGenerator extends abstractFileGenerator
+class EntityGenerator extends AbstractFileGenerator
 {
 	protected $ext = '';
 	protected $directory = 'Entity';

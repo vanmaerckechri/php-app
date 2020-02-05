@@ -4,7 +4,7 @@ namespace Core\Devboard;
 
 use Core\App;
 
-class RepoGenerator extends abstractFileGenerator
+class RepoGenerator extends AbstractFileGenerator
 {
 	protected $ext = 'Repository';
 	protected $directory = 'Repository';

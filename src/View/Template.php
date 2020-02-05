@@ -7,8 +7,10 @@ use App\View\HeaderView;
 
 Class Template
 {
-	private static function importJs($varPage)
+	private static function importAssets(string $fileType, array $varPage): ?string
 	{
+		$folder = $fileType === 'javascript' ? 'js' : 'css';
+
 		if (!isset($varPage['jsFileNames']))
 		{
 			return null;
@@ -17,12 +19,10 @@ Class Template
 		ob_start();
 		foreach ($varPage['jsFileNames'] as $fileName) 
 		{
-			$path = '/public/js/' . $fileName . '.js';
+			$path = "/public/{$folder}/" . $fileName . ".{$folder}";
 			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
 			
-			?>
-			<script type="text/javascript" src="<?= $path ?>"></script>
-			<?php
+			?><script type="text/<?=$fileType?>" src="<?=$path?>"></script><?php
 		}
 		return ob_get_clean();
 	}
@@ -30,10 +30,9 @@ Class Template
 	public static function load(array $varPage): void
 	{
 		$header = HeaderView::get($varPage);
-		$js = SELF::importJs($varPage);
+		$js = SELF::importAssets('javascript', $varPage);
 
 		ob_start();
-
 		?>
 			<!DOCTYPE html>
 			<html lang=<?=App::getConfig('language')?>>
@@ -64,7 +63,6 @@ Class Template
 			</body>
 			</html>
 		<?php
-
 		echo ob_get_clean();
 	}
 }
