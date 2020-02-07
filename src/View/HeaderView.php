@@ -3,9 +3,9 @@
 namespace App\View;
 
 use Core\{
+	AbstractView,
 	Router\Router,
-	Authentification\Auth,
-	AbstractView
+	Authentification\Auth
 };
 
 Class HeaderView extends AbstractView

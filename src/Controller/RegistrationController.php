@@ -19,7 +19,7 @@ class RegistrationController extends AbstractController
 		'title' => 'APP-PHP::INSCRIPTION',
 		'h1' => 'APP-PHP',
 		'h2' => 'INSCRIPTION',
-		'jsFileNames' => ['confirmPassword']
+		'javascript' => ['confirmPassword']
 	];
 
 	public function new(): void

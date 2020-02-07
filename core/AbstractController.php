@@ -14,8 +14,7 @@ abstract class AbstractController
 	{
 		$namespace = App::getConfig('autoload')['namespace'];
 		$class = $namespace . "View\\$class";
-		$this->varPage['content'] = call_user_func_array([$class, $method], [$this->varPage]);
-		call_user_func_array([$namespace . 'View\Template', 'load'], [$this->varPage]);
+		call_user_func_array([$namespace . 'View\Template', 'load'], [$class, $method, $this->varPage]);
 		exit;
 	}
 

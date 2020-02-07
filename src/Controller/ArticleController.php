@@ -5,8 +5,8 @@ namespace App\Controller;
 use Core\ {
 	App,
 	Helper,
-	AbstractController,
 	FilesManager,
+	AbstractController,
 	MessagesManager\MessagesManager,
 	Authentification\Auth
 };

@@ -3,9 +3,9 @@
 namespace App\View;
 
 use Core\{
-	Router\Router,
 	AbstractView,
-	Pagination
+	Pagination,
+	Router\Router
 };
 
 Class HomeView extends AbstractView

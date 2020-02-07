@@ -3,8 +3,8 @@
 namespace App\Mail;
 
 use Core\ {
-	Router\Router,
-	AbstractMail
+	AbstractMail,
+	Router\Router
 };
 
 class RegistrationMail extends AbstractMail

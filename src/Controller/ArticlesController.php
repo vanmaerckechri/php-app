@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Core\ {
-	AbstractController,
-	Pagination
+	Pagination,
+	AbstractController
 };
 use App\Repository\ArticleRepository;
 

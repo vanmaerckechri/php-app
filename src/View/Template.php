@@ -2,36 +2,17 @@
 
 namespace App\View;
 
-use Core\App;
+use Core\ {
+	App,
+	AbstractTemplate
+};
 use App\View\HeaderView;
 
-Class Template
+Class Template extends AbstractTemplate
 {
-	private static function importAssets(string $fileType, array $varPage): ?string
-	{
-		$folder = $fileType === 'javascript' ? 'js' : 'css';
-
-		if (!isset($varPage['jsFileNames']))
-		{
-			return null;
-		}
-
-		ob_start();
-		foreach ($varPage['jsFileNames'] as $fileName) 
-		{
-			$path = "/public/{$folder}/" . $fileName . ".{$folder}";
-			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-			
-			?><script type="text/<?=$fileType?>" src="<?=$path?>"></script><?php
-		}
-		return ob_get_clean();
-	}
-
-	public static function load(array $varPage): void
+	public static function display(array $varPage): void
 	{
 		$header = HeaderView::get($varPage);
-		$js = SELF::importAssets('javascript', $varPage);
-
 		ob_start();
 		?>
 			<!DOCTYPE html>
@@ -59,7 +40,7 @@ Class Template
 			    	<div class="container">
 					</div>
 				</footer>
-				<?= $js ?? '' ?>
+				<?= $varPage['javascript'] ?? '' ?>
 			</body>
 			</html>
 		<?php

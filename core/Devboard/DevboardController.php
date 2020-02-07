@@ -14,22 +14,23 @@ class DevboardController
 	public function index()
 	{
 		$migration = new Migration();
-		$dbName = $migration->getDbName();
-		$isDbExist = $migration->checkDbExist();
-		if ($isDbExist)
+		$varPage['dbName'] = $migration->getDbName();
+		$varPage['isDbExist'] = $migration->checkDbExist();
+		if ($varPage['isDbExist'])
 		{
-			$schemas = $this->getTablesFromSchemas();
-			$tablesFromDb = $migration->listTablesFromDb();
+			$varPage['schemas'] = $this->getTablesFromSchemas();
+			$varPage['tablesFromDb'] = $migration->listTablesFromDb();
 
 			$entityGenerator = new EntityGenerator();
-			$modelList = $entityGenerator->list();
+			$varPage['modelList'] = $entityGenerator->list();
 
 			$repoGenerator = new RepoGenerator();
-			$repoList = $repoGenerator->list();
+			$varPage['repoList'] = $repoGenerator->list();
 		}
 
 		$varPage['messages'] = MessagesManager::getMessages();
-		require 'DevboardView.php';
+
+		DevboardView::index($varPage);
 	}
 
 	public function create()

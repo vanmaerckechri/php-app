@@ -7,8 +7,6 @@ use Core\ {
 	Router\Router
 };
 
-$lang = 'fr';
-
 App::start();
 
 Router::init();

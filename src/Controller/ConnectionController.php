@@ -3,8 +3,8 @@
 namespace App\Controller;
 
 use Core\ {
-	AbstractController,
 	Router\Router,
+	AbstractController,
 	Authentification\Auth,
 	Authentification\Oauth,
 	MessagesManager\MessagesManager

@@ -3,8 +3,8 @@
 namespace App\View;
 
 use Core\{
-	Router\Router,
 	AbstractView,
+	Router\Router,
 	Pagination
 };
 
