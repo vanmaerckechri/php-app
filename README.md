@@ -415,7 +415,7 @@
 
 - #### 5.3 Méthodes Héritées
 
-    Afficher:
+    Afficher une Vue (voir chapitre 6):
     ```php
     renderer(string $class, string $method): void
     
@@ -503,10 +503,18 @@
 
 - ### 8.1 Configuration
 
-    Le routeur doit être déployé dans le fichier '\\public\\index.php'.
+    Toutes les requêtes réalisées en dehors des sous-dossiers '\\public\\...' doivent être redirigées vers le fichier '\\public\\index.php'.
     
-    Voici ce dont le routeur à besoin pour fonctionner:
+    Dans le fichier '\\.htaccess':
+    ```php
+    RewriteEngine On
+
+    RewriteCond %{REQUEST_URI} !(public/css|public/images|public/js)
+    RewriteRule ^(.*)$ public/index.php?url=$1 [QSA,L]
+    ```
     
+    Le routeur doit être déployé dans le fichier '\\public\\index.php':
+
     ```php
     use Core\Router\Router;
     
