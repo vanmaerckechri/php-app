@@ -6,10 +6,9 @@ use Core\Router\Router;
 
 Class ConnectionView
 {
-	public static function index($varPage)
+	public static function index(array $varPage): string
 	{
-		ob_start();
-		?>
+		ob_start(); ?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<form action="" method="post">
@@ -20,8 +19,6 @@ Class ConnectionView
 				<a class="btn" href="https://accounts.google.com/o/oauth2/v2/auth?scope=profile email&access_type=online&redirect_uri=<?=Router::url($varPage['google_route'])?>&response_type=code&client_id=<?= $varPage['goole_id'] ?>">SE CONNECTER AVEC GOOGLE</a>
 			</form>
 		</div>
-		<?php
-
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

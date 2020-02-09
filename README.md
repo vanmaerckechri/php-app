@@ -402,12 +402,17 @@
 
     La variable '$varPage' est de type array et est utilisée pour transmettre les informations (titre de la page, entrées utilisateur, résultat des requêtes faites en base de données, fichiers javascript, etc.) du controlleur vers la vue.
     
-    Il existe trois clés dont le nom est réservé:
-    - javascript: de type array, utilisée pour transmettre le nom des fichiers javascript qu'il faut charger sur la page.
+    Il existe 4 clés dont le nom est réservé:
+    - js: de type array, utilisée pour transmettre le nom des fichiers javascript qu'il faut charger sur la page.
         
         ```php
-       $this->varPage['javascript'][] = 'confirmPassword';
+       $this->varPage['js'][] = 'ConfirmPassword';
        ```
+       
+    - script: de type string, utilisée pour transmettre du code javascript qui se lancera une fois la page complétement chargée (pratique pour instancier et configurer les classes chargées à partir de fichiers).
+        ```php
+        var confirmPassword = new ConfirmPassword('registerForm');
+        ```
        
     - css: de type array, utilisée pour transmettre le nom des fichiers css qu'il faut charger sur la page.
     - content: de type string, il s'agit du contenu de la vue appelée par son controlleur et la méthode 'renderer'.
@@ -746,14 +751,14 @@
         
         ```php
         // retourne false | true (si true alors ajoute l'utilisateur à la session!)
-    	Auth::login($_POST['username'], $_POST['password']);
+        Auth::login($_POST['username'], $_POST['password']);
         ```
         
     - ### 12.1.3 Déconnexion
     
         ```php
         // retourne true | false
-    	Auth::removeUserFromSession();
+        Auth::removeUserFromSession();
         ```
         
     - ### 12.1.4 Récupérer l'Utilisateur
@@ -777,13 +782,13 @@
         ```php
         ...
         "oauth": {
-    		"google": {
-    			"goole_id": "xXx1",
-    			"google_secret": "xXx2",
-    			"google_route": "routePourTraiterLaCo"
-    		}
-    	}
-    	...
+            "google": {
+                "goole_id": "xXx1",
+                "google_secret": "xXx2",
+                "google_route": "routePourTraiterLaCo"
+            }
+        }
+        ...
         ```
 
         Dans le controlleur:
@@ -792,7 +797,7 @@
         $oauthGoogle = Oauth::getConfig('google');
         // Pour l'utilisation de '$this->varPage' (voir chapitre 5.2).
         $this->varPage['goole_id'] = $oauthGoogle['goole_id'];
-		$this->varPage['google_route'] = $oauthGoogle['google_route'];
+        $this->varPage['google_route'] = $oauthGoogle['google_route'];
         ```
         
         Dans la vue:
@@ -806,13 +811,13 @@
         Dans le controlleur appelé par 'google_route':
     
         ```php
-    	$oauth = new Oauth();
-		if ($oauth->login('google'))
-		{
-			// welcome!
-		}
-	    ```
-	    
+        $oauth = new Oauth();
+        if ($oauth->login('google'))
+        {
+            // welcome!
+        }
+        ```
+        
 ## 13. Sources
 
 - [Grafikart](https://www.grafikart.fr/)

@@ -10,14 +10,12 @@ use Core\{
 
 Class HomeView extends AbstractView
 {
-	public static function index($varPage)
+	public static function index(array $varPage): string
 	{
-		ob_start();
-		?>
+		ob_start(); ?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 		</div>
-		<?php
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

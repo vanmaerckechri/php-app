@@ -10,7 +10,7 @@ use Core\{
 
 Class ArticlesView extends AbstractView
 {
-	public static function index($varPage)
+	public static function index(array $varPage): string
 	{
 		ob_start();
 		?>
@@ -31,7 +31,6 @@ Class ArticlesView extends AbstractView
 			</ul>
 			<?=Pagination::getNav(4) ?: 'Aucun article trouvé!';?>
 		</div>
-		<?php
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

@@ -13,8 +13,18 @@ abstract class AbstractController
 	protected function renderer(string $class, string $method): void
 	{
 		$namespace = App::getConfig('autoload')['namespace'];
-		$class = $namespace . "View\\$class";
-		call_user_func_array([$namespace . 'View\Template', 'load'], [$class, $method, $this->varPage]);
+		$view = $namespace . "View\\$class";
+
+		if (isset($this->varPage['css']))
+		{
+			$this->varPage['css'] = self::addAssets('css', $this->varPage['css']);
+		}
+		if (isset($this->varPage['js']))
+		{
+			$this->varPage['js'] = self::addAssets('js', $this->varPage['js']);
+		}
+		$this->varPage['content'] = call_user_func_array([$view, $method], [$this->varPage]);
+		call_user_func_array([$namespace . 'View\Template', 'display'], [$this->varPage]);
 		exit;
 	}
 
@@ -77,5 +87,19 @@ abstract class AbstractController
 			}
 		}
 		return true;
+	}
+
+	private static function addAssets(string $type, array $list): ?string
+	{
+		$longType = $type === 'js' ? 'javascript' : 'css';
+		ob_start();
+		foreach ($list as $fileName) 
+		{
+			$path = "/public/{$type}/" . $fileName . ".{$type}";
+			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+			
+			?><script type="text/<?=$longType?>" src="<?=$path?>"></script><?php
+		}
+		return ob_get_clean();
 	}
 }

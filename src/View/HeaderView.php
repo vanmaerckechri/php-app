@@ -10,11 +10,10 @@ use Core\{
 
 Class HeaderView extends AbstractView
 {
-	public static function get($varPage)
+	public static function get(array $varPage): string
 	{
 		$user = Auth::user();
-		ob_start();
-		?>
+		ob_start(); ?>
 		<h1><?=$varPage['h1'] ?? ''?></h1>
 		<nav>
 			<div>
@@ -32,7 +31,6 @@ Class HeaderView extends AbstractView
 			</div>
 			<?php endif; ?>
 		</nav>
-		<?php 
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

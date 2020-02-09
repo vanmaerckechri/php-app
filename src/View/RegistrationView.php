@@ -2,14 +2,16 @@
 
 namespace App\View;
 
-use Core\Router\Router;
+use Core\ {
+	AbstractView,
+	Router\Router
+};
 
-Class RegistrationView
+Class RegistrationView extends AbstractView
 {
-	public static function new($varPage)
+	public static function new(array $varPage): string
 	{
-		ob_start();
-		?>
+		ob_start(); ?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<form method="post" id='form'>
@@ -21,8 +23,6 @@ Class RegistrationView
 				<a href="<?=Router::url('connection')?>">Vous avez déjà un compte ?</a>
 			</form>
 		</div>
-		<?php
-
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

@@ -2,13 +2,10 @@
 
 namespace App\View;
 
-use Core\ {
-	App,
-	AbstractTemplate
-};
+use Core\App;
 use App\View\HeaderView;
 
-Class Template extends AbstractTemplate
+Class Template
 {
 	public static function display(array $varPage): void
 	{
@@ -22,6 +19,7 @@ Class Template extends AbstractTemplate
 			    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 			    <meta http-equiv="X-UA-Compatible" content="ie=edge">
 			    <link rel="stylesheet" type="text/css" href="/public/css/style.css">
+			    <?= $varPage['css'] ?? '' ?>
 			    <title><?= $varPage['title'] ?></title>
 			</head>
 			<body>
@@ -40,7 +38,13 @@ Class Template extends AbstractTemplate
 			    	<div class="container">
 					</div>
 				</footer>
-				<?= $varPage['javascript'] ?? '' ?>
+				<?= $varPage['js'] ?? '' ?>
+				<script type="text/javascript">
+					window.addEventListener("load", function(event)
+					{
+						<?= $varPage['script'] ?? '' ?>
+					});
+				</script>
 			</body>
 			</html>
 		<?php

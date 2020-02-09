@@ -18,13 +18,15 @@ class RegistrationController extends AbstractController
 	protected $varPage = [
 		'title' => 'APP-PHP::INSCRIPTION',
 		'h1' => 'APP-PHP',
-		'h2' => 'INSCRIPTION',
-		'javascript' => ['confirmPassword']
+		'h2' => 'INSCRIPTION'
 	];
 
 	public function new(): void
 	{
 		$this->redirect('home', ['logged' => true]);
+
+		$this->varPage['js'] = ['ConfirmPassword'];
+		$this->varPage['script'] = self::scriptForNew();
 
 		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
@@ -99,5 +101,13 @@ class RegistrationController extends AbstractController
 			}
 		}
 		$this->redirect('connection');
+	}
+
+	private static function scriptForNew(): string
+	{
+		ob_start(); ?>
+			var confirmPassword = new CVMTOOLS.ConfirmPassword();
+			confirmPassword.init('form');
+		<?php return ob_get_clean();
 	}
 }

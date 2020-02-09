@@ -212,3 +212,8 @@ nav a.active
 {
 	max-width: 666px;
 }
+.article-form img
+{
+	max-width: 100%;
+	height: auto;
+}

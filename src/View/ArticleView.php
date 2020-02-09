@@ -3,20 +3,20 @@
 namespace App\View;
 
 use Core\ {
+	AbstractView,
 	Router\Router,
 	Authentification\Auth
 };
 
-Class ArticleView
+Class ArticleView extends AbstractView
 {
-	public static function show($varPage)
+	public static function show(array $varPage): string
 	{
 		$previous = $varPage['previous'];
 		$next = $varPage['next'];
 		$user = Auth::user();
 
-		ob_start();
-		?>
+		ob_start();	?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<div class="article-buttons">
@@ -39,24 +39,22 @@ Class ArticleView
 				</div>
 			</div>
 		</div>
-		<?php 
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 	
-	public static function form($varPage)
+	public static function form(array $varPage): string
 	{
-		ob_start();
-		?>
+		ob_start();	?>
 		<div class="container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<form class="article-form" method="post" enctype="multipart/form-data">
-				<label for="username">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
-				<label for="image">Image<input type="file" name="image" accept="image/*"><?= $varPage['messages']['uploadSms'] ?? '' ?></label>
-				<label for="contenu">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
+				<label for="title">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
+				<label for="image">Image<input type="file" name="image" id="image" accept="image/*"><?= $varPage['messages']['uploadSms'] ?? '' ?></label>
+				<img id="imagePreview" src="<?= $varPage['recordedInputs']['imagePreview'] ?? '' ?>">
+				<label for="content">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
 			</form>
 		</div>
-		<?php
-		return ob_get_clean();
+		<?php return ob_get_clean();
 	}
 }

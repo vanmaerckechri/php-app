@@ -48,6 +48,10 @@ class ArticleController extends AbstractController
 	public function new(): void
 	{
 		$this->redirect('connection', ['logged' => false]);
+
+		$this->varPage['js'] = ['InstantLoadImg'];
+		$this->varPage['script'] = self::scriptForNewAndEdit();
+
 		$this->varPage['recordedInputs'] = $this->getRecordedInputs();
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer('ArticleView', 'form');
@@ -84,6 +88,9 @@ class ArticleController extends AbstractController
 	{
 		$this->redirect('connection', ['logged' => false]);
 
+		$this->varPage['js'] = ['InstantLoadImg'];
+		$this->varPage['script'] = self::scriptForNewAndEdit();
+
 		$userId = Auth::user()->getId();
 		$article = new Article();
 
@@ -98,6 +105,8 @@ class ArticleController extends AbstractController
 				$recordInputs = $this->getRecordedInputs();
 				$this->varPage['recordedInputs']['title'] = isset($recordInputs['title']) ? $recordInputs['title'] : $article->getTitle();
 				$this->varPage['recordedInputs']['content'] = isset($recordInputs['content']) ? $recordInputs['content'] : $article->getContent();
+				$this->varPage['recordedInputs']['imagePreview'] = $article->getImg_file() ? '/public/images/' . $article->getImg_file() : null;
+
 				$this->varPage['messages'] = MessagesManager::getMessages();
 				$this->renderer('ArticleView', 'form');
 			}
@@ -156,5 +165,13 @@ class ArticleController extends AbstractController
 			return ['path' => $imagePath, 'fileName' => FilesManager::getFileName()];
 		}
 		return null;
+	}
+
+	private static function scriptForNewAndEdit(): string
+	{
+		ob_start(); ?>
+			var instantLoadImg = new CVMTOOLS.InstantLoadImg();
+			instantLoadImg.init('image', 'imagePreview');
+		<?php return ob_get_clean();
 	}
 }
