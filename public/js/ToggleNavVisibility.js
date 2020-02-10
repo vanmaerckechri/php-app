@@ -16,13 +16,13 @@ CVMTOOLS.ToggleNavVisibility.prototype.init = function(navId)
 
 CVMTOOLS.ToggleNavVisibility.prototype.detectDirection = function(e)
 {
-	if (document.documentElement.scrollTop > this.lastPosition)
-	{
-		this.hide();
-	}
-	else
+	if (document.documentElement.scrollTop < this.lastPosition - 5)
 	{
 		this.display();
+	}
+	else if (document.documentElement.scrollTop > this.lastPosition + 5)
+	{
+		this.hide();
 	}
 	this.updatePosition('lastPosition');
 };

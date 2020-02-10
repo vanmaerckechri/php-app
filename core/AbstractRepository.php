@@ -104,7 +104,6 @@ abstract class AbstractRepository
 		$inputs = $obj->getValuesToPush(false);
 		if ($inputs)
 		{
-			var_dump($inputs);
 			$request = new Request();
 			$request->update($obj->table, $inputs)->where('id', '=', $id)->execute();
 			return true;

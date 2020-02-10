@@ -3,13 +3,27 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	max-width: 100%;
 	.article
 	{
 		margin-bottom: $distance-generic03;
 		border: 1px solid $bgColor-nav;
-		width: 30%;
+		position: relative;
 		display: flex;
 		flex-direction: column;
+		width: 30%;
+		min-height: 210px;
+		&:hover
+		{
+			.content
+			{
+				opacity: 1;
+			}
+			img
+			{
+				opacity: 0.4;
+			}
+		}
 		h3, .content, .creation-infos
 		{
 			padding: $distance-generic01;
@@ -27,12 +41,15 @@
 			flex: 1;
 			overflow: hidden;
 			text-overflow: ellipsis;
+			opacity: 0;
+			transition: opacity 0.2s;
 		}
 		.creation-infos
 		{
 			display: flex;
 			justify-content: space-between;
 			font-size: 0.9rem;
+			background-color: rgba(255, 255, 255, 0.5);
 			.user, .date
 			{
 				max-width: 50%;
@@ -44,6 +61,15 @@
 		.btn
 		{
 			text-align: right;
+		}
+		img
+		{
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			z-index: -1;
+			transition: opacity 0.2s;
 		}
 	}
 }
@@ -80,6 +106,11 @@
 			margin-top: $distance-generic02;
 			display: flex;
 			justify-content: space-between;
+		}
+		img
+		{
+			width: 100%;
+			height: auto;
 		}
 	}
 	form

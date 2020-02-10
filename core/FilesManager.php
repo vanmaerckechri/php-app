@@ -120,13 +120,13 @@ class FilesManager
 
 	private static function randFileName()
 	{
-		$min = self::$schema['minLength'] ? self::$schema['minLength'] : 10;
-		$max = self::$schema['maxLength'] ? self::$schema['maxLength'] : 18;
+		$min = self::$schema['minLength'] ? self::$schema['minLength'] - 1 : 10;
+		$max = self::$schema['maxLength'] ? self::$schema['maxLength'] - 1 : 18;
 		$chars = 'bcdfghjklmnpqrstvwxzaeiouy0123456789';
 		$charsLength = strlen($chars) - 1;
-		$fileName = '';
 		do
 		{
+			$fileName = '';
 			$length = rand($min, $max);
 			for ($i = $length; $i >= 0; $i--)
 			{

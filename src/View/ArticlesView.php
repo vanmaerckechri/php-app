@@ -20,6 +20,9 @@ Class ArticlesView extends AbstractView
 				<?php foreach ($varPage['articles'] as $article): ?>
 				<li class="article">
 					<h3><?=htmlentities($article->getTitle())?></h3>
+					<?php if ($article->getImg_file()): ?>
+						<img src="\public\images\<?=$article->getImg_file()?>" alt="">
+					<?php endif; ?>
 					<p class="content"><?=htmlentities(self::excerpt($article->getContent(), 125))?></p>
 					<div class="creation-infos">
 						<p class="user"><?=$article->user_name?></p>

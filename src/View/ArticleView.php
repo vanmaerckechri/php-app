@@ -32,6 +32,9 @@ Class ArticleView extends AbstractView
 					<a class="btn" href="<?=Router::url('editArticle', ['id' => $varPage['article']->getId(), 'slug' => $varPage['article']->getSlug()])?>">EDIT</a>
 				<?php endif; ?>
 				<h3><?=htmlentities($varPage['article']->getTitle())?></h3>
+				<?php if ($varPage['article']->getImg_file()): ?>
+					<img src="\public\images\<?=$varPage['article']->getImg_file()?>" alt="">
+				<?php endif; ?>
 				<p><?=nl2br(htmlentities($varPage['article']->getContent()))?></p>
 				<div class="creation-infos">
 					<p class="user"><?=$varPage['article']->user_name?></p>
@@ -50,7 +53,7 @@ Class ArticleView extends AbstractView
 			<form class="article-form" method="post" enctype="multipart/form-data">
 				<label class="title" for="title">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
 				<label for="image">Image<input type="file" name="image" id="image" accept="image/*"><?= $varPage['messages']['uploadSms'] ?? '' ?></label>
-				<img id="imagePreview" class="imagePreview" src="<?= $varPage['recordedInputs']['imagePreview'] ?? '' ?>">
+				<img id="imagePreview" class="imagePreview" src="<?= $varPage['recordedInputs']['imagePreview'] ?? '' ?>" alt="">
 				<label for="content">Contenu<textarea class="content" name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
 			</form>
