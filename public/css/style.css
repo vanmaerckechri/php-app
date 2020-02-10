@@ -1,219 +1,189 @@
-html, body, header, nav, footer, section, div, span, h1, h2, h3, h4, h5, h6, p, a, blockquote, cite, img, ol, ul, li, form, fieldset, legend, label, input, textarea, button
-{
-	margin: 0;
-	padding: 0;
-	border: 0;
-	box-sizing: border-box;
-}
-body
-{
-	background-color: grey;
-}
-header
-{
-	border-bottom: 2px solid black;
-	background-color: rgb(200, 200, 200);
-}
-h1
-{
-	text-align: center;
-}
-h2
-{
-	margin: 2rem 0;
-}
-form
-{
-	max-width: 350px;
-	width: 100%;
-}
-label
-{
-	margin-bottom: 0.5rem;
-	display: block;
-}
-input
-{
-	margin-top: 0.2rem;
-	padding: 0.2rem 0.4rem;
-	display: block;
-	width: 100%;
-}
-textarea
-{
-	margin-top: 0.2rem;
-	min-width: 100%;
-	max-width: 100%;
-	min-height: 300px;
-}
-nav a
-{
-	margin-left: 0.2rem;
-	padding: 0.2rem 0.4rem;
-}
-nav a.active
-{
-	color: white;
-	background-color: black;
-}
-.main
-{
-	width: 100%;
-}
-.main .container
-{
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-}
-.container
-{
-	margin: 0 auto;
-	padding: 0.5rem 1rem;
-	display: flex;
-	justify-content: space-between;
-	align-items: baseline;
-	max-width: 1600px;
-	width: 100%;
-}
-.btn
-{
-	margin: 1rem 0;
-	padding: 0.2rem;
-	display: block;
-	text-decoration: none;
-	text-align: center;
-	font-family: inherit;
-	font-size: 1.2rem;
-	color: black;
-	background-color: white;
-	transition: background-color 0.2s;
-}
-.btn:hover
-{
-	cursor: pointer;
-	background-color: orange;
-}
-.btn.disable
-{
-	color: white;
-	background-color: rgb(50, 50, 50);
-}
-.btn.disable:hover
-{
-	cursor: default;
-}
-.sms-container
-{
-	width: 100%;
-}
-.sms-container .sms-error, .sms-container .sms-info
-{
-	text-align: center;
-}
-.sms-error, .sms-info
-{
-	padding: 0.1rem 0.2rem;
-	width: 100%;
-	background-color: black;
-}
-.sms-error
-{
-	color: red;
-}
-.sms-info
-{
-	color: green;
-}
-.articles-container
-{
-	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-between;
-}
-.articles-container .article
-{
-	margin-bottom: 5vw;
-	width: 30%;
-	min-height: 220px;
-	display: flex;
-	flex-direction: column;
-	background-color: rgb(200, 200, 200);
-}
-.articles-container .article h3
-{
-	overflow: hidden;
-	text-overflow: ellipsis;
-	min-height: 66px;
-	color: white;
-	background-color: black;
-}
-.articles-container .article .content, .articles-container .article h3, .articles-container .article .date, .articles-container .article .user
-{
-	padding: 0.75rem;
-}
-.articles-container .article .content
-{
-	flex: 1;
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.articles-container .creation-infos
-{
-	display: flex;
-	justify-content: space-between;
-}
-.articles-container .article .btn
-{
-	margin: 0;
-}
-.pagination-container
-{
-	display: flex;
-}
-.pagination-container .btn
-{
-	margin: 0 0.5rem;
-}
-.article-container
-{
-	max-width: 666px;
-	list-style: none;
-}
-.article-container h3
-{
-	margin-bottom: 1rem;
-}
-.article-container h3, .article-container p
-{
-	overflow: hidden;
-	text-overflow: ellipsis;
-}
-.article-container h3
-{
-	display: inline;
-}
-.article-container .btn
-{
-	display: inline-block;
-}
-.article-buttons
-{
-	margin-bottom: 1rem;
-	display: flex;
-	max-width: 666px;
-	width: 100%;
-}
-.article-buttons .btn:last-child
-{
-	margin-left: auto;
-}
-.article-form
-{
-	max-width: 666px;
-}
-.article-form img
-{
-	max-width: 100%;
-	height: auto;
-}
+html, body, header, nav, footer, section, div, span, h1, h2, h3, h4, h5, h6, p, a, blockquote, cite, img, ol, ul, li, form, fieldset, legend, label, input, textarea, button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  box-sizing: border-box; }
+
+html {
+  font-size: 100%;
+  font-family: Roboto, Helvetica, Arial, sans-serif; }
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: Montserrat, Helvetica, Arial, sans-Serif;
+  font-weight: bold; }
+
+h1 {
+  font-size: 1.3rem; }
+
+h2 {
+  margin: 2.5rem 0;
+  text-align: center;
+  font-size: 1.2rem; }
+
+h3 {
+  font-size: 1rem; }
+
+p {
+  line-height: 1.3rem; }
+
+ol, ul {
+  list-style: none; }
+
+img {
+  vertical-align: baseline; }
+
+.sms-container {
+  width: 100%;
+  text-align: center;
+  background-color: black; }
+
+.sms-info {
+  color: green; }
+
+.sms-error {
+  color: #d21d1d; }
+
+.container {
+  margin: 0 auto;
+  padding: 0 0.5rem;
+  max-width: 1337px; }
+
+.main .container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; }
+
+.btn {
+  display: block;
+  padding: 0.5rem;
+  font-family: Montserrat, Helvetica, Arial, sans-Serif;
+  color: #dbdde1;
+  text-decoration: none;
+  background-color: #2a3036;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  user-select: none; }
+  .btn:hover {
+    cursor: pointer; }
+  .btn:focus {
+    outline: none; }
+
+.pagination-container {
+  margin: 0 auto 2.5rem;
+  display: flex;
+  justify-content: center; }
+  .pagination-container .btn {
+    margin: 0 0.1rem;
+    padding: 0.5rem; }
+  .pagination-container .btn.disable {
+    color: #212426;
+    background-color: #dbdde1; }
+    .pagination-container .btn.disable:hover {
+      cursor: default; }
+
+form {
+  max-width: 666px;
+  width: 100%; }
+  form label {
+    margin-bottom: 1.5rem; }
+  form label, form input {
+    display: block;
+    width: 100%; }
+  form textarea, form input[type='text'], form input[type='password'], form input[type='email'] {
+    margin-top: 0.5rem;
+    border: 1px solid black;
+    padding: 0.5rem; }
+  form .btn {
+    text-align: center;
+    font-size: 1rem; }
+  form .sms-error, form .sms-info {
+    margin-top: 0.5rem; }
+
+.connexion-container {
+  max-width: 500px; }
+  .connexion-container .link {
+    margin: 1.5rem 0;
+    display: block; }
+
+header {
+  padding: 0.5rem 0;
+  background-color: #2a3036; }
+  header h1 {
+    padding: 0.5rem 0;
+    color: #dbdde1; }
+  header nav {
+    display: flex;
+    justify-content: space-between; }
+    header nav a {
+      color: #dbdde1;
+      text-decoration: none; }
+    header nav a.active {
+      text-decoration: underline; }
+    header nav .btn-container {
+      margin-left: auto; }
+      header nav .btn-container a {
+        margin-left: 1.5rem; }
+
+.articles-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between; }
+  .articles-container .article {
+    margin-bottom: 2.5rem;
+    border: 1px solid #2a3036;
+    width: 30%;
+    display: flex;
+    flex-direction: column; }
+    .articles-container .article h3, .articles-container .article .content, .articles-container .article .creation-infos {
+      padding: 0.5rem; }
+    .articles-container .article h3 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      color: #dbdde1;
+      background-color: #2a3036; }
+    .articles-container .article .content {
+      flex: 1;
+      overflow: hidden;
+      text-overflow: ellipsis; }
+    .articles-container .article .creation-infos {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.9rem; }
+      .articles-container .article .creation-infos .user, .articles-container .article .creation-infos .date {
+        max-width: 50%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap; }
+    .articles-container .article .btn {
+      text-align: right; }
+
+.article-container {
+  max-width: 666px; }
+  .article-container .nav {
+    margin-bottom: 0.5rem;
+    display: flex;
+    width: 100%; }
+    .article-container .nav .btn:last-child {
+      margin-left: auto; }
+  .article-container .article {
+    width: 100%;
+    list-style: none; }
+    .article-container .article h3 {
+      margin: 0.5rem 0 1.5rem;
+      border-top: 1px solid black;
+      padding-top: 0.5rem; }
+    .article-container .article .btn {
+      display: inline-block; }
+    .article-container .article .creation-infos {
+      margin-top: 1.5rem;
+      display: flex;
+      justify-content: space-between; }
+  .article-container form .imagePreview {
+    margin-bottom: 1.5rem;
+    max-width: 100%; }
+  .article-container form .content {
+    min-height: 333px;
+    min-width: 100%;
+    max-width: 100%; }
+
+/*# sourceMappingURL=style.css.map */

@@ -16,7 +16,12 @@ Class HeaderView extends AbstractView
 		ob_start(); ?>
 		<h1><?=$varPage['h1'] ?? ''?></h1>
 		<nav>
+			<?php if ($user): ?>
 			<div>
+				<a class="<?=self::activeCurrentPage('newArticle')?>" href="<?=Router::url('newArticle')?>">Rédiger un Nouvel Article</a>
+			</div>
+			<?php endif; ?>
+			<div class="btn-container">
 				<a class="<?=self::activeCurrentPage('home')?>" href="<?=Router::url('home')?>">Accueil</a>
 				<a class="<?=self::activeCurrentPage('articles')?>" href="<?=Router::url('articles', ['page' => 1])?>">Les Articles</a>
 				<?php if (!$user): ?>
@@ -25,11 +30,6 @@ Class HeaderView extends AbstractView
 				<a href="<?=Router::url('disconnect')?>">Se Déconnecter</a>
 				<?php endif; ?>
 			</div>
-			<?php if ($user): ?>
-			<div>
-				<a class="<?=self::activeCurrentPage('newArticle')?>" href="<?=Router::url('newArticle')?>">Rédiger un Nouvel Article</a>
-			</div>
-			<?php endif; ?>
 		</nav>
 		<?php return ob_get_clean();
 	}

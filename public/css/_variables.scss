@@ -1,0 +1,46 @@
+// 1. DISTANCES
+
+	// 1.1 Generic
+	$distance-generic01: 0.5rem;
+	$distance-generic02: 1.5rem;
+	$distance-generic03: 2.5rem;
+
+	// 1.2 Max-Width
+	$container-maxWidth: 1337px;
+
+// 2. COLORS
+
+	// 2.1 Shades
+
+		// 2.1.1 Grey
+		$grey01: #212426; // darkest
+		$grey02: #2a3036;
+		$grey03: #8593a2;
+		$grey04: #dbdde1; // lightest
+
+		// 2.1.2 Aubergine
+		$violet01: #302f44;
+		$violet02: #8e8ca8;
+
+		// 2.1.3 Red
+		$red1: #d21d1d;
+
+	// 2.2 Distribution
+
+		// 2.2.1 nav
+		$bgColor-nav: $grey02;
+		$bgColor-navBtn: $grey02;
+		$borderColor-navBtn: $grey03;
+		$color-navBtn: $grey04;
+		$bgColor-navBtn-hover: $grey04;
+		$color-navBtn-hover: $grey01;
+
+		// 2.2.2 sms
+		$color-alert: $red1;
+		$color-info: green;
+
+// 3. FONTS
+
+	// 3.1 Font-Family
+	$fontFamily-title: Montserrat, Helvetica, Arial, sans-Serif;
+	$fontFamily-main: Roboto, Helvetica, Arial, sans-serif;

@@ -1,0 +1,32 @@
+header
+{
+	padding: $distance-generic01 0;
+	background-color: $bgColor-nav;
+	h1
+	{
+		padding: $distance-generic01 0;
+		color: $color-navBtn;		
+	}
+	nav
+	{
+		display: flex;
+		justify-content: space-between;
+		a
+		{
+			color: $color-navBtn;
+			text-decoration: none;
+		}
+		a.active
+		{
+			text-decoration: underline;
+		}
+		.btn-container
+		{
+			margin-left: auto;
+			a
+			{
+				margin-left: $distance-generic02;
+			}
+		}
+	}
+}

@@ -17,9 +17,9 @@ Class ArticleView extends AbstractView
 		$user = Auth::user();
 
 		ob_start();	?>
-		<div class="container">
+		<div class="article-container container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
-			<div class="article-buttons">
+			<div class="nav">
 				<?php if ($previous): ?>
 					<a class="btn" href="<?=Router::url('article', ['id' => $previous->getId(), 'slug' => $previous->getSlug()])?>">PREVIOUS</a>
 				<?php endif; ?>
@@ -27,7 +27,7 @@ Class ArticleView extends AbstractView
 					<a class="btn" href="<?=Router::url('article', ['id' => $next->getId(), 'slug' => $next->getSlug()])?>">NEXT</a>
 				<?php endif; ?>
 			</div>
-			<div class="article-container">
+			<div class="article">
 				<?php if ($user && $user->getId() === $varPage['article']->getUser_id()): ?>
 					<a class="btn" href="<?=Router::url('editArticle', ['id' => $varPage['article']->getId(), 'slug' => $varPage['article']->getSlug()])?>">EDIT</a>
 				<?php endif; ?>
@@ -45,13 +45,13 @@ Class ArticleView extends AbstractView
 	public static function form(array $varPage): string
 	{
 		ob_start();	?>
-		<div class="container">
+		<div class="article-container container">
 			<h2><?=$varPage['h2'] ?? ''?></h2>
 			<form class="article-form" method="post" enctype="multipart/form-data">
-				<label for="title">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
+				<label class="title" for="title">Titre<input type="text" name="title" id="title" value="<?=htmlentities($varPage['recordedInputs']['title'] ?? '')?>" required><?=$varPage['messages']['titleSms'] ?? ''?></label>
 				<label for="image">Image<input type="file" name="image" id="image" accept="image/*"><?= $varPage['messages']['uploadSms'] ?? '' ?></label>
-				<img id="imagePreview" src="<?= $varPage['recordedInputs']['imagePreview'] ?? '' ?>">
-				<label for="content">Contenu<textarea name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
+				<img id="imagePreview" class="imagePreview" src="<?= $varPage['recordedInputs']['imagePreview'] ?? '' ?>">
+				<label for="content">Contenu<textarea class="content" name="content" id="content" required><?=htmlentities($varPage['recordedInputs']['content'] ?? '')?></textarea><?= $varPage['messages']['contentSms'] ?? '' ?></label>
 				<input id="validation" class="btn" type="submit" value="ENREGISTRER">
 			</form>
 		</div>

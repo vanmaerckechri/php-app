@@ -1,0 +1,99 @@
+.articles-container
+{
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;
+	.article
+	{
+		margin-bottom: $distance-generic03;
+		border: 1px solid $bgColor-nav;
+		width: 30%;
+		display: flex;
+		flex-direction: column;
+		h3, .content, .creation-infos
+		{
+			padding: $distance-generic01;
+		}
+		h3
+		{
+			overflow: hidden;
+			text-overflow: ellipsis;
+			white-space:nowrap;
+			color: $color-navBtn;
+			background-color: $bgColor-nav;
+		}
+		.content
+		{
+			flex: 1;
+			overflow: hidden;
+			text-overflow: ellipsis;
+		}
+		.creation-infos
+		{
+			display: flex;
+			justify-content: space-between;
+			font-size: 0.9rem;
+			.user, .date
+			{
+				max-width: 50%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space:nowrap;
+			}
+		}
+		.btn
+		{
+			text-align: right;
+		}
+	}
+}
+
+.article-container
+{
+	max-width: 666px;
+	.nav
+	{
+		margin-bottom: $distance-generic01;
+		display: flex;
+		width: 100%;
+		.btn:last-child
+		{
+			margin-left: auto;
+		}
+	}
+	.article
+	{
+		width: 100%;
+		list-style: none;
+		h3
+		{
+			margin: $distance-generic01 0 $distance-generic02;
+			border-top: 1px solid black;
+			padding-top: $distance-generic01;
+		}
+		.btn
+		{
+			display: inline-block;
+		}
+		.creation-infos
+		{
+			margin-top: $distance-generic02;
+			display: flex;
+			justify-content: space-between;
+		}
+	}
+	form
+	{
+		.imagePreview
+		{
+			margin-bottom: $distance-generic02;
+			max-width: 100%;
+		}
+		.content
+		{
+			min-height: 333px;
+			min-width: 100%;
+			max-width: 100%;
+		}
+	}
+}

@@ -134,7 +134,7 @@ class ArticleController extends AbstractController
 					&& $articleOldVer->getSlug() === $slug
 					&& $articleOldVer->getUser_id() === $userId
 				){
-					if ($uploadInfos = $this->uploadImage(false));
+					if ($uploadInfos = $this->uploadImage(false))
 					{
 						// new file and last file exist ? remove last file
 						if ($uploadInfos['fileName'] && $oldFileName = $articleOldVer->getImg_file())

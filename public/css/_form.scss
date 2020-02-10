@@ -1,0 +1,39 @@
+form
+{
+	max-width: 666px;
+	width: 100%;
+	label
+	{
+		margin-bottom: $distance-generic02;
+	}
+	label, input
+	{
+		display: block;
+		width: 100%;
+	}
+	textarea, input[type='text'], , input[type='password'], , input[type='email']
+	{
+		margin-top: $distance-generic01;
+		border: 1px solid black;
+		padding: $distance-generic01;
+	}
+	.btn
+	{
+		text-align: center;
+		font-size: 1rem;
+	}
+	.sms-error, .sms-info
+	{
+		margin-top: $distance-generic01;
+	}
+}
+
+.connexion-container
+{
+	max-width: 500px;
+	.link
+	{
+		margin: $distance-generic02 0;
+		display: block;
+	}
+}
