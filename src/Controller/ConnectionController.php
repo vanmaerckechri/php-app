@@ -18,6 +18,7 @@ class ConnectionController extends AbstractController
 		'title' => 'APP-PHP::CONNEXION',
 		'h1' => 'APP-PHP',
 		'h2' => 'CONNEXION',
+		'css' => ['style']
 	];
 
 	public function index(): void

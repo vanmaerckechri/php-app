@@ -89,16 +89,23 @@ abstract class AbstractController
 		return true;
 	}
 
-	private static function addAssets(string $type, array $list): ?string
+	private static function addAssets(string $ext, array $list): ?string
 	{
-		$longType = $type === 'js' ? 'javascript' : 'css';
+		$path = "/public/{$ext}/";
+		$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
+
 		ob_start();
 		foreach ($list as $fileName) 
 		{
-			$path = "/public/{$type}/" . $fileName . ".{$type}";
-			$path = str_replace('/', DIRECTORY_SEPARATOR, $path);
-			
-			?><script type="text/<?=$longType?>" src="<?=$path?>"></script><?php
+			$file = $path . $fileName . ".{$ext}";
+			if ($ext === 'css')
+			{
+				?><link rel="stylesheet" type="text/css" href="<?=$file?>"><?php
+			}
+			else
+			{
+				?><script type="text/javascript" src="<?=$file?>"></script><?php
+			}
 		}
 		return ob_get_clean();
 	}

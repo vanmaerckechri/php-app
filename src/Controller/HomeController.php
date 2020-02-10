@@ -15,6 +15,7 @@ class HomeController extends AbstractController
 		'title' => 'APP-PHP::HOME',
 		'h1' => 'APP-PHP',
 		'h2' => 'HOME',
+		'css' => ['style']
 	];
 
 	public function index()

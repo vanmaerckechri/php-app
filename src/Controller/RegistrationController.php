@@ -18,7 +18,8 @@ class RegistrationController extends AbstractController
 	protected $varPage = [
 		'title' => 'APP-PHP::INSCRIPTION',
 		'h1' => 'APP-PHP',
-		'h2' => 'INSCRIPTION'
+		'h2' => 'INSCRIPTION',
+		'css' => ['style']
 	];
 
 	public function new(): void

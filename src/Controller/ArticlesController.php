@@ -14,6 +14,7 @@ class ArticlesController extends AbstractController
 		'title' => 'APP-PHP::ARTICLES',
 		'h1' => 'APP-PHP',
 		'h2' => 'ARTICLES',
+		'css' => ['style']
 	];
 
 	public function index($currentPage)

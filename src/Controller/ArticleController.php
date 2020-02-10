@@ -21,6 +21,7 @@ class ArticleController extends AbstractController
 		'title' => 'APP-PHP::ARTICLE',
 		'h1' => 'APP-PHP',
 		'h2' => 'Article',
+		'css' => ['style']
 	];
 
 	public function show(int $id, string $slug): void

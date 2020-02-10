@@ -10,6 +10,7 @@ class Error404Controller extends AbstractController
 		'title' => 'APP-PHP::404',
 		'h1' => 'APP-PHP',
 		'h2' => 'PAGE INTROUVABLE',
+		'css' => ['style']
 	];
 
 	public function show()
