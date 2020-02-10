@@ -171,8 +171,8 @@ class ArticleController extends AbstractController
 	private static function scriptForNewAndEdit(): string
 	{
 		ob_start(); ?>
-			var instantLoadImg = new CVMTOOLS.InstantLoadImg();
-			instantLoadImg.init('image', 'imagePreview');
+			CVMTOOLS.instantLoadImg = new CVMTOOLS.InstantLoadImg();
+			CVMTOOLS.instantLoadImg.init('image', 'imagePreview');
 		<?php return ob_get_clean();
 	}
 }

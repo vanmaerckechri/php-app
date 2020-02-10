@@ -107,8 +107,8 @@ class RegistrationController extends AbstractController
 	private static function scriptForNew(): string
 	{
 		ob_start(); ?>
-			var confirmPassword = new CVMTOOLS.ConfirmPassword();
-			confirmPassword.init('form');
+			CVMTOOLS.confirmPassword = new CVMTOOLS.ConfirmPassword();
+			CVMTOOLS.confirmPassword.init('form');
 		<?php return ob_get_clean();
 	}
 }

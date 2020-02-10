@@ -18,7 +18,7 @@ class HomeController extends AbstractController
 		'css' => ['style']
 	];
 
-	public function index()
+	public function index(): void
 	{
 		$this->varPage['messages'] = MessagesManager::getMessages();
 		$this->renderer('HomeView', 'index');

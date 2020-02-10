@@ -23,7 +23,7 @@ Class Template
 			    <title><?= $varPage['title'] ?></title>
 			</head>
 			<body>
-				<header>
+				<header id="header" class="test">
 					<div class="container">
 						<?=$header?>
 					</div>
@@ -38,10 +38,13 @@ Class Template
 			    	<div class="container">
 					</div>
 				</footer>
+				<script type="text/javascript" src="/public/js/ToggleNavVisibility.js"></script>
 				<?= $varPage['js'] ?? '' ?>
 				<script type="text/javascript">
 					window.addEventListener("load", function(event)
 					{
+						CVMTOOLS.toggleNavVisibility = new CVMTOOLS.ToggleNavVisibility();
+						CVMTOOLS.toggleNavVisibility.init('header');
 						<?= $varPage['script'] ?? '' ?>
 					});
 				</script>

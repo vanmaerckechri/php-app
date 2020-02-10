@@ -43,6 +43,9 @@ img {
 .sms-error {
   color: #d21d1d; }
 
+.main {
+  padding-top: 76px; }
+
 .container {
   margin: 0 auto;
   padding: 0 0.5rem;
@@ -106,7 +109,10 @@ form {
 
 header {
   padding: 0.5rem 0;
-  background-color: #2a3036; }
+  position: fixed;
+  width: 100%;
+  background-color: #2a3036;
+  transition: opacity 0.2s; }
   header h1 {
     padding: 0.5rem 0;
     color: #dbdde1; }
@@ -122,6 +128,9 @@ header {
       margin-left: auto; }
       header nav .btn-container a {
         margin-left: 1.5rem; }
+  header.hide {
+    opacity: 0;
+    pointer-events: none; }
 
 .articles-container {
   display: flex;
