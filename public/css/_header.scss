@@ -5,6 +5,7 @@ header
 	width: 100%;
 	background-color: $bgColor-nav;
 	transition: opacity 0.2s;
+	z-index: 1;
 	h1
 	{
 		padding: $distance-generic01 0;

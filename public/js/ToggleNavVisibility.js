@@ -7,40 +7,43 @@ CVMTOOLS.ToggleNavVisibility = function()
 	this.lastPosition;
 };
 
-CVMTOOLS.ToggleNavVisibility.prototype.init = function(navId)
+CVMTOOLS.ToggleNavVisibility.prototype = 
 {
-	this.nav = document.getElementById(navId);
-	this.updatePosition('lastPosition');
-	window.addEventListener('scroll', this.detectDirection.bind(this));
-};
-
-CVMTOOLS.ToggleNavVisibility.prototype.detectDirection = function(e)
-{
-	if (document.documentElement.scrollTop < this.lastPosition - 5)
+	init(navId)
 	{
-		this.display();
-	}
-	else if (document.documentElement.scrollTop > this.lastPosition + 5)
+		this.nav = document.getElementById(navId);
+		this.updatePosition('lastPosition');
+		window.addEventListener('scroll', this.detectDirection.bind(this));
+	},
+
+	detectDirection(e)
 	{
-		this.hide();
-	}
-	this.updatePosition('lastPosition');
-};
+		if (document.documentElement.scrollTop < this.lastPosition - 5)
+		{
+			this.display();
+		}
+		else if (document.documentElement.scrollTop > this.lastPosition + 5)
+		{
+			this.hide();
+		}
+		this.updatePosition('lastPosition');
+	},
 
-CVMTOOLS.ToggleNavVisibility.prototype.updatePosition = function(positionName)
-{
-	this[positionName] = document.documentElement.scrollTop;
-};
-
-CVMTOOLS.ToggleNavVisibility.prototype.hide = function()
-{
-	if (this.lastPosition > this.nav.offsetHeight)
+	updatePosition(positionName)
 	{
-		this.nav.classList.add("hide");
-	}
-};
+		this[positionName] = document.documentElement.scrollTop;
+	},
 
-CVMTOOLS.ToggleNavVisibility.prototype.display = function()
-{
-	this.nav.classList.remove("hide");
+	hide()
+	{
+		if (this.lastPosition > this.nav.offsetHeight)
+		{
+			this.nav.classList.add("hide");
+		}
+	},
+
+	display()
+	{
+		this.nav.classList.remove("hide");
+	}
 };
